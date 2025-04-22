@@ -1,0 +1,46 @@
+/* General setup */
+@font-face {
+  font-family: 'Alex Brush';
+  src: url('fonts/AlexBrush-Regular.woff2') format('woff2'),
+      url('fonts/AlexBrush-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Exo';
+  src: url('fonts/Exo-Black.woff2') format('woff2'),
+      url('fonts/Exo-Black.woff') format('woff');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+html {
+  font-size: 10px;
+  margin: 0;
+  font-family: "Exo", sans-serif;
+}
+
+body {
+  width: 80%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Typography */
+
+h1 {
+  font-size: 3.2rem;
+}
+
+h2 {
+  font-size: 2.4rem;
+}
+
+p {
+  font-size: 1.4rem;
+  line-height: 1.6;
+  word-spacing: 0.6rem;
+}
