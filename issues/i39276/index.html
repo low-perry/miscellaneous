@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Transition Example</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Ensure html and body take full height */
+        html, body {
+            height: 100%;
+            margin: 0;
+            font-family: 'Inter', sans-serif; /* Use Inter font */
+        }
+
+        /* --- View Transition Styles --- */
+
+        /* Default Root Transition: Fade */
+        ::view-transition-old(root) {
+            animation: 300ms cubic-bezier(0.4, 0, 1, 1) both fade-out;
+        }
+        ::view-transition-new(root) {
+            animation: 300ms cubic-bezier(0, 0, 0.2, 1) both fade-in;
+        }
+
+        /* Specific Transition for 'settings-navigation': Slide */
+        /* Only apply when 'settings-navigation' type is active */
+        :root:active-view-transition-type(settings-navigation)::view-transition-old(root) {
+            animation: 350ms cubic-bezier(0.4, 0, 1, 1) both slide-to-left;
+        }
+        :root:active-view-transition-type(settings-navigation)::view-transition-new(root) {
+            /* Use a different duration/easing for entry */
+            animation: 350ms cubic-bezier(0, 0, 0.2, 1) both slide-from-right;
+        }
+
+        /* Keyframes */
+        @keyframes fade-in {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes fade-out {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+        @keyframes slide-to-left {
+            /* Slide out slightly further than just off-screen for a better effect */
+            to { transform: translateX(-40px); opacity: 0; }
+        }
+        @keyframes slide-from-right {
+            /* Start slightly off-screen */
+            from { transform: translateX(40px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* Add some basic styles for the interactive elements */
+        button {
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease;
+        }
+        button:hover {
+            transform: translateY(-1px);
+        }
+         button:active {
+            transform: translateY(0px);
+        }
+    </style>
+     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 flex flex-col items-center justify-center min-h-screen p-4">
+
+    <div class="bg-white p-8 rounded-xl shadow-lg w-full max-w-md text-center">
+        <h1 class="text-2xl font-bold mb-6 text-gray-800">View Transition Demo</h1>
+
+        <nav class="mb-6 space-x-4">
+            <button id="home-btn" class="bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 px-5 rounded-lg shadow">
+                Home
+            </button>
+            <button id="settings-btn" class="bg-indigo-500 hover:bg-indigo-600 text-white font-medium py-2 px-5 rounded-lg shadow">
+                Settings
+            </button>
+        </nav>
+
+        <main id="content-area" class="border border-gray-200 p-6 rounded-lg bg-gray-50 min-h-[150px]">
+            <h2 class="text-xl font-semibold mb-3 text-gray-700">Welcome Home!</h2>
+            <p class="text-gray-600">This is the main content area. Click the buttons above to navigate.</p>
+        </main>
+
+        <p id="fallback-notice" class="text-sm text-red-600 mt-4 font-medium hidden">
+            Note: View Transitions API not supported. Content updated without animation.
+        </p>
+    </div>
+
+    <script>
+        // --- DOM References ---
+        const homeButton = document.getElementById('home-btn');
+        const settingsButton = document.getElementById('settings-btn');
+        const contentArea = document.getElementById('content-area');
+        const fallbackNotice = document.getElementById('fallback-notice');
+
+        // --- Content Update Functions ---
+
+        // Function to display the Home content
+        const showHomeContent = () => {
+            contentArea.innerHTML = `
+                <h2 class="text-xl font-semibold mb-3 text-gray-700">Welcome Home!</h2>
+                <p class="text-gray-600">This is the main content area. Click the buttons above to navigate.</p>
+            `;
+            // In a real app, this might involve fetching data or manipulating more complex DOM
+            // For synchronous updates like this, returning nothing (undefined) is fine.
+            // If it were async (e.g., fetch), it should return a Promise.
+        };
+
+        // Function to display the Settings content (simulates a slight delay)
+        const showSettingsContent = async () => {
+            contentArea.innerHTML = `<p class="text-gray-500 italic p-4">Loading settings...</p>`; // Show loading state
+            // Simulate an asynchronous operation like fetching data
+            await new Promise(resolve => setTimeout(resolve, 100)); // Short delay
+            contentArea.innerHTML = `
+                <h2 class="text-xl font-semibold mb-3 text-gray-700">Settings</h2>
+                <div class="space-y-3 text-left">
+                     <label class="flex items-center">
+                        <input type="checkbox" class="form-checkbox h-5 w-5 text-indigo-600 rounded mr-2">
+                        <span>Enable Notifications</span>
+                    </label>
+                    <label class="block">
+                        <span class="text-gray-700">Theme:</span>
+                        <select class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                            <option>Light</option>
+                            <option>Dark</option>
+                            <option>System Default</option>
+                        </select>
+                    </label>
+                </div>
+            `;
+            // The async function implicitly returns a resolved Promise when done.
+        };
+
+        // --- Navigation Logic ---
+
+        const navigate = (updateFunction, options = {}) => {
+            // Check if the View Transitions API is supported
+            if (!document.startViewTransition) {
+                console.log("View Transitions not supported, updating directly.");
+                fallbackNotice.classList.remove('hidden'); // Show fallback message
+                // Directly call the update function (await if it's async)
+                const result = updateFunction();
+                if (result && typeof result.then === 'function') {
+                    result.catch(err => console.error("Error during direct update:", err));
+                }
+                return; // Exit early
+            }
+
+            // View Transitions are supported
+            fallbackNotice.classList.add('hidden'); // Hide fallback message
+            console.log(`Starting view transition with options:`, options);
+
+            // Start the transition, passing the update function and any options (like types)
+            const transition = document.startViewTransition({
+                update: updateFunction, // The function to update the DOM
+                types: options.types || [] // Pass types if provided
+            });
+
+            // Optional: Handle transition promises
+            transition.ready.then(() => console.log("Transition ready (pseudo-elements created)."))
+                           .catch(err => console.error("Error during transition ready:", err));
+
+            transition.finished.then(() => console.log("Transition finished."))
+                              .catch(err => console.error("Error during transition finished:", err));
+
+            transition.updateCallbackDone.then(() => console.log("DOM update promise resolved."))
+                                       .catch(err => console.error("Error during DOM update promise:", err));
+        };
+
+        // --- Event Listeners ---
+        homeButton.addEventListener('click', () => {
+            console.log("Home button clicked");
+            // Navigate to Home - no specific types needed, will use default animation
+            navigate(showHomeContent);
+        });
+
+        settingsButton.addEventListener('click', () => {
+            console.log("Settings button clicked");
+            // Navigate to Settings, providing specific types for custom animation
+            navigate(showSettingsContent, { types: ['settings-navigation'] });
+        });
+
+        // Initial log to confirm script loaded
+        console.log("View Transition Example script loaded.");
+        // Check support on load
+        if (!document.startViewTransition) {
+             fallbackNotice.classList.remove('hidden');
+        }
+
+    </script>
+
+</body>
+</html>
