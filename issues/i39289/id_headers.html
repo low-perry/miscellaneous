@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      table {
+        border-collapse: collapse;
+        width: 100%;
+      }
+      th,
+      td {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: left;
+      }
+      caption {
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+      th {
+        background-color: #f2f2f2;
+      }
+    </style>
+  </head>
+  <body>
+    <table>
+      <caption>
+        Clothing Data by Region
+      </caption>
+      <thead>
+        <tr>
+          <!-- Parent grouping for Region and Clothes -->
+          <th id="region-group" colspan="2">Region</th>
+          <th id="clothes" colspan="3">Clothes</th>
+        </tr>
+        <tr>
+          <!-- Subheaders: Region splits into Country and City -->
+          <th id="col-country">Country</th>
+          <th id="col-city">City</th>
+          <!-- Individual clothing category headers -->
+          <th id="col-trousers">Trousers</th>
+          <th id="col-skirts">Skirts</th>
+          <th id="col-dresses">Dresses</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <!-- Belgium spans both city rows -->
+          <th id="belgium" scope="row" headers="col-country" rowspan="2">
+            Belgium
+          </th>
+          <th id="antwerpen" headers="col-city belgium">Antwerpen</th>
+          <td headers="col-trousers belgium antwerpen">56</td>
+          <td headers="col-skirts belgium antwerpen">22</td>
+          <td headers="col-dresses belgium antwerpen">43</td>
+        </tr>
+        <tr>
+          <!-- Second city row under Belgium -->
+          <th id="brussels" headers="col-city belgium">Brussels</th>
+          <td headers="col-trousers belgium brussels">45</td>
+          <td headers="col-skirts belgium brussels">30</td>
+          <td headers="col-dresses belgium brussels">38</td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>
