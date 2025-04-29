@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      table {
+        border-collapse: collapse;
+        width: 100%;
+      }
+      th,
+      td {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: left;
+      }
+      caption {
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+      th {
+        background-color: #f2f2f2;
+      }
+    </style>
+  </head>
+  <body>
+    <table>
+      <thead>
+        <tr>
+          <th colspan="2" scope="colgroup">Region</th>
+          <th colspan="3" scope="colgroup">Clothes</th>
+        </tr>
+
+        <tr>
+          <th scope="col">Country</th>
+          <th scope="col">City</th>
+          <th scope="col">Trousers</th>
+          <th scope="col">Skirts</th>
+          <th scope="col">Dresses</th>
+        </tr>
+      </thead>
+      <tr>
+        <th rowspan="2" scope="rowgroup">The Netherlands</th>
+        <th scope="row">Amsterdam</th>
+        <td>89</td>
+        <td>34</td>
+        <td>69</td>
+      </tr>
+      <tr>
+        <th scope="row">Utrecht</th>
+        <td>80</td>
+        <td>12</td>
+        <td>43</td>
+      </tr>
+      
+      
+    </table>
+  </body>
+</html>
