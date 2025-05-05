@@ -47,3 +47,18 @@ body {
 #feedback-down:hover svg path {
   fill: red;
 }
+
+/* Bounce animation */
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Apply animation to SVGs */
+svg.animate {
+  animation: bounce 0.5s ease-out;
+}

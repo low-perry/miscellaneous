@@ -1,28 +1,31 @@
-
-document.addEventListener("DOMContentLoaded", function(){
+document.addEventListener("DOMContentLoaded", function() {
   const upButton = document.getElementById("feedback-up");
   const downButton = document.getElementById("feedback-down");
 
-  upButton.addEventListener("click", function() {
-    // Remove selection from the other button, if needed
+  function animateButton(button) {
+    const svg = button.querySelector("svg");
+    svg.classList.add("animate");
+    svg.addEventListener("animationend", () => {
+      svg.classList.remove("animate");
+    }, { once: true });
+  }
+
+  upButton.addEventListener("click", () => {
     downButton.classList.remove("selected");
-    // Add the 'selected' class to turn the icon green
     upButton.classList.add("selected");
-    
-    // Send a custom event to Google Analytics
+    animateButton(upButton);
+
     gtag('event', 'feedback', {
       'event_category': 'User Feedback',
       'event_label': 'up'
     });
   });
 
-  downButton.addEventListener("click", function() {
-    // Remove selection from the other button
+  downButton.addEventListener("click", () => {
     upButton.classList.remove("selected");
-    // Add the 'selected' class to turn the icon red
     downButton.classList.add("selected");
-    
-    // Send a custom event to Google Analytics
+    animateButton(downButton);
+
     gtag('event', 'feedback', {
       'event_category': 'User Feedback',
       'event_label': 'down'
