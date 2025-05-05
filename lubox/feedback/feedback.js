@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
   const upButton = document.getElementById("feedback-up");
   const downButton = document.getElementById("feedback-down");
+  const feedbackContainer = document.getElementById("feedback-container"); // Parent container for the buttons
 
   const FeedbackType = {
     UP: "up",
@@ -30,7 +31,15 @@ document.addEventListener("DOMContentLoaded", function () {
     gtag("event", "feedback", {
       event_category: "User Feedback",
       event_label: feedbackType,
-    });
+    }); 
+
+    
+    feedbackContainer.classList.add("fade-out");
+
+    setTimeout(() => {
+      feedbackContainer.innerHTML = `<p>Your opinion matters to us! 🩵</p>`;
+      feedbackContainer.classList.add("fade-in");
+    }, 500); 
   }
 
   upButton.addEventListener("click", handleFeedbackClick);
