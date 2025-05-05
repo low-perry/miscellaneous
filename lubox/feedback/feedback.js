@@ -1,34 +1,38 @@
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
   const upButton = document.getElementById("feedback-up");
   const downButton = document.getElementById("feedback-down");
 
-  function animateButton(button) {
-    const svg = button.querySelector("svg");
+  const FeedbackType = {
+    UP: "up",
+    DOWN: "down",
+  };
+
+  function handleFeedbackClick(event) {
+    const clickedButton = event.currentTarget;
+    const otherButton = clickedButton === upButton ? downButton : upButton;
+
+    otherButton.classList.remove("selected");
+    clickedButton.classList.add("selected");
+
+    // Animate the clicked button
+    const svg = clickedButton.querySelector("svg");
     svg.classList.add("animate");
-    svg.addEventListener("animationend", () => {
-      svg.classList.remove("animate");
-    }, { once: true });
+    svg.addEventListener(
+      "animationend",
+      () => {
+        svg.classList.remove("animate");
+      },
+      { once: true }
+    );
+
+    // Send feedback to Google Analytics
+    const feedbackType = clickedButton === upButton ? FeedbackType.UP : FeedbackType.DOWN;
+    gtag("event", "feedback", {
+      event_category: "User Feedback",
+      event_label: feedbackType,
+    });
   }
 
-  upButton.addEventListener("click", () => {
-    downButton.classList.remove("selected");
-    upButton.classList.add("selected");
-    animateButton(upButton);
-
-    gtag('event', 'feedback', {
-      'event_category': 'User Feedback',
-      'event_label': 'up'
-    });
-  });
-
-  downButton.addEventListener("click", () => {
-    upButton.classList.remove("selected");
-    downButton.classList.add("selected");
-    animateButton(downButton);
-
-    gtag('event', 'feedback', {
-      'event_category': 'User Feedback',
-      'event_label': 'down'
-    });
-  });
+  upButton.addEventListener("click", handleFeedbackClick);
+  downButton.addEventListener("click", handleFeedbackClick);
 });
