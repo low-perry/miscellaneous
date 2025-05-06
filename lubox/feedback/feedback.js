@@ -8,6 +8,30 @@ document.addEventListener("DOMContentLoaded", function () {
     DOWN: "down",
   };
 
+  const FeedbackForms = {
+    ONSUCCESS_FORM: "https://docs.google.com/forms/d/e/1FAIpQLSergq3-VdaGp1d_OrfDhgS9I2Q5VeHnTXVqdM7XC6U01uPlSA/viewform?usp=sharing",
+    ONISSUE_FORM: "https://docs.google.com/forms/d/e/1FAIpQLScFJ09QGqziE-SlAnCWzPAmWn226p0Uw0dJn7gqG6mfHKPYuw/viewform?usp=sharing",
+  };
+
+  function createFeedbackButton(feedbackType) {
+    const button = document.createElement("button");
+    button.classList.add("button-styles");
+
+    if (feedbackType === FeedbackType.UP) {
+      button.textContent = "Help us improve our docs";
+      button.onclick = () => {
+        window.open(FeedbackForms.ONSUCCESS_FORM, "_blank");
+      };
+    } else {
+      button.textContent = "Report an issue";
+      button.onclick = () => {
+        window.open(FeedbackForms.ONISSUE_FORM, "_blank");
+      };
+    }
+
+    return button;
+  }
+
   function handleFeedbackClick(event) {
     const clickedButton = event.currentTarget;
     const otherButton = clickedButton === upButton ? downButton : upButton;
@@ -31,27 +55,14 @@ document.addEventListener("DOMContentLoaded", function () {
     gtag("event", "feedback", {
       event_category: "User Feedback",
       event_label: feedbackType,
-    }); 
+    });
 
     feedbackContainer.classList.add("fade-out");
 
     setTimeout(() => {
       feedbackContainer.innerHTML = `<p>Your opinion matters to us! 🩵</p>`;
 
-      const button = document.createElement("button");
-      button.classList.add("button-styles");
-
-      if (feedbackType === FeedbackType.UP) {
-        button.textContent = "Help us improve our docs";
-        button.onclick = () => {
-          window.open("https://docs.google.com/forms/d/e/1FAIpQLSergq3-VdaGp1d_OrfDhgS9I2Q5VeHnTXVqdM7XC6U01uPlSA/viewform?usp=sharing", "_blank");
-        };
-      } else {
-        button.textContent = "Report an issue";
-        button.onclick = () => {
-          window.open("https://docs.google.com/forms/d/e/1FAIpQLScFJ09QGqziE-SlAnCWzPAmWn226p0Uw0dJn7gqG6mfHKPYuw/viewform?usp=sharing", "_blank");
-        };
-      }
+      const button = createFeedbackButton(feedbackType);
       feedbackContainer.appendChild(button);
       feedbackContainer.classList.add("fade-in");
     }, 500); 
