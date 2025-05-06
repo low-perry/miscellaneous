@@ -10,7 +10,7 @@ body {
   text-align: center; 
 }
 
-#feedback button {
+#feedback  button {
   background: transparent;
   border: none;
   padding: 0;
@@ -73,4 +73,22 @@ svg.animate {
 
 #feedback-container.fade-in {
   opacity: 1; 
+}
+
+#feedback-container .button-styles {
+  display: inline-block; /* Ensure the button is displayed */
+  visibility: visible; /* Ensure the button is visible */
+  padding: 10px 20px;
+  font-size: 16px;
+  color: #ffffff;
+  background-color: #007bff;
+  border: 2px solid #0056b3;
+  border-radius: 8px; /* Rounded corners */
+  cursor: pointer;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+#feedback-container .button-styles:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+  border-color: #003f7f; /* Darker border on hover */
 }
