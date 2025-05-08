@@ -9,8 +9,8 @@ document.addEventListener("DOMContentLoaded", function () {
   };
 
   const FeedbackForms = {
-    ONSUCCESS_FORM: "https://docs.google.com/forms/d/e/1FAIpQLSergq3-VdaGp1d_OrfDhgS9I2Q5VeHnTXVqdM7XC6U01uPlSA/viewform?usp=sharing",
-    ONISSUE_FORM: "https://docs.google.com/forms/d/e/1FAIpQLScFJ09QGqziE-SlAnCWzPAmWn226p0Uw0dJn7gqG6mfHKPYuw/viewform?usp=sharing",
+    ONSUCCESS_FORM: "https://docs.google.com/forms/",
+    ONISSUE_FORM: "https://docs.google.com/forms/",
   };
 
   function createFeedbackButton(feedbackType) {
