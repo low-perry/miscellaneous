@@ -9,8 +9,13 @@ document.addEventListener("DOMContentLoaded", function () {
   };
 
   const FeedbackForms = {
+<<<<<<< HEAD
     ONSUCCESS_FORM: "https://docs.google.com/forms/d/e/1FAIpQLScsv_-1lx09vDCYdIfP4Q6Gpt3K6WUyqvGXQe3yQN03Z7nm2A/viewform?usp=pp_url&entry.2144526813=SOURCE_URL_PLACEHOLDER",
     ONISSUE_FORM: "https://docs.google.com/forms/d/e/1FAIpQLSfdlN8_MBbvQH8OvJHpv7LRIuM7IVdM9Qn6gqS-bqI5ApP0VA/viewform?usp=pp_url&entry.233291793=SOURCE_URL_PLACEHOLDER",
+=======
+    ONSUCCESS_FORM: "https://docs.google.com/forms/",
+    ONISSUE_FORM: "https://docs.google.com/forms/",
+>>>>>>> 3c780db1ca8204989b4e4a903153b4f05cabf275
   };
 
   function createFeedbackButton(feedbackType) {
