@@ -84,7 +84,7 @@ body {
   grid-template-columns: repeat(
     auto-fit,
     minmax(300px, 1fr)
-  ); /* Responsive grid */
+  );
   gap: 30px;
   margin-top: 30px;
 }
@@ -114,7 +114,7 @@ body {
 .persona-card p {
   font-size: 1em;
   color: #666;
-  min-height: 60px; 
+  min-height: 60px;
 }
 .btn-persona {
   margin-top: 20px;
@@ -125,4 +125,59 @@ body {
 }
 .btn-persona:hover {
   background-color: #1e7e34;
+}
+.doc-content {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 0 20px;
+}
+.breadcrumbs {
+  margin-bottom: 20px;
+  font-size: 0.9em;
+}
+.breadcrumbs ol {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.breadcrumbs li {
+  display: inline;
+}
+.breadcrumbs li + li::before {
+  content: ">";
+  margin: 0 5px;
+  color: #6c757d;
+}
+.lead-paragraph {
+  font-size: 1.15em;
+  margin-bottom: 30px;
+  color: #444;
+}
+.doc-content h2 {
+  font-size: 1.8em;
+  margin-top: 40px;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 5px;
+}
+.doc-image {
+  max-width: 100%;
+  height: auto;
+  border: 1px solid #ddd;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  border-radius: 4px;
+}
+.related-topics {
+  margin-top: 50px;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 5px;
+}
+.related-topics h3 {
+  margin-top: 0;
+}
+.related-topics ul {
+  list-style: disc;
+  padding-left: 20px;
 }
