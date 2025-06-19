@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autocomplete API Demo</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f4f7f9;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            padding-top: 50px;
+        }
+        .container {
+            width: 100%;
+            max-width: 500px;
+            position: relative;
+        }
+        #search-input {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+        }
+        #autocomplete-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid #ddd;
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            max-height: 400px;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+        .result-group {
+            border-bottom: 1px solid #eee;
+        }
+        .result-group:last-child {
+            border-bottom: none;
+        }
+        .result-group h3 {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: #666;
+            padding: 10px 15px 5px;
+            margin: 0;
+            background-color: #f9f9f9;
+        }
+        .result-item {
+            padding: 10px 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .result-item:hover {
+            background-color: #f0f0f0;
+        }
+        .result-item img {
+            width: 40px;
+            height: 40px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+        .result-item .title {
+            flex-grow: 1;
+        }
+        .result-item .title em {
+            font-style: normal;
+            font-weight: bold;
+            background-color: #fffbe6;
+        }
+        .result-item .price {
+            font-size: 14px;
+            color: #555;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <input type="text" id="search-input" placeholder="Search for products or categories...">
+        <div id="autocomplete-results"></div>
+    </div>
+
+    <!-- Axios for making HTTP requests -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- UUID library for generating unique event IDs -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/uuid/8.3.2/uuid.min.js"></script>
+
+    <script>
+        // --- CONFIGURATION ---
+        const TRACKER_ID = "179075-204259"; // Using a demo tracker ID
+        const AUTOCOMPLETE_API_URL = "https://live.luigisbox.com/autocomplete/v2";
+        const ANALYTICS_API_URL = "https://api.luigisbox.com/";
+        const CLIENT_ID = Math.floor(Math.random() * 1e18);
+
+        // --- DOM ELEMENTS ---
+        const searchInput = document.getElementById('search-input');
+        const resultsContainer = document.getElementById('autocomplete-results');
+
+        // --- HELPER FUNCTIONS ---
+        const debounce = (func, delay) => {
+            let timeout;
+            return function(...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), delay);
+            };
+        };
+        
+        async function sendAnalyticsEvent(payload) {
+            try {
+                axios.post(ANALYTICS_API_URL, payload);
+                console.log('Analytics event sent:', payload.type, payload);
+            } catch (error) {
+                console.error('Failed to send analytics event:', error);
+            }
+        }
+
+        function renderResults(hits) {
+            resultsContainer.innerHTML = '';
+            if (!hits || hits.length === 0) {
+                return;
+            }
+
+            const groupedResults = hits.reduce((acc, hit) => {
+                // The API response for products uses 'item' as the type, so we group by that
+                (acc[hit.type] = acc[hit.type] || []).push(hit);
+                return acc;
+            }, {});
+
+            // A map to make group titles more user-friendly
+            const groupTitleMap = {
+                item: 'Products',
+                category: 'Categories',
+                query: 'Popular Searches'
+            };
+
+            for (const type in groupedResults) {
+                const groupDiv = document.createElement('div');
+                groupDiv.className = 'result-group';
+                
+                const groupTitle = document.createElement('h3');
+                
+                groupTitle.textContent = groupTitleMap[type] || type;
+                groupDiv.appendChild(groupTitle);
+
+                groupedResults[type].forEach(item => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'result-item';
+                    itemDiv.dataset.itemId = item.url || item.attributes.title;
+                    itemDiv.dataset.itemType = item.type;
+                    
+                    let innerHTML = '';
+                    
+                    if (item.attributes.image_link) {
+                        innerHTML += `<img src="${item.attributes.image_link}" alt="" onerror="this.style.display='none'">`;
+                    }
+                    innerHTML += `<div class="title">${item.attributes.title}</div>`;
+                    
+                    if (item.attributes.price) {
+                        innerHTML += `<div class="price">${item.attributes.price}</div>`;
+                    }
+                    itemDiv.innerHTML = innerHTML;
+
+                    groupDiv.appendChild(itemDiv);
+                });
+                resultsContainer.appendChild(groupDiv);
+            }
+        }
+        
+        // --- CORE LOGIC ---
+        const getSuggestions = async (query) => {
+            if (!query) {
+                resultsContainer.innerHTML = '';
+                return;
+            }
+
+            try {
+                // 1. FETCH DATA FROM THE AUTOCOMPLETE API
+                const response = await axios.get(AUTOCOMPLETE_API_URL, {
+                    params: {
+                        tracker_id: TRACKER_ID,
+                        q: query,
+                        type: 'product:5,category:3,query:5', 
+                        hit_fields: 'title,url,price,image_link' 
+                    }
+                });
+
+                const hits = response.data.hits;
+                
+                // 2. RENDER THE DATA ON THE BROWSER
+                renderResults(hits);
+
+                // 3. SEND ANALYTICS FOR THE VIEW
+                if (hits && hits.length > 0) {
+                    const analyticsPayload = {
+                        id: uuid.v4(),
+                        type: "event",
+                        tracker_id: TRACKER_ID,
+                        client_id: CLIENT_ID,
+                        lists: {
+                            "Autocomplete": {
+                                query: { string: query },
+                                items: hits.map((hit, index) => ({
+                                    title: hit.attributes.title,
+                                    url: hit.url || hit.attributes.title,
+                                    position: index + 1
+                                }))
+                            }
+                        }
+                    };
+                    sendAnalyticsEvent(analyticsPayload);
+                }
+
+            } catch (error) {
+                console.error("Failed to fetch autocomplete suggestions:", error);
+                resultsContainer.innerHTML = '';
+            }
+        };
+
+        
+        searchInput.addEventListener('input', debounce(e => {
+            getSuggestions(e.target.value);
+        }, 300));
+
+        resultsContainer.addEventListener('click', (e) => {
+            const resultItem = e.target.closest('.result-item');
+            if (resultItem) {
+                const itemId = resultItem.dataset.itemId;
+                console.log(`Clicked on item: ${itemId}`);
+
+                const clickPayload = {
+                    id: uuid.v4(),
+                    type: "click",
+                    tracker_id: TRACKER_ID,
+                    client_id: CLIENT_ID,
+                    action: {
+                        type: "click",
+                        resource_identifier: itemId
+                    }
+                };
+                sendAnalyticsEvent(clickPayload);
+
+                resultsContainer.innerHTML = '';
+            }
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!resultsContainer.contains(e.target) && e.target !== searchInput) {
+                resultsContainer.innerHTML = '';
+            }
+        });
+
+    </script>
+</body>
+</html>
