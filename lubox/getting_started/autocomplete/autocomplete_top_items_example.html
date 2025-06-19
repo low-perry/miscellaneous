@@ -213,7 +213,7 @@
                 const response = await axios.get(TOP_ITEMS_API_URL, {
                     params: {
                         tracker_id: TRACKER_ID,
-                        type: 'items:5,category:3', // Note: use 'items' (plural) for this API
+                        type: 'product:5,category:3,query:5',
                         hit_fields: 'title,url,price,image_link'
                     }
                 });
