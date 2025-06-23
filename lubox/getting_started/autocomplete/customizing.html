@@ -57,6 +57,21 @@ function LBInitAutocomplete() {
     TrackerId: '179075-204259',
     Locale: 'en',
     CloseWhenQueryIsEmpty: false,
+    Actions: [
+      {
+        forRow: function (row) {
+          return row.type === 'product';
+        },
+        iconUrl: ,
+        title: "Add to cart",
+        action: function (event, result) {
+          event.preventDefault();
+          const productId = result.url;
+          // Here you can add your custom logic to handle the action, e.g., add to cart
+          console.log(`Product ${productId} added to cart!`);
+        }
+      }
+    ],
     Translations: {
       en: {
         types: {
