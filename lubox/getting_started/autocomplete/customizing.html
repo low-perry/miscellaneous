@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Luigi's Box Search Demo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="https://cdn.luigisbox.com/autocomplete.css"/>
+
+    <style>
+      body {
+        margin: 0;
+        background: #f8f9fa;
+        font-family: system-ui, sans-serif;
+      }
+      .search-demo-container {
+        max-width: 1000px;
+        margin: 0 auto;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+        border: 2px solid #e0e0e0;
+        padding: 32px 24px;
+      }
+      @media (max-width: 400px) {
+        .search-demo-container {
+          max-width: 100vw;
+          border-radius: 32px;
+          padding: 24px 8px;
+        }
+      }
+      input[type="search"] {
+        width: 100%;
+        font-size: 1.1em;
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        margin-bottom: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="search-demo-container">
+      <form>
+        <input
+          type="search"
+          id="landing-search"
+          placeholder="Search for something, e.g., ukulele"
+          autocomplete="off"
+        />
+      </form>
+      <div id="landing-search-ui"></div>
+    </div>
+    <script>
+function LBInitAutocomplete() {
+  AutoComplete({
+    Layout: 'hero',
+    TrackerId: '179075-204259',
+    Locale: 'en',
+    CloseWhenQueryIsEmpty: false,
+    Translations: {
+      en: {
+        types: {
+          item: {
+            name: "Products",
+            heroName: "Top product",
+            recommendName: "Top products"
+          },
+          query: {
+            name: "Searches",
+            recommendName: "Trending searches"
+          },
+          category: {
+            name: "Categories",
+            recommendName: "Popular categories"
+          }
+        }
+      }
+    },
+    Types: [
+      {
+        type: 'product',
+        size: 7,
+        recommend: {},
+      },
+      {
+        type: 'query',
+        recommend: {},
+      },
+      {
+        type: 'category',
+        recommend: {},
+      }
+    ]
+  }, '#landing-search')
+}
+</script>
+
+<script src="https://cdn.luigisbox.com/autocomplete.js" async onload="LBInitAutocomplete()"></script>
+    <script>
+      function LBInitLandingSearch() {
+        Luigis.Search(
+          {
+            TrackerId: "179075-204259",
+            Locale: "en",
+            Theme: "boo",
+            Size: 3,
+            Facets: ["brand"],
+            DefaultFilters: { type: "product" },
+            QuicksearchTypes: ["category", "brand"],
+            UrlParamName: { QUERY: "q" },
+          },
+          "#landing-search",
+          "#landing-search-ui"
+        );
+      }
+    </script>
+    <script
+      src="https://cdn.luigisbox.com/search.js"
+      async
+      onload="LBInitLandingSearch()"
+    ></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const searchInput = document.querySelector('input[type="search"]');
+        if (searchInput) {
+          searchInput.addEventListener("keydown", function (e) {
+            if (e.key === "Enter") {
+              e.preventDefault();
+            }
+          });
+        }
+        document.addEventListener("click", function (e) {
+          let target = e.target.closest("a");
+          if (target) {
+            e.preventDefault();
+          }
+        });
+      });
+      window.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") {
+          // Tell the parent to close the modal
+          if (window.parent && window.parent !== window) {
+            window.parent.postMessage({ type: "closeModal" }, "*");
+          }
+        }
+      });
+    </script>
+  </body>
+</html>
