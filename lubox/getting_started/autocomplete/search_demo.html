@@ -5,7 +5,7 @@
     <title>Luigi's Box Search Demo</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="https://cdn.luigisbox.com/autocomplete.css"/>
-
+    <script async src="https://scripts.luigisbox.com/LBX-204259.js"></script>
     <style>
       body {
         margin: 0;
@@ -36,6 +36,11 @@
         border: 1px solid #ccc;
         margin-bottom: 16px;
       }
+
+    div.luigi-ac-footer {
+      display: none !important;
+    }
+
     </style>
   </head>
   <body>
@@ -53,40 +58,25 @@
     <script>
 function LBInitAutocomplete() {
   AutoComplete({
-    Layout: 'hero',
+    Layout: 'heromobile',
     TrackerId: '179075-204259',
     Locale: 'en',
     CloseWhenQueryIsEmpty: false,
-    Actions: [
-      {
-        forRow: function (row) {
-          return row.type === 'product';
-        },
-        iconUrl: "https://raw.githubusercontent.com/low-perry/miscellaneous/refs/heads/main/lubox/images/plus.svg",
-        title: "Add to cart",
-        action: function (event, result) {
-          event.preventDefault();
-          const productId = result.url;
-          // Here you can add your custom logic to handle the action, e.g., add to cart
-          console.log(`Product ${productId} added to cart!`);
-        }
-      }
-    ],
     Translations: {
       en: {
         types: {
           item: {
             name: "Products",
-            heroName: "Top product",
-            recommendName: "Top products"
+            heroName: "Top pro",
+            recommendName: "Top produc"
           },
           query: {
             name: "Searches",
-            recommendName: "Trending searches"
+            recommendName: "Trending queries"
           },
           category: {
             name: "Categories",
-            recommendName: "Popular categories"
+            recommendName: "Popular catego"
           }
         }
       }
@@ -144,13 +134,13 @@ function LBInitAutocomplete() {
             }
           });
         }
-        document.addEventListener("click", function (e) {
+      /*   document.addEventListener("click", function (e) {
           let target = e.target.closest("a");
           if (target) {
             e.preventDefault();
           }
         });
-      });
+      }); */
       window.addEventListener("keydown", function (e) {
         if (e.key === "Escape") {
           // Tell the parent to close the modal

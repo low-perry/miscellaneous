@@ -51,63 +51,33 @@
       <div id="landing-search-ui"></div>
     </div>
     <script>
-function LBInitAutocomplete() {
-  AutoComplete({
-    Layout: 'hero',
-    TrackerId: '179075-204259',
-    Locale: 'en',
-    CloseWhenQueryIsEmpty: false,
-    Actions: [
+  function LBInitAutocomplete() {
+    // This function initializes the Luigi's Box Autocomplete widget.
+    AutoComplete(
       {
-        forRow: function (row) {
-          return row.type === 'product';
-        },
-        iconUrl: "https://raw.githubusercontent.com/low-perry/miscellaneous/refs/heads/main/lubox/images/plus.svg",
-        title: "Add to cart",
-        action: function (event, result) {
-          event.preventDefault();
-          const productId = result.url;
-          // Here you can add your custom logic to handle the action, e.g., add to cart
-          console.log(`Product ${productId} added to cart!`);
-        }
-      }
-    ],
-    Translations: {
-      en: {
-        types: {
-          item: {
-            name: "Products",
-            heroName: "Top product",
-            recommendName: "Top products"
+        // --- Configuration Start ---
+
+        Layout: "heromobile",           // Specifies the visual layout. "line", "hero", "grid", and "heromobile" are options.
+        TrackerId: "179075-204259", // Replace with your actual Tracker ID.
+        Locale: "en",             // Set the language for localization (e.g., "en", "de", "sk").
+        CloseWhenQueryIsEmpty: false,
+        Types: [                  // Define what content types to search for.
+          {
+            type: "product",         // Suggest products/items.
+            name: "Products",      // The header text for the "item" section.
+            size: 7,
           },
-          query: {
-            name: "Searches",
-            recommendName: "Trending searches"
-          },
-          category: {
-            name: "Categories",
-            recommendName: "Popular categories"
+          {
+            type: "category",     // Suggest categories.
+            name: "Categories"
           }
-        }
-      }
-    },
-    Types: [
-      {
-        type: 'product',
-        size: 7,
-        recommend: {},
+        ]
+
+        // --- Configuration End ---
       },
-      {
-        type: 'query',
-        recommend: {},
-      },
-      {
-        type: 'category',
-        recommend: {},
-      }
-    ]
-  }, '#landing-search')
-}
+      "#landing-search"       // The CSS selector for your search input field.
+    );
+  }
 </script>
 
 <script src="https://cdn.luigisbox.com/autocomplete.js" async onload="LBInitAutocomplete()"></script>
