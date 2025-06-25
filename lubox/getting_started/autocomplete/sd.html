@@ -5,7 +5,7 @@
     <title>Luigi's Box Search Demo</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="https://cdn.luigisbox.com/autocomplete.css"/>
-    <script async src="https://scripts.luigisbox.com/LBX-204259.js"></script>
+
     <style>
       body {
         margin: 0;
@@ -36,13 +36,27 @@
         border: 1px solid #ccc;
         margin-bottom: 16px;
       }
+      .luigi-ac {
+    background-color: pink;
+}
 
-    div.luigi-ac-footer {
-      display: none !important;
-    }
+/* Change the hover color for suggestion items */
+.luigi-ac .luigi-ac-item:hover {
+    background-color: #e70a0a;
+}
 
-    
+/* Customize the style of the suggestion titles */
+.luigi-ac .luigi-ac-title {
+    font-size: 16px;
+    color: #0df466;
+    font-weight: 500;
+}
 
+/* Customize the color of the section headers (e.g., "Products") */
+.luigi-ac .luigi-ac-header {
+    color: #5a0558;
+    border-bottom: 1px solid #cce5ff;
+}
     </style>
   </head>
   <body>
@@ -69,16 +83,16 @@ function LBInitAutocomplete() {
         types: {
           item: {
             name: "Products",
-            heroName: "Top pro",
-            recommendName: "Top produc"
+            heroName: "Top product",
+            recommendName: "Top products"
           },
           query: {
             name: "Searches",
-            recommendName: "Trending queries"
+            recommendName: "Trending searches"
           },
           category: {
             name: "Categories",
-            recommendName: "Popular catego"
+            recommendName: "Popular categories"
           }
         }
       }
@@ -136,13 +150,13 @@ function LBInitAutocomplete() {
             }
           });
         }
-      /*   document.addEventListener("click", function (e) {
+        document.addEventListener("click", function (e) {
           let target = e.target.closest("a");
           if (target) {
             e.preventDefault();
           }
         });
-      }); */
+      });
       window.addEventListener("keydown", function (e) {
         if (e.key === "Escape") {
           // Tell the parent to close the modal
