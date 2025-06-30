@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luigi's Box search.js Demo</title>
+    <style>
+        /* Basic styling for the page layout and components */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            background-color: #f9fafb;
+            color: #1f2937;
+        }
+        .page-header {
+            background-color: #fff;
+            padding: 1rem 2rem;
+            border-bottom: 1px solid #e5e7eb;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: center;
+        }
+        .header-search-form input[type="search"] {
+            width: 100%;
+            max-width: 400px;
+            padding: 0.75rem;
+            font-size: 1rem;
+            border-radius: 8px;
+            border: 1px solid #d1d5db;
+        }
+        main {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: auto;
+        }
+        /* Styling for the search.js rendered UI */
+        #search-ui .search-container {
+            display: grid;
+            grid-template-columns: 280px 1fr; /* Sidebar for facets, main area for results */
+            gap: 2rem;
+        }
+        /* Styling for the product tiles */
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 1.5rem;
+        }
+        .product-tile {
+            background-color: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            transition: box-shadow 0.2s;
+            text-align: left;
+        }
+        .product-tile:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .product-tile img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background-color: #f3f4f6;
+        }
+        .product-tile .product-info {
+            padding: 1rem;
+        }
+        .product-tile .product-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin: 0 0 0.5rem;
+            color: #111827;
+        }
+        .product-tile .product-price {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: #374151;
+            margin: 0;
+        }
+        .product-tile .product-link {
+            display: block;
+            margin-top: 1rem;
+            text-align: center;
+            padding: 0.5rem;
+            background-color: #3b82f6;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+        }
+        /* Basic styling for facets (using the 'boo' theme classes) */
+        .lb-facet { margin-bottom: 1.5rem; }
+        .lb-facet .lb-facet__title { font-weight: 600; margin-bottom: 0.75rem; text-align: left;}
+        .lb-facet .lb-facet__list ul { margin: 0; padding: 0;}
+        .lb-facet .lb-facet__list li { list-style: none; margin-bottom: 0.5rem; text-align: left;}
+        .lb-facet .lb-facet__list label { display: flex; align-items: center; cursor: pointer; }
+        .lb-facet .lb-facet__list input { margin-right: 0.5rem; }
+        .no-results-container { text-align: center; }
+    </style>
+</head>
+<body>
+
+    <header class="page-header">
+        <!-- ** FIX: This form now correctly submits to the current page ** -->
+        <!-- The action attribute is empty, causing a page reload with new query parameters -->
+        <form action="" method="GET" class="header-search-form">
+            <input name="q" id="page-search-input" type="search" placeholder="Search our store (e.g., ukulele)...">
+        </form>
+    </header>
+
+    <main>
+        <!-- This is the container where search.js will render the entire UI -->
+        <div id="search-ui">
+            <!-- A loading indicator for better UX -->
+            <p style="text-align: center;">Loading search results...</p>
+        </div>
+    </main>
+
+    <!-- 
+      TEMPLATES
+      These must be defined in the HTML *before* the search.js script is loaded.
+    -->
+
+    <!-- Main template for the search UI layout -->
+    <script type="text/x-template" id="template-search">
+        <div class="search-container">
+            <div class="search-facets-column">
+                <facets></facets>
+            </div>
+            <div class="search-results-column">
+                <h2 v-if="query">Search results for: "{{ query }}" ({{ hitsCount }})</h2>
+                <div style="display: flex; justify-content: flex-end; margin-bottom: 1rem;">
+                    <sort></sort>
+                </div>
+                <results class="results-grid"></results>
+                <pagination></pagination>
+            </div>
+        </div>
+    </script>
+
+    <!-- Template for a single product result tile (for type='product') -->
+    <script type="text/x-template" id="template-result-product">
+        <div class="product-tile">
+            <img v-if="attributes.image_link" :src="attributes.image_link" alt="" onerror="this.style.display='none'">
+            <div class="product-info">
+                <h3 class="product-title" v-html="attributes.title"></h3>
+                <p class="product-price" v-if="attributes.price">{{ attributes.price }}</p>
+                <a :href="url" class="product-link">View Details</a>
+            </div>
+        </div>
+    </script>
+
+    <!-- Template for when no results are found -->
+    <script type="text/x-template" id="template-no-results">
+        <div class="no-results-container">
+            <h3>No results found for "{{ query }}"</h3>
+            <p>You might be interested in our top products:</p>
+            <top-items></top-items> <!-- This component shows popular items -->
+        </div>
+    </script>
+    
+    <!-- Load the search.js library -->
+    <script src="https://cdn.luigisbox.com/search.js"></script>
+
+    <!-- Initialize the library -->
+    <script>
+        // Get the search query from the URL parameter, e.g., from search.html?q=shirts
+        const urlParams = new URLSearchParams(window.location.search);
+        const initialQuery = urlParams.get('q');
+        
+        // ** FIX: Populate the search input with the current query from the URL **
+        // This ensures the input field is always in sync with the search results shown.
+        const searchInputOnPage = document.getElementById('page-search-input');
+        if(searchInputOnPage && initialQuery) {
+            searchInputOnPage.value = initialQuery;
+        }
+
+        // This is the main configuration object for search.js
+        Luigis.Search(
+            {
+                // --- Configuration ---
+                TrackerId: '179075-204259', // Using a demo Tracker ID
+                Theme: 'boo', // 'boo' is the recommended modern theme
+                Size: 12, // Number of results per page
+                Facets: ['brand', 'category', 'price_amount'],
+                Sorts: ['price_amount:asc', 'price_amount:desc'],
+                DefaultFilters: {
+                    type: 'product' 
+                },
+                TopItems: ['item:4'],
+                UrlParamName: {
+                    QUERY: 'q' // Tells the library to read the query from the 'q' URL parameter
+                }
+            },
+            // --- Selectors ---
+            '#page-search-input', // CSS selector for the search input box on this page
+            '#search-ui'          // CSS selector for the placeholder div where the UI will render
+        );
+        
+        // ** FIX: Removed the manual search trigger. **
+        // search.js automatically reads the 'q' parameter from the URL on page load 
+        // because we configured `UrlParamName: { QUERY: 'q' }`.
+    </script>
+</body>
+</html>
