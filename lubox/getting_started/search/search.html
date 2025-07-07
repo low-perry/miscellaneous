@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results</title>
+    
+    <!-- Google Fonts for a clean look -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* General Body Styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F9FAFB;
+            color: #1F2937;
+            margin: 0;
+        }
+
+        /* Container to center content */
+        .container {
+            width: 100%;
+            max-width: 1280px;
+            margin-left: auto;
+            margin-right: auto;
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: #FFFFFF;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            padding: 1rem 0;
+        }
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #111827;
+        }
+        header form {
+            width: 33.333333%;
+        }
+        header input[type="search"] {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 0.5rem 1rem;
+            border: 1px solid #D1D5DB;
+            border-radius: 0.5rem;
+            transition: box-shadow 0.2s, border-color 0.2s;
+        }
+        header input[type="search"]:focus {
+            outline: none;
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+        }
+
+        /* Main Content Styles */
+        main {
+            padding-top: 3rem;
+            padding-bottom: 3rem;
+            margin: 10px 10px;
+        }
+        
+        /* Style for the loading state to prevent page jump */
+        #search-ui:empty::before {
+            content: "Loading search...";
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            color: #9CA3AF;
+        }
+
+        /* Footer Styles */
+        footer {
+            background-color: #FFFFFF;
+            margin-top: 4rem;
+            padding: 2rem 0;
+            text-align: center;
+            color: #6B7280;
+            border-top: 1px solid #E5E7EB;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header>
+        <div class="container header-content">
+            <h1>My Awesome Shop</h1>
+            <form action="" method="GET">
+                <input 
+                  type="search" 
+                  name="q" 
+                  placeholder="Search for products..."
+                >
+            </form>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="container">
+        <div id="search-ui"></div>
+    </main>
+
+    <!-- Footer Section -->
+    <footer>
+        <div class="container">
+            &copy; 2025 My Awesome Shop. All rights reserved.
+        </div>
+    </footer>
+
+    <!-- STEP 1: Define the initialization function. This makes it globally available. -->
+    <script>
+      function initLuigisBoxSearch() {
+        // Enable Luigi's Box linter for debugging in the browser console.
+        Luigis.lint = true;
+
+        // Helper: Get search query from URL and put it in the search box for better UX
+        const urlParams = new URLSearchParams(window.location.search);
+        const query = urlParams.get('q');
+        const searchInput = document.querySelector('[name="q"]');
+        if (query && searchInput) {
+          searchInput.value = query;
+        }
+
+        // Initialize the Luigi's Box Search UI
+        Luigis.Search(
+          {
+            // --- Configuration Start ---
+            
+            TrackerId: '179075-204259', 
+            Locale: "en",
+            
+            Theme: 'boo',
+            
+            DefaultFilters: {
+              type: 'product'
+            },
+
+            Facets: ['brand', 'category', 'price_amount'],
+            
+            // --- Configuration End ---
+          },
+          
+          '[name="q"]',
+          '#search-ui'
+        );
+      }
+    </script>
+
+    <!-- 
+      STEP 2: Load the Search.js library asynchronously.
+      The `onload` attribute calls our initialization function once the script is ready.
+    -->
+    <script 
+      src="https://cdn.luigisbox.com/search.js" 
+      async 
+      onload="initLuigisBoxSearch()"
+    ></script>
+
+</body>
+</html>

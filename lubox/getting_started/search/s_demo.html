@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results</title>
+    
+    <!-- Google Fonts for a clean look -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* General Body Styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F9FAFB;
+            color: #1F2937;
+            margin: 0;
+        }
+
+        /* Container to center content */
+        .container {
+            width: 100%;
+            max-width: 1280px; /* Equivalent to Tailwind's container */
+            margin-left: auto;
+            margin-right: auto;
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: #FFFFFF;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        }
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+        }
+        header h1 {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 700;
+            color: #111827;
+        }
+        header form {
+            width: 33.333333%;
+        }
+        header input[type="search"] {
+            width: 100%;
+            padding: 0.5rem 1rem;
+            border: 1px solid #D1D5DB;
+            border-radius: 0.5rem; /* rounded-lg */
+            transition: box-shadow 0.2s, border-color 0.2s;
+        }
+        header input[type="search"]:focus {
+            outline: none;
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+        }
+
+        /* Main Content Styles */
+        main {
+            padding-top: 2rem;
+            padding-bottom: 2rem;
+        }
+        
+        /* Style for the loading state to prevent page jump */
+        #search-ui:empty::before {
+            content: "Loading search...";
+            min-height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            color: #9CA3AF;
+        }
+
+        /* Footer Styles */
+        footer {
+            background-color: #FFFFFF;
+            margin-top: 3rem;
+            padding: 1.5rem 0;
+            text-align: center;
+            color: #6B7280;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header>
+        <div class="container header-content">
+            <h1>My Awesome Shop</h1>
+            <!-- 
+              This is the search form. On other pages, its action would be "/search.html".
+              On this page, the action can be empty as Search.js handles updates.
+            -->
+            <form action="" method="GET">
+                <input 
+                  type="search" 
+                  name="q" 
+                  placeholder="Search for products..."
+                >
+            </form>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="container">
+        <!-- 
+          This is the main placeholder where the Search.js library will render 
+          the entire search interface (facets, results, pagination, etc.).
+          The :empty pseudo-class in the <style> tag will apply a loading state.
+        -->
+        <div id="search-ui"></div>
+    </main>
+
+    <!-- Footer Section -->
+    <footer>
+        <div class="container">
+            &copy; 2025 My Awesome Shop. All rights reserved.
+        </div>
+    </footer>
+
+    <!-- 
+      STEP 1: Define the initialization function.
+      This must come before the script that loads the library.
+    -->
+    <script>
+      function initLuigisBoxSearch() {
+        // This function initializes the Luigi's Box Search UI
+        Luigis.Search(
+          {
+            // --- Configuration Start ---
+            
+            // Replace with your actual Tracker ID from the Luigi's Box application
+            // This value MUST be a string.
+            TrackerId: '179075-204259', 
+            
+            // Use the 'boo' theme for a modern, responsive look out of the box
+            Theme: 'boo',
+            
+            // Tell Search.js to only search for products by default.
+            // This prevents other content types (like categories or articles) from appearing in the main results.
+            DefaultFilters: {
+              type: 'item'
+            },
+
+            // Define which filters (facets) to show the user.
+            // Search.js will automatically create the appropriate UI (checkboxes, sliders) for these.
+            Facets: ['brand', 'category', 'price_amount'],
+            
+            // --- Configuration End ---
+          },
+          
+          // This is the CSS selector for the search input field on this page.
+          // Search.js will listen to this input and also keep it in sync with the search state.
+          '[name="q"]',
+          
+          // This is the CSS selector for the placeholder element where the UI will be rendered.
+          '#search-ui'
+        );
+      }
+    </script>
+
+    <!-- 
+      STEP 2: Load the Search.js library asynchronously.
+      The `onload` attribute calls our initialization function once the script is ready.
+    -->
+    <script 
+      src="https://cdn.luigisbox.com/search.js" 
+      async 
+      onload="initLuigisBoxSearch()"
+    ></script>
