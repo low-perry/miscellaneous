@@ -1,0 +1,6 @@
+<div>
+    <h3 class="lb-results__heading" v-show="!$store.state.typeFacet" v-html="trans('search.mainResultsTitle', {hitsCount: ':hitsCount'}).replace('(:hitsCount)', '<span class=\'lb-search__hits\'>(' + hitsCount + ')</span>').replace(':hitsCount', '<span class=\'lb-search__hits\'>' + hitsCount + '</span>')"></h3>
+    <div class="lb-results">
+        <result :result="result" v-for="(result, i) in results" :key="i" :index="i"></result>
+    </div>
+</div>

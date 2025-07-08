@@ -1,0 +1,7 @@
+<div class="lb-aside-section">
+    <facet-date :data="facet" v-if="type === 'date'" :key="facetId + name" :is-collapsed="isCollapsed"></facet-date>
+    <facet-multichoice :data="facet" v-if="type === 'text'" :key="facetId + name" :is-collapsed="isCollapsed"></facet-multichoice>
+    <facet-numeric-range :data="facet" v-if="type === 'float'" :key="facetId + name" :is-collapsed="isCollapsed"></facet-numeric-range>
+    <facet-boolean :data="facet" v-if="type === 'boolean'" :key="facetId + name" :is-collapsed="isCollapsed"></facet-boolean>
+    <facet-hierarchical :data="facet" v-if="type === 'hierarchical'" :key="facetId + name" :is-collapsed="isCollapsed"></facet-hierarchical>
+</div>

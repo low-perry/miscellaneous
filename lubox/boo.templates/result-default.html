@@ -1,0 +1,63 @@
+<div class="lb-result lb-result--default">
+    <div class="lb-result__inner">
+        <a
+            :href="attributes.original_url"
+            class="lb-result__aside"
+            @click="ga && ga.sendGAClick('Result')"
+        >
+            <div class="lb-result__image-wrapper">
+                <img
+                    :src="attributes.image_link"
+                    class="lb-result__image"
+                >
+            </div>
+        </a>
+        <div class="lb-result__main">
+            <h2 class="lb-result__title">
+                <a
+                    :href="attributes.original_url"
+                    class="lb-result__title-link lb-search-text-color-primary-clickable"
+                    @click="ga && ga.sendGAClick('Result')"
+                >
+                    {{ attributes.title }}
+                </a>
+            </h2>
+            <p class="lb-result__description" v-html="attributes.description"></p>
+            <div class="lb-result__actions">
+                <div
+                    v-if="attributes.price_amount > 0 || attributes.price_old_amount > 0"
+                    class="lb-result__action-item lb-result__prices"
+                >
+                    <div
+                        v-if="attributes.price_old_amount > 0 && attributes.price_old_amount !== attributes.price_amount"
+                        class="lb-result__old-price"
+                    >
+                        {{ attributes.price_old_amount | price }}
+                    </div>
+                    <div
+                        v-if="attributes.price_amount > 0"
+                        class="lb-result__price"
+                    >
+                        {{ attributes.price_amount | price }}
+                    </div>
+                </div>
+
+                <div class="lb-result__action-buttons">
+                    <a
+                        :href="attributes.original_url"
+                        class="lb-btn lb-result__btn-buy lb-result__action-item lb-search-bg-color-primary-clickable"
+                        @click="ga && ga.sendGAClick('Result')"
+                    >
+                        {{ trans('resultDefault.actionButton')}}
+                    </a>
+                </div>
+            </div>
+            <div
+                v-if="attributes.availability === 0"
+                class="lb-result__availability lb-result__availability--0"
+            >
+                {{ trans('resultDefault.availability.0') }}
+            </div>
+        </div>
+    </div>
+</div>

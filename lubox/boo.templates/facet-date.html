@@ -1,0 +1,21 @@
+<div class="lb-facet lb-facet--date" :class="(isCollapsed ? 'lb-facet--collapsed' : '')">
+    <div class="lb-facet__header">
+        <div class="lb-facet__title">
+            {{ trans('facet.name.'.concat(this.label || name)) }}
+        </div>
+    </div>
+    {{ dates }}
+    <div>
+        {{ trans('facetDate.smallerThan') }}
+        <br>
+        <button @click="onDateChange({dates, options: {smallerThan: true}})">
+            {{ trans('facetDate.get') }}
+        </button>
+    </div>
+    {{ trans('facetDate.exactDay') }}:
+    <lb-datepicker id="datepicker" :dates="dates" @change="onDateChange"></lb-datepicker>
+    {{ trans('facetDate.biggerThan') }}:
+    <lb-datepicker id="datepicker" :dates="dates" @change="onDateChange" :options="{biggerThan: true}"></lb-datepicker>
+    {{ trans('facetDate.range') }}:
+    <lb-datepicker id="datepicker-range" :dates="dates" :options="{mode: 'range'}" @change="onDateChange"></lb-datepicker>
+</div>

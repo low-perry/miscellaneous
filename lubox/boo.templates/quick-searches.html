@@ -1,0 +1,25 @@
+<div class="lb-quick-searches" v-if="getQuickSearchTypes.length && totalHits > 0">
+    <div class="lb-quick-searches__headings">
+        <h3 class="lb-quick-searches__heading"
+            :class="{ 'lb-quick-searches__heading--active' : visibleType === type }"
+            @click="setVisibleType(type)"
+            v-show="hitsByType[type] > 0"
+            v-for="type in getQuickSearchTypes"
+            :key="type"
+            :type="type"
+        >
+            <template v-if="!!topItems">
+                <strong>{{ trans('quickSearch.topItemTitle.'.concat(type)) }}</strong> ({{ hitsByType[type] }})
+            </template>
+            <template v-else>
+                <strong>{{ trans('quickSearch.title.'.concat(type)) }}</strong> ({{ hitsByType[type] }})
+            </template>
+        </h3>
+    </div>
+    <quick-search
+        v-for="quick in visibleTypes"
+        :key="quick"
+        :type="quick"
+        :top-items="topItems"
+    ></quick-search>
+</div>

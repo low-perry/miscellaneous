@@ -1,0 +1,126 @@
+<div
+    class="lb-search"
+    :class="{
+        'is-loading': isLoading,
+        'is-initial-loading': isInitialLoading,
+        'is-no-results': isNoResults
+     }"
+>
+    <banner position="header"></banner>
+    <div class="lb-search__body">
+        <div id="results-scroll-to"></div>
+        <div class="lb-container lb-search__container">
+            <aside class="lb-search__aside lb-js-mobile-filter">
+                <h2 class="lb-aside-heading">{{ trans('search.filters') }}</h2>
+                <div class="lb-aside-heading__hits-count lb-d-t-none">{{ trans('facets.hitsCount', { hitsCount: hitsCount }) }}</div>
+                <div class="lb-aside-border">
+                    <div
+                        class="lb-search__close-filter lb-js-mobile-filter-close"
+                        :title="trans('facets.closeFilter')"
+                    ></div>
+                    <!-- <div class="lb-d-t-none">
+                        <div class="lb-aside-section">
+                            <sort></sort>
+                        </div>
+                    </div> -->
+                    <div class="lb-d-none lb-d-t-block">
+                        <active-filters></active-filters>
+                    </div>
+                    <facets></facets>
+                    <div class="lb-d-t-none">
+                        <active-filters></active-filters>
+                    </div>
+                    <div class="lb-facets__mobile-actions">
+                        <span
+                            class="lb-btn lb-search-bg-color-primary-clickable lb-js-mobile-filter-close"
+                        >
+                            {{ trans('facets.showResults', {hitsCount: hitsCount}) }}
+                        </span>
+                    </div>
+                    <div class="lb-banner">
+                        <banner position="panel"></banner>
+                    </div>
+                </div>
+            </aside>
+            <main class="lb-search__main">
+                <error></error>
+                <template v-if="!isInitialError">
+                    <h1 class="lb-search__headline">
+                        <template v-if="!query">
+                        <span class="lb-search__title">
+                            {{ trans('search.titleShort') }}
+                        </span>
+                        </template>
+                        <template v-else>
+                        <span
+                            class="lb-search__title"
+                            v-html="trans('search.title', { query: ':query', hitsCount: ':hitsCount' })
+                                .replace(':query', '<strong class=\'lb-search__query lb-search-text-color-primary\'>' + query + '</strong>')
+                                .replace('(:hitsCount)', '<span class=\'lb-search__hits\'>(' + hitsCountWithQuicksearch + ')</span>')
+                                .replace(':hitsCount', '<span class=\'lb-search__hits\'>' + hitsCountWithQuicksearch + '</span>')
+                            "
+                        >
+                        </span>
+                        </template>
+                    </h1>
+
+                    <div
+                        v-if="correctedQuery"
+                        v-html="trans('search.correctedQuery', { correctedQuery: correctedQuery })"
+                        class="lb-search__corrected-query"
+                    ></div>
+
+                    <div
+                        v-if="isAppliedQueryUnderstanding"
+                        class="lb-query-understanding"
+                    >
+                        <div class="lb-query-understanding__title">
+                            {{ trans('search.queryUnderstanding.title') }}:
+                        </div>
+                        <div class="lb-query-understanding__list">
+                        <span
+                            v-for="filter in recognizedFilters"
+                            class="lb-query-understanding__item lb-search-bg-color-secondary"
+                        >
+                            {{ trans('facet.name.'.concat(filter.key)) }}: {{filter.value}}
+                        </span>
+                        </div>
+                        <a
+                            href
+                            class="lb-query-understanding__cancel lb-search-text-color-primary-clickable"
+                            @click.prevent="cancelQueryUnderstanding"
+                        >
+                            {{ trans('search.queryUnderstanding.cancel') }}
+                        </a>
+                    </div>
+                    <quick-searches></quick-searches>
+                    <div class="lb-search__button-and-sorting">
+                        <div
+                            class="lb-d-t-none lb-search__button-and-sorting__button"
+                            :class="{ 'lb-d-none': !(isFacets || isSorts || isActiveFilters) }"
+                        >
+                            <div
+                                class="lb-search__mobile-filter lb-search-bg-color-primary-clickable lb-js-mobile-filter-toggle">
+                                {{ trans('search.filter') }}
+                            </div>
+                        </div>
+                        <div class="lb-search__button-and-sorting__sorting">
+                            <sort></sort>
+                        </div>
+                    </div>
+                    <facet-type></facet-type>
+                    <results></results>
+                    <additional-results class="lb-additional-results">
+                        <h2 class="lb-additional-results__title">
+                            {{ trans('additionalResults.title') }}
+                        </h2>
+                    </additional-results>
+                    <pagination></pagination>
+                    <!-- <related-searches></related-searches> -->
+                </template>
+            </main>
+        </div>
+    </div>
+
+    <banner position="footer"></banner>
+</div>

@@ -1,0 +1,9 @@
+<span
+    role="button"
+    class="lb-voice-search-icon"
+    :class="{'lb-voice-search-icon--active': voiceSearchPopupVisible, 'lb-voice-search-icon--disabled': !voiceSearchMicAllowed}" 
+    :title="voiceSearchMicAllowed ? trans('voiceSearch.iconTitle') : trans('voiceSearch.disablediconTitle')"
+    @click="showVoiceSearchPopup"
+>
+    <span class="lb-voice-search-icon__icon"></span>
+</span>

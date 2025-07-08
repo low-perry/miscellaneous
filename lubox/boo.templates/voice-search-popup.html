@@ -1,0 +1,120 @@
+<transition name="lb-voice-search-fade-transition">
+    <section class="lb-voice-search-popup" v-show="voiceSearchPopupVisible && flacReady">
+        <div class="lb-voice-search-popup__backdrop">
+            <div class="lb-voice-search-popup__content">                
+                <transition :name="voiceSearchPopupVisible ? 'lb-voice-search-fade-transition' : ''">
+                    <div
+                        v-show="isListening"
+                        class="lb-voice-search-popup__is-listening"
+                    >
+                        <span
+                            role="button"
+                            class="lb-voice-search-popup__close"
+                            :title="trans('voiceSearch.close')"
+                            @click="hideVoiceSearchPopup"
+                        ></span>
+                        <div class="lb-voice-search-popup__text-big">
+                            {{ trans('voiceSearch.listening') }}
+                        </div>
+                        <div class="lb-voice-search-popup__timer">
+                            <canvas ref="canvas"width="320" height="44"></canvas>
+                            <span class="lb-voice-search-popup__button-bg"></span>
+                            <svg viewBox="0 0 44 44">
+                                <circle r="21" cx="22" cy="22"
+                                    :style="{transitionDuration: ''.concat(listeningTime).concat('ms')}"
+                                    :class="{'lb-voice-search-popup__listening-progress--transition': progressTransition }"
+                                ></circle>
+                            </svg>
+                            <transition name="lb-voice-search-fade-transition">
+                                <span
+                                    v-show="silenceFlag"
+                                    class="lb-voice-search-popup__recording"
+                                >
+                                    <span class="lb-voice-search-popup__recording-microphone"></span>
+                                </span>
+                            </transition>
+                            <transition name="lb-voice-search-fade-transition">
+                                <span
+                                    v-show="!silenceFlag"
+                                    role="button"
+                                    class="lb-voice-search-popup__recording lb-voice-search-popup__recording--stop"
+                                    :title="trans('voiceSearch.stop')"
+                                    @click="stopListening"
+                                >
+                                    <span class="lb-voice-search-popup__recording-stop"></span>
+                                </span>
+                            </transition>
+                        </div>
+                        <div class="lb-voice-search-popup__text-small">
+                            {{ trans('voiceSearch.listeningInfo') }}
+                        </div>
+                    </div>
+                </transition>
+                <transition name="lb-voice-search-fade-transition">
+                    <div
+                        v-if="allowMicMessage"
+                        class="lb-voice-search-popup__allow-mic"
+                        key="1"
+                    >
+                        <div class="lb-voice-search-popup__text-big">
+                            {{ trans('voiceSearch.heading') }}
+                        </div>
+                        <div class="lb-voice-search-popup__text-medium">
+                            {{ trans('voiceSearch.allowMic') }}
+                        </div>
+                    </div>
+                    
+                    
+
+                    <div
+                        v-else-if="isRecognizing"
+                        class="lb-voice-search-popup__is-recognizing"
+                        key="2"
+                    >
+                        <div class="lb-voice-search-popup__text-big">
+                            {{ trans('voiceSearch.recognizing') }}
+                        </div>
+                        <div class="lb-voice-search-popup__text-medium">
+                            {{ trans('voiceSearch.recognizingInfo') }}
+                        </div>
+                        <div class="lb-voice-search-popup__recognizing-spinner">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                    <div
+                        v-else-if="recognitionError"
+                        class="lb-voice-search-popup__recognition-error"
+                        key="3"
+                    >
+                        <span
+                        role="button"
+                        class="lb-voice-search-popup__close"
+                        :title="trans('voiceSearch.close')"
+                        @click="hideVoiceSearchPopup"
+                        ></span>
+                        <div class="lb-voice-search-popup__text-big">
+                            {{ trans('voiceSearch.recognitionError') }}
+                        </div>
+                        <div
+                            v-html="trans('voiceSearch.recognitionErrorInfo')"
+                            class="lb-voice-search-popup__text-medium"
+                        >
+
+                        </div>
+                        <div>
+                            <span 
+                                role="button"
+                                class="lb-voice-search-popup__button-tryagain"
+                                @click="startListening"
+                            >
+                                {{ trans('voiceSearch.tryAgain') }}
+                            </span>
+                        </div>
+                    </div>
+                </transition>
+            </div>
+        </div>
+    </section>
+</transition>

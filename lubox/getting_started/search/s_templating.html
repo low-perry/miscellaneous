@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results</title>
+    
+    <!-- Google Fonts for a clean look -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* General Body Styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F9FAFB;
+            color: #1F2937;
+            margin: 0;
+        }
+
+        /* Container to center content */
+        .container {
+            width: 100%;
+            max-width: 1280px;
+            margin-left: auto;
+            margin-right: auto;
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: #FFFFFF;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            padding: 1rem 0;
+        }
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #111827;
+        }
+        header form {
+            width: 33.333333%;
+        }
+        header input[type="search"] {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 0.5rem 1rem;
+            border: 1px solid #D1D5DB;
+            border-radius: 0.5rem;
+            transition: box-shadow 0.2s, border-color 0.2s;
+        }
+        header input[type="search"]:focus {
+            outline: none;
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+        }
+
+        /* Main Content Styles */
+        main {
+            padding-top: 3rem;
+            padding-bottom: 3rem;
+        }
+        
+        /* Footer Styles */
+        footer {
+            background-color: #FFFFFF;
+            margin-top: 4rem;
+            padding: 2rem 0;
+            text-align: center;
+            color: #6B7280;
+            border-top: 1px solid #E5E7EB;
+        }
+
+        /* --- Custom Template Styles Start --- */
+        .search-layout {
+            display: flex;
+            gap: 2rem;
+            position: relative; /* Needed for the loading overlay */
+        }
+        .search-main-content {
+            flex: 3;
+        }
+        .search-sidebar {
+            flex: 1;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .product-card {
+            border: 1px solid #E5E7EB;
+            border-radius: 0.5rem;
+            background-color: #fff;
+            overflow: hidden;
+            transition: box-shadow 0.2s;
+        }
+        .product-card:hover {
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1);
+        }
+        .product-card a {
+            text-decoration: none;
+            color: inherit;
+        }
+        .product-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background-color: #f3f4f6;
+        }
+        .product-info {
+            padding: 1rem;
+        }
+        .product-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin: 0 0 0.25rem 0;
+            /* Allow em tags for highlighting */
+        }
+        .product-title em {
+            font-style: normal;
+            background-color: #FEF3C7;
+        }
+        .product-brand {
+            font-size: 0.875rem;
+            color: #6B7280;
+            margin: 0 0 0.5rem 0;
+        }
+        .product-price {
+            font-size: 1.125rem;
+            font-weight: 700;
+        }
+        
+        /* --- Loading Spinner Overlay Styles --- */
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(0, 0, 0, 0.1);
+            border-top-color: #111827;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        /* --- Custom Pagination Styles --- */
+        .lb-pagination {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        .lb-pagination__pager {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .lb-pagination_page {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 36px;
+            height: 36px;
+            padding: 0 0.5rem;
+            border: 1px solid #D1D5DB;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: background-color 0.2s, color 0.2s;
+        }
+        .lb-pagination_page:hover {
+            background-color: #F3F4F6;
+        }
+        .lb-pagination_page--active {
+            background-color: #3B82F6;
+            color: white;
+            border-color: #3B82F6;
+            font-weight: 600;
+        }
+        .lb-pagination_page--disabled {
+            color: #9CA3AF;
+            cursor: not-allowed;
+            background-color: #F9FAFB;
+        }
+        .lb-pagination_page--hidden {
+            border: none;
+            cursor: default;
+        }
+        .lb-pagination_page--hidden:hover {
+            background-color: transparent;
+        }
+        .lb-pagination__info {
+            color: #6B7280;
+            font-size: 0.875rem;
+        }
+        /* --- Custom Template Styles End --- */
+
+    </style>
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header>
+        <div class="container header-content">
+            <h1>My Awesome Shop</h1>
+            <form action="" method="GET">
+                <input 
+                  type="search" 
+                  name="q" 
+                  placeholder="Search for products..."
+                >
+            </form>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="container">
+        <div id="search-ui">
+            <!-- The Search.js library will render the 'template-search' here -->
+        </div>
+    </main>
+
+    <!-- Footer Section -->
+    <footer>
+        <div class="container">
+            &copy; 2025 My Awesome Shop. All rights reserved.
+        </div>
+    </footer>
+
+    <!-- 
+      STEP 1: Define CUSTOM TEMPLATES.
+      These must come before the Search.js library is loaded.
+    -->
+    
+    <!-- Custom Template for the Main Search Layout -->
+    <script type="text/x-template" id="template-search">
+      <div class="search-layout">
+        <loading>
+            <div class="loading-overlay">
+                <div class="spinner"></div>
+            </div>
+        </loading>
+        <!-- Sidebar column for facets -->
+        <div class="search-sidebar">
+          <facets></facets>
+        </div>
+        <!-- Main content column -->
+        <div class="search-main-content">
+          <h1>Search results for "{{ query }}"</h1>
+          <sort></sort>
+          <!-- The ResultsRenderer will populate this component -->
+          <results class="results-grid"></results>
+          <!-- The <pagination> component will now use our custom template -->
+          <pagination></pagination>
+        </div>
+      </div>
+    </script>
+
+    <!-- UPDATED: Custom Template for Numbered Pagination -->
+    <script type="text/x-template" id="template-pagination">
+        <div class="lb-pagination">
+            <div class="lb-pagination__pager" v-if="paginationData.totalPages > 1">
+                <div class="lb-pagination_page lb-pagination_page--button lb-pagination_page--button-first" :class="{'lb-pagination_page--disabled' : actualPage === 1}" @click="goToFirstPage">
+                    &lt;&lt;
+                </div>
+                <div class="lb-pagination_page lb-pagination_page--button lb-pagination_page--button-prev" :class="{'lb-pagination_page--disabled' : actualPage === 1}" @click="goToPrevPage">
+                    &lt;
+                </div>
+
+                <div v-if="paginationData.prevPagesHidden" class="page-item">
+                    <span :data-page="1" class="lb-pagination_page" @click="goToPage(1)"> 1</span>
+                </div>
+
+                <div v-if="paginationData.prevPagesHidden && paginationData.startPage !== 2" class="lb-pagination_page lb-pagination_page--hidden lb-pagination_page--hidden-prev">...</div>
+                
+                <div v-for="(pagerPage, ind) in paginationData.pages" :key="ind+'-'+pagerPage">
+                    <span :data-page="pagerPage" v-if="actualPage === pagerPage" class="lb-pagination_page lb-pagination_page--active"> <strong>{{pagerPage}}</strong> </span>
+                    <span :data-page="pagerPage" v-else class="lb-pagination_page" @click="goToPage(pagerPage)"> {{pagerPage}}</span>
+                </div>
+
+                <div v-if="paginationData.nextPagesHidden && paginationData.endPage !== paginationData.totalPages - 1" class="lb-pagination_page lb-pagination_page--hidden lb-pagination_page--hidden-next">...</div>
+
+                <div v-if="paginationData.nextPagesHidden" class="page-item">
+                    <span :data-page="paginationData.totalPages" class="lb-pagination_page" @click="goToPage(paginationData.totalPages)"> {{paginationData.totalPages}}</span>
+                </div>
+                
+                <div class="lb-pagination_page lb-pagination_page--button lb-pagination_page--button-next" :class="{'lb-pagination_page--disabled' : actualPage === totalPages}" @click="goToNextPage">
+                    &gt;
+                </div>
+                <div class="lb-pagination_page lb-pagination_page--button lb-pagination_page--button-last" :class="{'lb-pagination_page--disabled' : actualPage === totalPages}" @click="goToLastPage">
+                    &gt;&gt;
+                </div>
+            </div>
+            <div class="lb-pagination__info">
+                {{ trans('pagination.info', { first: firstResult, last: lastResult, total: hitsCount }) }}
+            </div>
+        </div>
+    </script>
+
+
+    <!-- 
+      STEP 2: Define the initialization function.
+    -->
+    <script>
+      function initLuigisBoxSearch() {
+
+        // Helper: Get search query from URL and put it in the search box for better UX
+        const urlParams = new URLSearchParams(window.location.search);
+        const query = urlParams.get('q');
+        const searchInput = document.querySelector('[name="q"]');
+        if (query && searchInput) {
+          searchInput.value = query;
+        }
+
+        // Initialize the Luigi's Box Search UI
+        Luigis.Search(
+          {
+            // --- Configuration Start ---
+            
+            TrackerId: '179075-204259', 
+            Locale: "en",
+            Theme: 'boo',
+            ISSPA: true,
+            DefaultFilters: {
+              type: 'product'
+            },
+            Facets: ['brand', 'category', 'price_amount'],
+
+            // Custom function to render the results grid manually.
+            ResultsRenderer: function(results, element, next) {
+                return new Promise(function(resolve) {
+                    // If it's a new search (not pagination), clear the container.
+                    if (!next) {
+                        element.innerHTML = '';
+                    }
+
+                    // Create an HTML string for all the new results
+                    const resultsHtml = results.map(result => {
+                        // Provide fallbacks for potentially missing data
+                        const imageUrl = result.attributes.image_link || 'https://placehold.co/400x400/eee/ccc?text=No+Image';
+                        const title = result.attributes.title || 'No Title Available';
+                        const brand = result.attributes.brand || '';
+                        // Manually format the price
+                        const price = result.attributes.price_amount ? `${result.attributes.price_amount} EUR` : '';
+
+                        return `
+                            <div class="product-card">
+                                <a href="${result.url}" target="_blank">
+                                    <img src="${imageUrl}" alt="" class="product-image" onerror="this.onerror=null;this.src='https://placehold.co/400x400/eee/ccc?text=No+Image';">
+                                    <div class="product-info">
+                                        <h3 class="product-title">${title}</h3>
+                                        <p class="product-brand">${brand}</p>
+                                        <div class="product-price">${price}</div>
+                                    </div>
+                                </a>
+                            </div>
+                        `;
+                    }).join('');
+
+                    // Append the new HTML to the results container
+                    element.insertAdjacentHTML('beforeend', resultsHtml);
+                    
+                    // Tell Search.js that we're done rendering
+                    resolve(null);
+                });
+            }
+            
+            // --- Configuration End ---
+          },
+          
+          '[name="q"]',
+          '#search-ui'
+        );
+      }
+    </script>
+
+    <!-- 
+      STEP 3: Load the Search.js library asynchronously.
+      The `onload` attribute calls our initialization function once the script is ready.
+    -->
+    <script 
+      src="https://cdn.luigisbox.com/search.js" 
+      async 
+      onload="initLuigisBoxSearch()"
+    ></script>
+
+</body>
+</html>

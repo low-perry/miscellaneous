@@ -1,0 +1,20 @@
+<div class="lb-facet lb-facet--boolean" :class="(isCollapsed ? 'lb-facet--collapsed' : '')">
+    <div class="lb-checkbox lb-checkbox--no-color">
+        <label class="lb-facet__label">
+            <input v-model="value" type="checkbox" class="lb-checkbox__input">
+            <span
+                class="lb-checkbox__check"
+                :class="{
+                    'lb-search-bg-color-primary': value
+                }"
+            ></span>
+            <span
+                class="lb-checkbox__element"
+            ></span>
+            <span class="lb-checkbox__text">
+                {{ trans('facet.name.'.concat(this.label || name)) }}
+                ({{ hits_count }})
+            </span>
+        </label>
+    </div>
+</div>

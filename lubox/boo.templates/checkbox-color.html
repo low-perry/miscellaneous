@@ -1,0 +1,48 @@
+<div
+    class="lb-checkbox"
+    :class="{
+        'lb-checkbox--color': hasColor(data),
+        'lb-checkbox--color-white': hasWhiteColor(data),
+        'lb-checkbox--no-color': !hasColor(data),
+    }"
+>
+    <label class="lb-facet__label">
+        <input v-model="data.used" type="checkbox" class="lb-checkbox__input">
+        <template
+            v-if="hasColor(data)"
+        >
+            <span
+                class="lb-checkbox__check"
+                :class="{
+                    'lb-search-bg-color-primary': data.used
+                }"
+            ></span>
+            <div
+                class="lb-checkbox__element"
+            >
+                <div
+                    v-for="color in colors(data)"
+                    class="lb-checkbox__color"
+                    :style="{ backgroundColor: color }"
+                ></div>
+            </div>
+        </template>
+        <template v-else>
+            <span
+                class="lb-checkbox__check"
+                :class="{
+                    'lb-search-bg-color-primary': data.used
+                }"
+            ></span>
+            <span class="lb-checkbox__element"></span>
+        </template>
+        <span
+            class="lb-checkbox__text lb-checkbox__text--translated"
+            v-if="$parent.name && $t('facets.values.' + $parent.name + '.' + data.value) !== ('facets.values.' + $parent.name + '.' + data.value)">
+            {{ $t('facets.values.' + $parent.name + '.' + data.value) }} ({{ data.hits_count }})
+        </span>
+        <span v-else class="lb-checkbox__text lb-checkbox__text--original">
+            {{ data.value }} ({{ data.hits_count }})
+        </span>
+    </label>
+</div>

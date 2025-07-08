@@ -1,0 +1,50 @@
+<div
+    class="lb-facet lb-facet--multichoice"
+    :class="(isCollapsed ? 'lb-facet--collapsed' : '') + ' lb-facet--'.concat(this.label || name)"
+>
+    <div class="lb-facet__header">
+        <div class="lb-facet__title" @click="$parent.toggleCollapsed">
+            {{ trans('facet.name.'.concat(this.label || name)) }} <span>({{values.length}})</span>
+        </div>
+    </div>
+    <div v-if="useSearch" class="lb-facet__search">
+        <input :value="search" @input="function(e){search = e.target.value}" :placeholder="trans('facet.multichoice.search.placeholder', { facet: name, facetTranslated: trans('facet.name.'.concat(this.label || name)).toLowerCase() })" />
+        <div class="lb-facet__search-clear" @click="clearSearch" v-if="search !== ''"></div>
+    </div>
+    <div class="lb-facet__list">
+        <div
+            :is="isFacetColor ? 'checkbox-color' : 'checkbox'"
+            v-for="val in visibleValues"
+            :data="val"
+            :key="val.value"
+        ></div>
+        <template v-if="hiddenValues.length && (!useSearch || (useSearch && search === ''))">
+            <div
+                class="lb-facet__hidden-list"
+                :class="{ 'is-visible': isToggleMore }"
+            >
+                <div
+                    :is="isFacetColor ? 'checkbox-color' : 'checkbox'"
+                    v-for="val in hiddenValues"
+                    :data="val"
+                    :key="val.value"
+                ></div>
+            </div>
+            <a
+                href
+                class="lb-facet__more"
+                @click.prevent="toggleMore"
+            >
+                <template v-if="isToggleMore">
+                    {{ trans('facet.multichoice.showLess', { count: hiddenValues.length }) }}
+                </template>
+                <template v-else>
+                    {{ trans('facet.multichoice.showMore', { count: hiddenValues.length }) }}
+                </template>
+            </a>
+        </template>
+    </div>
+    <div class="lb-facet__search-empty" v-if="noValuesFound">
+        {{ trans('facet.multichoice.search.nothingFound', { facet: name, facetTranslated: trans('facet.name.'.concat(this.label || name)).toLowerCase(), search:search }) }}
+    </div>
+</div>

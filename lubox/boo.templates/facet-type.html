@@ -1,0 +1,12 @@
+<div v-if="facet.values.length" class="lb-facet-type__tabs">
+    <div
+        v-for="type in facet.values"
+        :key="type.value"
+        class="lb-facet-type__tab"
+        :class="{'lb-facet-type__tab--active' : type.used}"
+        @click="setFilter(type)"
+    >
+        {{ $t('facets.values.type.' + type.value) !== ('facets.values.type.' + type.value) ? $t('facets.values.type.' + type.value) : type.value }}
+        ({{ type.hits_count }})
+    </div>
+</div>

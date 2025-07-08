@@ -1,0 +1,111 @@
+<div class="lb-facet lb-facet--range" :class="(isCollapsed ? 'lb-facet--collapsed' : '')" v-if="name.match(/price/)">
+    <div class="lb-facet__header">
+        <div class="lb-facet__title" @click="$parent.toggleCollapsed">
+            {{ trans('facet.name.'.concat(this.label || name)) }}
+        </div>
+    </div>
+    <div
+        v-if="changed"
+        class="lb-facet__changed"
+    >
+        {{ trans('facetNumericRange.changed') }}
+    </div>
+    <div class="lb-facet__range">
+        {{ trans('facetNumericRange.from') }} {{ bucketMinValue | price }}
+        -
+        {{ trans('facetNumericRange.to') }} {{ bucketMaxValue | price }}
+    </div>
+    <template v-if="showHistogram">
+        <div class="lb-pricefacet-wrap">
+            <div class="lb-histogram">
+                <div class="lb-histogram__from">
+                    {{ min | price }}
+                </div>
+                <div
+                    class="lb-histogram__cell"
+                    :title="trans('facetNumericRange.histogramBucketTitle', {
+                        min: val.value.split('|')[0],
+                        max: val.value.split('|')[1],
+                        value: val.value,
+                        count: val.hits_count,
+                    })"
+                    :class="{
+                        'is-disabled': !isFacetInRange(val.value, value),
+                        'lb-search-bg-color-primary': isFacetInRange(val.value, value),
+                    }"
+                    v-for="val in values"
+                    :style="{ height: 'calc('.concat(val.normalized_hits_count * ratio).concat('% + 3px') }"
+                ></div>
+                <div class="lb-histogram__to">
+                    {{ max | price }}
+                </div>
+            </div>
+            <vue-slider
+                :min="bucketMin"
+                :max="bucketMax"
+                :height="3"
+                :tooltip="false"
+                :dot-size="20"
+                :lazy="true"
+                v-model="bucketValue"
+                @callback="bucketCallback"
+            ></vue-slider>
+        </div>
+    </template>
+</div>
+
+<div class="lb-facet lb-facet--range" :class="(isCollapsed ? 'lb-facet--collapsed' : '')" v-else>
+    <div class="lb-facet__header">
+        <div class="lb-facet__title" @click="$parent.toggleCollapsed">
+            {{ trans('facet.name.'.concat(this.label || name)) }}
+        </div>
+    </div>
+    <div
+        v-if="changed"
+        class="lb-facet__changed"
+    >
+        {{ trans('facetNumericRange.changed') }}
+    </div>
+    <div class="lb-facet__range">
+        {{ trans('facetNumericRange.from') }} {{ bucketMinValue }}
+        -
+        {{ trans('facetNumericRange.to') }} {{ bucketMaxValue }}
+    </div>
+    <template v-if="showHistogram">
+        <div class="lb-pricefacet-wrap">
+            <div class="lb-histogram">
+                <div class="lb-histogram__from">
+                    {{ min }}
+                </div>
+                <div
+                    class="lb-histogram__cell"
+                    :title="trans('facetNumericRange.histogramBucketTitle', {
+                        min: val.value.split('|')[0],
+                        max: val.value.split('|')[1],
+                        value: val.value,
+                        count: val.hits_count,
+                    })"
+                    :class="{
+                        'is-disabled': !isFacetInRange(val.value, value),
+                        'lb-search-bg-color-primary': isFacetInRange(val.value, value),
+                    }"
+                    v-for="val in values"
+                    :style="{ height: 'calc('.concat(val.normalized_hits_count * ratio).concat('% + 3px') }"
+                ></div>
+                <div class="lb-histogram__to">
+                    {{ max }}
+                </div>
+            </div>
+            <vue-slider
+                :min="bucketMin"
+                :max="bucketMax"
+                :height="3"
+                :tooltip="false"
+                :dot-size="20"
+                :lazy="true"
+                v-model="bucketValue"
+                @callback="bucketCallback"
+            ></vue-slider>
+        </div>
+    </template>
+</div>

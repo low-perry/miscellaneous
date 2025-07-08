@@ -1,0 +1,17 @@
+<div class="lb-aside-section" v-if="activeFilters.length > 0">
+    <div class="lb-active-filters">
+        <div class="lb-facet__header">
+            <div class="lb-facet__title lb-d-t-none">
+                {{ trans('activeFilters.title') }}
+            </div>
+            <a
+                href
+                class="lb-facet__cancel"
+                @click.prevent="cancelAllFilters"
+            >
+                {{ trans('activeFilters.cancelAllFilters') }}
+            </a>
+        </div>
+        <active-filter :filter="filter" v-for="(filter, i) in activeFilters" :key="i"></active-filter>
+    </div>
+</div>

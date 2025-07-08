@@ -1,0 +1,8 @@
+<div class="lb-facets">
+    <facet
+        v-for="facet in facets"
+        :key="facet.name"
+        :facet="facet"
+        v-if="facet.values.length > 0"
+    ></facet>
+</div>

@@ -1,0 +1,10 @@
+<div
+    v-if="isError && !isRetryError"
+    class="lb-error"
+    :class="'lb-error--'.concat(error)"
+>
+    <div class="lb-error__title">
+        {{ trans('error.title') }}
+    </div>
+    <error-diagnostics></error-diagnostics>
+</div>

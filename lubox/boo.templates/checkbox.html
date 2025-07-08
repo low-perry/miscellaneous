@@ -1,0 +1,22 @@
+<div class="lb-checkbox lb-checkbox--no-color">
+    <label class="lb-facet__label">
+        <input v-model="computedUsed" type="checkbox" class="lb-checkbox__input" @input="emitInput">
+        <span
+            class="lb-checkbox__check"
+            :class="{
+                'lb-search-bg-color-primary': computedUsed
+            }"
+        ></span>
+        <span
+            class="lb-checkbox__element"
+        ></span>
+         <span
+            class="lb-checkbox__text lb-checkbox__text--translated"
+            v-if="$parent.name && $t('facets.values.' + $parent.name + '.' + data.value) !== ('facets.values.' + $parent.name + '.' + data.value)">
+            {{ $t('facets.values.' + $parent.name + '.' + data.value) }} ({{ data.hits_count }})
+        </span>
+        <span v-else class="lb-checkbox__text lb-checkbox__text--original">
+            {{ data.value }} ({{ data.hits_count }})
+        </span>
+    </label>
+</div>

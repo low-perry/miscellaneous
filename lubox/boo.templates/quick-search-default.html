@@ -1,0 +1,39 @@
+<div
+    v-if="items.length > 0"
+    class="lb-quick-search-default"
+    :class="'lb-quick-search-default--'.concat(type)"
+>
+    <div class="lb-quick-search-default__heading">
+        {{ trans('quickSearch.title.'.concat(type)) }}
+    </div>
+    <div class="lb-quick-search-default__list">
+        <a
+            :href="item.url"
+            v-for="item in items"
+            class="lb-quick-search-default__item lb-search-text-color-primary-clickable"
+            :class="hasImages ? 'is-image' : ''"
+            @click="ga && ga.sendGAClick('QuickSearch-'.concat(type))"
+        >
+            <div
+                v-if="hasImages"
+                class="lb-quick-search-default__item-image-wrapper"
+            >
+                <img
+                    v-if="item.attributes.image_link"
+                    :src="item.attributes.image_link"
+                    :title="item.attributes.title"
+                    class="lb-quick-search-default__item-image"
+                >
+                <div
+                    v-if="item.attributes.image_link"
+                    :style="{backgroundImage: 'url(\''+item.attributes.image_link+'\')'}"
+                    class="lb-quick-search-default__item-image-bg"
+                ></div>
+            </div>
+
+            <div class="lb-quick-search-default__item-title">
+                {{ item.attributes.title }}
+            </div>
+        </a>
+    </div>
+</div>

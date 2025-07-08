@@ -1,0 +1,46 @@
+<div class="lb-pagination">
+    
+    <div class="lb-pagination__pager" v-if="paginationData.totalPages > 1">
+        <div class="lb-pagination_page lb-pagination_page--button lb-pagination_page--button-first" :class="{'lb-pagination_page--disabled' : actualPage === 1}" @click="goToFirstPage">
+            &lt;&lt;
+        </div>
+        <div class="lb-pagination_page lb-pagination_page--button lb-pagination_page--button-prev" :class="{'lb-pagination_page--disabled' : actualPage === 1}" @click="goToPrevPage">
+            &lt;
+        </div>
+
+        <div v-if="paginationData.prevPagesHidden" class="page-item">
+            <span :data-page="1" class="lb-pagination_page" @click="goToPage(1)"> 1</span>
+        </div>
+
+        <div v-if="paginationData.prevPagesHidden && paginationData.startPage !== 2" class="lb-pagination_page lb-pagination_page--hidden lb-pagination_page--hidden-prev">...</div>
+        
+        <div v-for="(pagerPage, ind) in paginationData.pages" :key="ind+'-'+pagerPage">
+            <span :data-page="pagerPage" v-if="actualPage === pagerPage" class="lb-pagination_page lb-pagination_page--active"> <strong>{{pagerPage}}</strong> </span>
+            <span :data-page="pagerPage" v-else class="lb-pagination_page" @click="goToPage(pagerPage)"> {{pagerPage}}</span>
+        </div>
+
+        <div v-if="paginationData.nextPagesHidden && paginationData.endPage !== paginationData.totalPages - 1" class="lb-pagination_page lb-pagination_page--hidden lb-pagination_page--hidden-next">...</div>
+
+        <div v-if="paginationData.nextPagesHidden" class="page-item">
+            <span :data-page="paginationData.totalPages" class="lb-pagination_page" @click="goToPage(paginationData.totalPages)"> {{paginationData.totalPages}}</span>
+        </div>
+       
+        <div class="lb-pagination_page lb-pagination_page--button lb-pagination_page--button-next" :class="{'lb-pagination_page--disabled' : actualPage === totalPages}" @click="goToNextPage">
+            &gt;
+        </div>
+        <div class="lb-pagination_page lb-pagination_page--button lb-pagination_page--button-last" :class="{'lb-pagination_page--disabled' : actualPage === totalPages}" @click="goToLastPage">
+            &gt;&gt;
+        </div>
+    </div>
+    <a
+        href
+        class="lb-btn lb-pagination__btn lb-search-bg-color-primary-clickable"
+        v-if="isNextPage"
+        @click.prevent="nextPage"
+    >
+        {{ trans('pagination.nextPage', { page: page }) }}
+    </a>
+    <div class="lb-pagination__info">
+        {{ trans('pagination.info', { first: firstResult, last: lastResult, total: hitsCount }) }}
+    </div>
+</div>

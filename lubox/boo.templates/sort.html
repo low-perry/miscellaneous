@@ -1,0 +1,12 @@
+<div
+     v-if="isSorts && isNoResults === false"
+    class="lb-sorts"
+>
+    <div
+        class="lb-sorts__title"
+        v-html="trans('sort.headlineTitle')"
+    ></div>
+    <select v-model="sortModel">
+        <option v-for="option in sortOptions" :key="'sort-'.concat(option)" :value="option">{{ trans('sort.'.concat(option || 'default')) }}</option>
+    </select>
+</div>

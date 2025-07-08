@@ -1,0 +1,44 @@
+<div
+    v-if="isTopItemsResults"
+    class="lb-top-items"
+>
+    <h2 class="lb-top-items__title">
+        {{ trans('topItems.title') }}
+    </h2>
+
+    <div
+        v-if="topItemsQuickSearchTypes.length"
+        class="lb-top-items__quick-searches"
+    >
+        <div class="lb-quick-searches">
+            <quick-search
+                v-for="(type, i) in topItemsQuickSearchTypes"
+                :key="i"
+                :type="type"
+                top-items
+            ></quick-search>
+        </div>
+    </div>
+
+    <template v-if="topItemsRendererResult.length">
+        <div v-html="topItemsRendererResult"></div>
+    </template>
+    <template v-else>
+        <div
+            v-if="topItemsItems.length"
+            class="lb-top-items__results"
+        >
+            <h3 class="lb-top-items__results-title">
+                {{ trans('topItems.results.title') }}
+            </h3>
+            <div class="lb-results">
+                <result
+                    v-for="(result, i) in topItemsItems"
+                    :result="result"
+                    :key="i"
+                    :index="i"
+                ></result>
+            </div>
+        </div>
+    </template>
+</div>

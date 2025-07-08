@@ -1,0 +1,31 @@
+<div class="lb-result lb-result--default" v-if="position == 'result'">
+
+        <a
+        :href="attributes.original_url"
+        class="lb-result__aside"
+    >
+        <div class="lb-result__image-wrapper lb-result__banner">
+            <img
+                :src="attributes.image_link"
+                class="lb-result__image lb-search__banner-desktop"
+            >
+            <img
+                :src="attributes.image_link_mobile"
+                class="lb-result__image lb-search__banner-mobile"
+            >
+        </div>
+    </a>
+</div>
+<a v-else-if="position == 'header' && searchHeader" :href="searchHeader.url" class="lb-search__banner-header">
+    <img class="lb-search__banner-desktop" :src="searchHeader.search_header.desktop_url">
+    <img class="lb-search__banner-mobile" :src="searchHeader.search_header.mobile_url">
+</a>
+<a v-else-if="position == 'footer' && searchFooter" :href="searchFooter.url"  class="lb-search__banner-footer">
+    <img class="lb-search__banner-desktop" :src="searchFooter.search_footer.desktop_url">
+    <img class="lb-search__banner-mobile" :src="searchFooter.search_footer.mobile_url">
+</a>
+<a v-else-if="position == 'panel' && searchPanel" :href="searchPanel.url" class="lb-search__banner-panel">
+    <img class="lb-search__banner-desktop" :src="searchPanel.search_panel.desktop_url">
+    <img class="lb-search__banner-mobile" :src="searchPanel.search_panel.mobile_url">
+</a>
+
