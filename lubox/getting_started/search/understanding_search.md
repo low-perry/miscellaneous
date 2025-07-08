@@ -22,7 +22,7 @@ Luigi's Box Search is designed to provide a modern, interactive experience for y
 
 There are two primary ways to integrate Luigi's Box Search into your website or application. Your choice will depend on your development resources and how much control you need over the user interface.
 
-1. search.js library (recommended for web)
+**search.js library (recommended for web)**
 
 This is a powerful, self-hosted JavaScript library that can rapidly build an entire interactive, single-page-application style search interface for you.
 
@@ -33,7 +33,7 @@ This is a powerful, self-hosted JavaScript library that can rapidly build an ent
   - **Customizable:** You can provide your own HTML templates to control the look and feel while the library handles the logic.
 - **Luigi's Box recommendation:** This is the recommended path for most web integrations as it provides the most features with the least development effort.
 
-2. Direct search API (for custom UI / non-web)
+**Direct search API (for custom UI / non-web)**
 
 This approach involves making direct GET requests to the Luigi's Box Search API endpoint (`https://live.luigisbox.com/search`) and using the JSON response to build your own user interface from scratch.
 
@@ -45,7 +45,7 @@ This approach involves making direct GET requests to the Luigi's Box Search API 
   - **Maximum flexibility:** You have complete control over how the results and filters are rendered.
 - **Cons / developer responsibility:**
   - **Manual implementation:** You are responsible for building the entire UI, including facets, sorting controls, and pagination logic.
-- **Manual analytics:** You **must** manually implement the analytics tracking for search views, clicks, and facet interactions. Without this, the system cannot learn or improve.
+  - **Manual analytics:** You **must** manually implement the analytics tracking for search views, clicks, and facet interactions. Without this, the system cannot learn or improve.
 
 ## Next steps
 
