@@ -22,7 +22,7 @@
         /* Container to center content */
         .container {
             width: 100%;
-            max-width: 1280px; /* Equivalent to Tailwind's container */
+            max-width: 1280px;
             margin-left: auto;
             margin-right: auto;
             padding-left: 1rem;
@@ -33,16 +33,15 @@
         header {
             background-color: #FFFFFF;
             box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            padding: 1rem 0;
         }
         .header-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding-top: 1rem;
-            padding-bottom: 1rem;
         }
         header h1 {
-            font-size: 1.5rem; /* text-2xl */
+            font-size: 1.5rem;
             font-weight: 700;
             color: #111827;
         }
@@ -51,9 +50,10 @@
         }
         header input[type="search"] {
             width: 100%;
+            box-sizing: border-box;
             padding: 0.5rem 1rem;
             border: 1px solid #D1D5DB;
-            border-radius: 0.5rem; /* rounded-lg */
+            border-radius: 0.5rem;
             transition: box-shadow 0.2s, border-color 0.2s;
         }
         header input[type="search"]:focus {
@@ -64,28 +64,45 @@
 
         /* Main Content Styles */
         main {
-            padding-top: 2rem;
-            padding-bottom: 2rem;
+            padding-top: 3rem;
+            padding-bottom: 3rem;
         }
         
-        /* Style for the loading state to prevent page jump */
-        #search-ui:empty::before {
-            content: "Loading search...";
-            min-height: 60vh;
+        /* --- Spinner Styles Start --- */
+
+        /* Container to center the spinner and maintain page height */
+        .spinner-container {
             display: flex;
-            align-items: center;
             justify-content: center;
-            font-size: 1.25rem;
-            color: #9CA3AF;
+            align-items: center;
+            min-height: 60vh;
         }
+
+        /* The spinner animation */
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* The spinner element itself */
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(0, 0, 0, 0.1);
+            border-top-color: #111827; /* Darker color for the spinning part */
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        /* --- Spinner Styles End --- */
+
 
         /* Footer Styles */
         footer {
             background-color: #FFFFFF;
-            margin-top: 3rem;
-            padding: 1.5rem 0;
+            margin-top: 4rem;
+            padding: 2rem 0;
             text-align: center;
             color: #6B7280;
+            border-top: 1px solid #E5E7EB;
         }
     </style>
 </head>
@@ -95,10 +112,6 @@
     <header>
         <div class="container header-content">
             <h1>My Awesome Shop</h1>
-            <!-- 
-              This is the search form. On other pages, its action would be "/search.html".
-              On this page, the action can be empty as Search.js handles updates.
-            -->
             <form action="" method="GET">
                 <input 
                   type="search" 
@@ -112,11 +125,15 @@
     <!-- Main Content Area -->
     <main class="container">
         <!-- 
-          This is the main placeholder where the Search.js library will render 
-          the entire search interface (facets, results, pagination, etc.).
-          The :empty pseudo-class in the <style> tag will apply a loading state.
+          The search UI will be rendered here.
+          It now contains a spinner that will be displayed on initial load
+          and automatically removed by Search.js.
         -->
-        <div id="search-ui"></div>
+        <div id="search-ui">
+            <div class="spinner-container">
+                <div class="spinner"></div>
+            </div>
+        </div>
     </main>
 
     <!-- Footer Section -->
@@ -139,7 +156,8 @@
             
             // Replace with your actual Tracker ID from the Luigi's Box application
             // This value MUST be a string.
-            TrackerId: '179075-204259', 
+            TrackerId: '179075-204259',
+            Locale: 'en',
             
             // Use the 'boo' theme for a modern, responsive look out of the box
             Theme: 'boo',
@@ -147,7 +165,7 @@
             // Tell Search.js to only search for products by default.
             // This prevents other content types (like categories or articles) from appearing in the main results.
             DefaultFilters: {
-              type: 'item'
+              type: 'product'
             },
 
             // Define which filters (facets) to show the user.
