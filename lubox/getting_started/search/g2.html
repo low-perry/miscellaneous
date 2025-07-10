@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Search Results</title>
+    
+    <!-- Google Fonts for a clean look -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* General Body Styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F9FAFB;
+            color: #1F2937;
+            margin: 0;
+        }
+
+        /* Container to center content */
+        .container {
+            width: 100%;
+            max-width: 1280px;
+            margin-left: auto;
+            margin-right: auto;
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: #FFFFFF;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            padding: 1rem 0;
+        }
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #111827;
+        }
+        header form {
+            width: 33.333333%;
+        }
+        header input[type="search"] {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 0.5rem 1rem;
+            border: 1px solid #D1D5DB;
+            border-radius: 0.5rem;
+            transition: box-shadow 0.2s, border-color 0.2s;
+        }
+        header input[type="search"]:focus {
+            outline: none;
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+        }
+
+        /* Main Content Styles */
+        main {
+            padding-top: 3rem;
+            padding-bottom: 3rem;
+        }
+        
+        /* Footer Styles */
+        footer {
+            background-color: #FFFFFF;
+            margin-top: 4rem;
+            padding: 2rem 0;
+            text-align: center;
+            color: #6B7280;
+            border-top: 1px solid #E5E7EB;
+        }
+
+        /* --- Custom Template Styles Start --- */
+        .search-layout {
+            display: flex;
+            gap: 2rem;
+            position: relative;
+        }
+        .search-main-content {
+            flex: 3;
+        }
+        .search-sidebar {
+            flex: 1;
+        }
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .product-card {
+            border: 1px solid #E5E7EB;
+            border-radius: 0.5rem;
+            background-color: #fff;
+            overflow: hidden;
+            transition: box-shadow 0.2s;
+        }
+        .product-card:hover {
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1);
+        }
+        .product-card a {
+            text-decoration: none;
+            color: inherit;
+        }
+        .product-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background-color: #f3f4f6;
+        }
+        .product-info {
+            padding: 1rem;
+        }
+        .product-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin: 0 0 0.25rem 0;
+        }
+        .product-title em {
+            font-style: normal;
+            background-color: #FEF3C7;
+        }
+        .product-brand {
+            font-size: 0.875rem;
+            color: #6B7280;
+            margin: 0 0 0.5rem 0;
+        }
+        .product-price {
+            font-size: 1.125rem;
+            font-weight: 700;
+        }
+        
+        .my-facet {
+            margin-bottom: 1.5rem;
+        }
+        .my-facet h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+        .my-facet-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .my-facet-button {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border: 1px solid #D1D5DB;
+            border-radius: 9999px;
+            cursor: pointer;
+            transition: background-color 0.2s, color 0.2s;
+        }
+        .my-facet-button.active {
+            background-color: #3B82F6;
+            color: white;
+            border-color: #3B82F6;
+        }
+        .my-facet-button input {
+            display: none;
+        }
+        /* --- Custom Template Styles End --- */
+
+    </style>
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header>
+        <div class="container header-content">
+            <h1>My Awesome Shop</h1>
+            <form action="" method="GET">
+                <input 
+                  type="search" 
+                  name="q" 
+                  placeholder="Search for products..."
+                >
+            </form>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="container">
+        <div id="search-ui">
+            <!-- The Search.js library will render the 'template-search' here -->
+        </div>
+    </main>
+
+    <!-- Footer Section -->
+    <footer>
+        <div class="container">
+            &copy; 2025 My Awesome Shop. All rights reserved.
+        </div>
+    </footer>
+
+    <!-- 
+      STEP 1: Define CUSTOM TEMPLATES.
+      These must come before the Search.js library is loaded.
+    -->
+    
+    <!-- Custom Template for the Main Search Layout -->
+    <script type="text/x-template" id="template-search">
+      <div class="search-layout">
+        
+        <div class="search-main-content">
+          <h1 v-if="query">Search results for "{{ query }}"</h1>
+          <sort></sort>
+          <div class="results-grid">
+            <result v-for="(result, i) in results" :result="result" :key="i"></result>
+          </div>
+          <pagination></pagination>
+        </div>
+        <div class="search-sidebar">
+          <facets></facets>
+        </div>
+      </div>
+    </script>
+
+    <!-- Custom Template for a Single Result Tile -->
+    <script type="text/x-template" id="template-result-default">
+      <div class="product-card">
+        <a :href="url" target="_blank">
+          <img :src="attributes.image_link" :alt="attributes.title" class="product-image" onerror="this.onerror=null;this.src='https://placehold.co/400x400/eee/ccc?text=No+Image';">
+          <div class="product-info">
+            <h3 class="product-title" v-html="attributes.title"></h3>
+            <p class="product-brand">{{ attributes.brand }}</p>
+            <div class="product-price">{{ attributes.price_amount | price }}</div>
+          </div>
+        </a>
+      </div>
+    </script>
+
+    <!-- Custom Template for a Multichoice Facet -->
+    <script type="text/x-template" id="template-facet-multichoice">
+      <div class="my-facet">
+        <h3>{{ name.toUpperCase() }}</h3>
+        <div class="my-facet-options">
+          <div v-for="val in values">
+            <label 
+              class="my-facet-button" 
+              :class="{ 'active': val.used }"
+            >
+              <input v-model="val.used" type="checkbox">
+              {{ val.value }} ({{ val.hits_count }})
+            </label>
+          </div>
+        </div>
+      </div>
+    </script>
+
+    <!-- 
+      STEP 2: Define the initialization function.
+    -->
+    <script>
+      function initLuigisBoxSearch() {
+
+        // Helper: Get search query from URL and put it in the search box for better UX
+        const urlParams = new URLSearchParams(window.location.search);
+        const query = urlParams.get('q');
+        const searchInput = document.querySelector('[name="q"]');
+        if (query && searchInput) {
+          searchInput.value = query;
+        }
+
+        // Initialize the Luigi's Box Search UI
+        Luigis.Search(
+          {
+            // --- Configuration Start ---
+            
+            TrackerId: '179075-204259', 
+            Locale: "en",
+            Theme: 'boo',
+            ISSPA: true,
+            DefaultFilters: {
+              type: 'product'
+            },
+            Facets: ['brand', 'category', 'price_amount'],
+            
+            // --- Configuration End ---
+          },
+          
+          '[name="q"]',
+          '#search-ui'
+        );
+      }
+    </script>
+
+    <!-- 
+      STEP 3: Load the Search.js library asynchronously.
+      The `onload` attribute calls our initialization function once the script is ready.
+    -->
+    <script 
+      src="https://cdn.luigisbox.com/search.js" 
+      async 
+      onload="initLuigisBoxSearch()"
+    ></script>
+
+</body>
+</html>

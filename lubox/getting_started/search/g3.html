@@ -105,6 +105,8 @@
             background-color: #fff;
             overflow: hidden;
             transition: box-shadow 0.2s;
+            display: flex;
+            flex-direction: column;
         }
         .product-card:hover {
             box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1);
@@ -112,6 +114,9 @@
         .product-card a {
             text-decoration: none;
             color: inherit;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
         }
         .product-image {
             width: 100%;
@@ -121,12 +126,14 @@
         }
         .product-info {
             padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
         }
         .product-title {
             font-size: 1rem;
             font-weight: 600;
             margin: 0 0 0.25rem 0;
-            /* Allow em tags for highlighting */
         }
         .product-title em {
             font-style: normal;
@@ -140,7 +147,28 @@
         .product-price {
             font-size: 1.125rem;
             font-weight: 700;
+            margin-top: auto; /* Pushes price to the bottom */
         }
+        
+        /* --- Variant Styles Start --- */
+        .variant-swatches {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+        .variant-swatch {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid #E5E7EB;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .variant-swatch:hover {
+            transform: scale(1.1);
+        }
+        /* --- Variant Styles End --- */
         
         /* --- Loading Spinner Overlay Styles --- */
         .loading-overlay {
@@ -270,7 +298,6 @@
         </div>
         <!-- Main content column -->
         <div class="search-main-content">
-          <!-- This heading will only appear if there is a search query -->
           <h1 v-if="query">Search results for "{{ query }}"</h1>
           <sort></sort>
           <!-- The ResultsRenderer will populate this component -->
@@ -281,7 +308,7 @@
       </div>
     </script>
 
-    <!-- UPDATED: Custom Template for Numbered Pagination -->
+    <!-- Custom Template for Numbered Pagination -->
     <script type="text/x-template" id="template-pagination">
         <div class="lb-pagination">
             <div class="lb-pagination__pager" v-if="paginationData.totalPages > 1">
@@ -354,27 +381,38 @@
             // Custom function to render the results grid manually.
             ResultsRenderer: function(results, element, next) {
                 return new Promise(function(resolve) {
-                    // If it's a new search (not pagination), clear the container.
                     if (!next) {
                         element.innerHTML = '';
                     }
 
-                    // Create an HTML string for all the new results
                     const resultsHtml = results.map(result => {
-                        // Provide fallbacks for potentially missing data
                         const imageUrl = result.attributes.image_link || 'https://placehold.co/400x400/eee/ccc?text=No+Image';
                         const title = result.attributes.title || 'No Title Available';
                         const brand = result.attributes.brand || '';
-                        // Manually format the price
                         const price = result.attributes.price_amount ? `${result.attributes.price_amount} EUR` : '';
+                        
+                        // --- Variant Logic Start ---
+                        let variantSwatches = '';
+                        if (result.attributes.nested && result.attributes.nested.filter(v => v.type === 'variant').length > 0) {
+                            const variants = result.attributes.nested.filter(v => v.type === 'variant');
+                            variantSwatches = '<div class="variant-swatches">';
+                            variants.forEach(variant => {
+                                const color = variant.attributes.color_code && variant.attributes.color_code[0] ? variant.attributes.color_code[0] : '#ccc';
+                                const variantImage = variant.attributes.image_link || imageUrl;
+                                variantSwatches += `<div class="variant-swatch" style="background-color: ${color};" data-image="${variantImage}"></div>`;
+                            });
+                            variantSwatches += '</div>';
+                        }
+                        // --- Variant Logic End ---
 
                         return `
-                            <div class="product-card">
+                            <div class="product-card" data-main-image="${imageUrl}">
                                 <a href="${result.url}" target="_blank">
                                     <img src="${imageUrl}" alt="" class="product-image" onerror="this.onerror=null;this.src='https://placehold.co/400x400/eee/ccc?text=No+Image';">
                                     <div class="product-info">
                                         <h3 class="product-title">${title}</h3>
                                         <p class="product-brand">${brand}</p>
+                                        ${variantSwatches}
                                         <div class="product-price">${price}</div>
                                     </div>
                                 </a>
@@ -382,10 +420,8 @@
                         `;
                     }).join('');
 
-                    // Append the new HTML to the results container
                     element.insertAdjacentHTML('beforeend', resultsHtml);
                     
-                    // Tell Search.js that we're done rendering
                     resolve(null);
                 });
             }
@@ -400,14 +436,37 @@
     </script>
 
     <!-- 
-      STEP 3: Load the Search.js library asynchronously.
-      The `onload` attribute calls our initialization function once the script is ready.
+      STEP 3: Load the Search.js library and add event listeners for variants.
     -->
     <script 
       src="https://cdn.luigisbox.com/search.js" 
       async 
       onload="initLuigisBoxSearch()"
     ></script>
+    <script>
+        // Add event listeners after the main script to handle variant image swapping
+        document.addEventListener('mouseover', function(e) {
+            if (e.target.classList.contains('variant-swatch')) {
+                const card = e.target.closest('.product-card');
+                const imageElement = card.querySelector('.product-image');
+                const newImage = e.target.dataset.image;
+                if (imageElement && newImage) {
+                    imageElement.src = newImage;
+                }
+            }
+        });
+
+        document.addEventListener('mouseout', function(e) {
+            if (e.target.classList.contains('variant-swatch')) {
+                const card = e.target.closest('.product-card');
+                const imageElement = card.querySelector('.product-image');
+                const mainImage = card.dataset.mainImage;
+                if (imageElement && mainImage) {
+                    imageElement.src = mainImage;
+                }
+            }
+        });
+    </script>
 
 </body>
 </html>
