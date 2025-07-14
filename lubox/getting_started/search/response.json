@@ -1,0 +1,102 @@
+{
+  "results": {
+    "total_hits": 223,
+    "hits": [
+      {
+        "url": "http://www.e-shop.com/products/123456",
+        "attributes": {
+          "image_link": "http://www.e-shop.com/assets/imgs/products/123456.jpg",
+          "description": "Description field from your product catalog",
+          "categories": [
+            "Gadgets",
+            "Kids"
+          ],
+          "categories_count": 2,
+          "title": "<em>Product</em> X",
+          "title.untouched": "Product X",
+          "availability_rank_text": "true",
+          "price": "5.52 EUR",
+          "condition": "new"
+        },
+        "type": "item",
+        "updated_at": "2017-11-23T00:00:00+00:00"
+      }
+    ],
+    "facets": [
+      {
+        "name": "type",
+        "type": "text",
+        "values": [
+          {
+            "value": "item",
+            "hits_count": 123
+          },
+          {
+            "value": "article",
+            "hits_count": 14
+          }
+        ]
+      },
+      {
+        "name": "price_amount",
+        "type": "float",
+        "values": [
+          {
+            "value": "0.0|9.0",
+            "hits_count": 1
+          },
+          {
+            "value": "9.0|18.0",
+            "hits_count": 1
+          }
+        ]
+      },
+      {
+        "name": "categories_count",
+        "type": "float",
+        "values": [
+          {
+            "value": "1.0|2.0",
+            "hits_count": 147
+          },
+          {
+            "value": "2.0|3.0",
+            "hits_count": 71
+          }
+        ]
+      },
+      {
+        "name": "created_at",
+        "type": "date",
+        "values": [
+          {
+            "value": "2017-10-23T00:00:00+00:00|2017-11-23T00:00:00+00:00",
+            "hits_count": 18
+          },
+          {
+            "value": "2017-11-23T00:00:00+00:00|2017-12-23T00:00:00+00:00",
+            "hits_count": 80
+          }
+        ]
+      }
+    ],
+    "offset": "20",
+    "campaigns": [
+      {
+        "id": 13,
+        "target_url": "https://www.e-shop.com/harry-potter",
+        "banners": {
+          "search_header": {
+            "desktop_url": "https://www.e-shop.com/harry-potter-1.jpg",
+            "mobile_url": "https://www.e-shop.com/harry-potter-2.jpg"
+          },
+          "search_footer": {
+            "desktop_url": "https://www.e-shop.com/harry-potter-3.jpg",
+            "mobile_url": "https://www.e-shop.com/harry-potter-4.jpg"
+          }
+        }
+      }
+    ]
+  },
+  "next_page": "https://live.luigisbox.com/search?q=harry+potter&tracker_id=1234-5678&page=2"
+}
