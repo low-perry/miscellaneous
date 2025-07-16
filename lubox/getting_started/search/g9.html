@@ -374,7 +374,6 @@
         }
 
         try {
-          // UPDATED: Using axios.get instead of fetch
           const response = await axios.get(API_ENDPOINT, { params });
           const data = response.data;
 
