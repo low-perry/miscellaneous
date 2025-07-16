@@ -358,7 +358,7 @@
           "f[]": ["type:product"],
           facets: "brand,category,price_amount",
           hit_fields:
-            "title,url,price_amount,image_link,brand,nested,color_code,Colour,color,id",
+            "title,url,price_amount,image_link,brand,nested,color_code,color,id",
           size: RESULTS_PER_PAGE,
           page: page,
         };
@@ -422,9 +422,7 @@
             if (variants.length > 0) {
               const uniqueColors = new Map();
               variants.forEach((variant) => {
-                const colorName =
-                  variant.attributes.Colour?.[0] ||
-                  variant.attributes.color?.[0];
+                const colorName = variant.attributes.color?.[0];
                 if (colorName) {
                   const normalizedColorName = colorName.toLowerCase();
                   if (!uniqueColors.has(normalizedColorName)) {

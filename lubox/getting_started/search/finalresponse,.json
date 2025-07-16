@@ -1,0 +1,103 @@
+{
+  "results": {
+    "query": "digital piano",
+    "filters": [
+      "type:product"
+    ],
+    "hits": [
+      {
+        "url": "/smart-piano-the-one-digital-piano/?variantId=2369748",
+        "attributes": {
+          "brand": [
+            "Smart piano"
+          ],
+          "color": [
+            "Black"
+          ],
+          "title": "Smart piano The ONE Digital Piano",
+          "id": [
+            "2369748"
+          ],
+          "price_amount": 629,
+          "image_link": "https://cdn.myshoptet.com/usr/demoshop.luigisbox.com/user/shop/detail/1774257-1.jpg",
+          "color_code": [
+            "#3d2b1f"
+          ]
+        },
+        "nested": [
+          {
+            "url": "/digital-pianos/",
+            "attributes": {
+              "title": "Digital Pianos"
+            },
+            "type": "category"
+          },
+          {
+            "url": "/smart-piano/",
+            "attributes": {
+              "title": "Smart piano"
+            },
+            "type": "brand"
+          },
+          {
+            "url": "",
+            "attributes": {
+              "id": [
+                "2369745"
+              ],
+              "brand": [
+                "Smart piano"
+              ],
+              "price_amount": 1279,
+              "image_link": "https://cdn.myshoptet.com/usr/demoshop.luigisbox.com/user/shop/detail/1774257.jpg",
+              "color": [
+                "White"
+              ],
+              "title": "Smart piano The ONE Digital Piano",
+              "color_code": [
+                "#ffffff"
+              ]
+            },
+            "type": "variant"
+          } // more nested objects 
+        ],
+        "type": "product"
+      }
+    ],
+    "facets": [
+      {
+        "name": "brand",
+        "type": "text",
+        "values": [
+          {
+            "value": "Yamaha",
+            "hits_count": 37
+          } // more values
+        ]
+      },
+      {
+        "name": "category",
+        "type": "text",
+        "values": [
+          {
+            "value": "Musicians",
+            "hits_count": 172
+          } // more values
+        ]
+      },
+      {
+        "name": "price_amount",
+        "type": "float",
+        "values": [
+          {
+            "value": "2.89|213.0",
+            "hits_count": 36,
+            "normalized_hits_count": 0.21
+          } //more values
+        ]
+      }
+    ],
+    "total_hits": 172
+  },
+  "next_page": "https://live.luigisbox.com/search?tracker_id=179075-204259&q=digital%20piano&f[]=type:product&facets=brand,category,price_amount&hit_fields=title,url,price_amount,image_link,brand,nested,color_code,color,id&page=2"
+}

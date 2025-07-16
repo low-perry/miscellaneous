@@ -1,0 +1,72 @@
+{
+  "results": {
+    "query": "digital piano",
+    "filters": ["type:product"],
+    "hits": [
+      {
+        "url": "/smart-piano-the-one-digital-piano/?variantId=2369748",
+        "attributes": {
+          // ...more attributes
+          "title": "<em>Digital Piano</em> Y",
+          "price_amount": 499.99,
+          "image_link": "http://example.com/img2.jpg",
+          "color": ["Black"],
+          "id": ["456"],
+          "brand": ["Smart piano"],
+          "categories": ["Musicians", "Keys", "Digital Pianos"],
+          "nested": [
+            {
+              "url": "/digital-pianos/",
+              "attributes": {
+                "title": "Digital Pianos"
+                // more attributes as needed
+              },
+              "type": "category"
+            },
+            {
+              "url": "/smart-piano/",
+              "attributes": {
+                "title": "Smart piano"
+                // more attributes as needed
+              },
+              "type": "brand"
+            },
+            {
+              "url": "/smart-piano-the-one-digital-piano/?variantId=2369745",
+              "attributes": {
+                "title": "Digital Piano Y",
+                "image_link": "http://example.com/img2-variant.jpg",
+                "price_amount": 1279,
+                "id": ["2369745"],
+                "color": ["White"],
+                "color_code": ["#ffffff"]
+                // more attributes as needed
+              },
+              "type": "variant"
+            }
+            // more nested objects
+          ]
+        }
+      }
+      // ...more hits
+    ],
+    "total_hits": 150,
+    "facets": [
+      {
+        "name": "brand",
+        "values": [
+          { "value": "Smart piano", "hits_count": 50 },
+          { "value": "Digital Keys", "hits_count": 30 }
+        ]
+      },
+      {
+        "name": "price",
+        "values": [
+          { "value": "$0 - $500", "hits_count": 70 },
+          { "value": "$500 - $1000", "hits_count": 50 },
+          { "value": "$1000+", "hits_count": 30 }
+        ]
+      }
+  },
+  "next_page": "https://live.luigisbox.com/search?tracker_id=...f[]=type:product&page=2"
+}
