@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luigi's Box Assistant - Live Demo</title>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* --- General Styling --- */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f9fafb; /* bg-gray-50 */
+            color: #1f2937; /* text-gray-800 */
+            margin: 0;
+            padding: 1rem;
+        }
+
+        .container {
+            max-width: 896px; /* max-w-4xl */
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        /* --- Header --- */
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        header h1 {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700;
+            color: #111827; /* text-gray-900 */
+        }
+
+        header p {
+            color: #4b5563; /* text-gray-600 */
+            margin-top: 0.5rem;
+        }
+
+        /* --- Assistant Container --- */
+        #assistant-container {
+            background-color: #ffffff;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-lg */
+            padding: 1.5rem;
+        }
+
+        /* --- Loading Spinner --- */
+        #loading {
+            text-align: center;
+            padding: 2rem 0;
+        }
+        .spinner {
+            animation: spin 1s linear infinite;
+            height: 2rem; /* h-8 */
+            width: 2rem; /* w-8 */
+            color: #2563eb; /* text-blue-600 */
+            margin: 0 auto;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        #loading p {
+            margin-top: 0.5rem;
+            color: #6b7280; /* text-gray-500 */
+        }
+
+        /* --- Question & Options --- */
+        #question-area {
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        #question-area h3 {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600;
+            color: #111827; /* text-gray-900 */
+        }
+        #options-area {
+            display: grid;
+            grid-template-columns: 1fr; /* Default to single column */
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .option-button {
+            width: 100%;
+            text-align: left;
+            padding: 1rem;
+            background-color: #ffffff;
+            border: 1px solid #d1d5db; /* border-gray-300 */
+            border-radius: 0.5rem; /* rounded-lg */
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+        }
+        .option-button:hover {
+            background-color: #eff6ff; /* hover:bg-blue-50 */
+            border-color: #3b82f6; /* hover:border-blue-500 */
+        }
+        .option-button:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5); /* focus:ring-2 */
+        }
+        .option-button .title {
+            font-weight: 700;
+            color: #1f2937; /* text-gray-800 */
+        }
+        .option-button .details {
+            font-size: 0.875rem; /* text-sm */
+            color: #6b7280; /* text-gray-500 */
+            margin-top: 0.25rem;
+        }
+
+        /* --- Restart Button --- */
+        #restart-button-container {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        #restart-btn {
+            background-color: #e5e7eb; /* bg-gray-200 */
+            color: #374151; /* text-gray-700 */
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 0.5rem; /* rounded-lg */
+            cursor: pointer;
+            transition: background-color 0.3s ease-in-out;
+        }
+        #restart-btn:hover {
+            background-color: #d1d5db; /* hover:bg-gray-300 */
+        }
+
+        /* --- Results Area --- */
+        #results-divider {
+            margin: 1.5rem 0;
+            border: 0;
+            border-top: 1px solid #e5e7eb; /* border-gray-200 */
+        }
+        #results-title {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #111827; /* text-gray-900 */
+        }
+        #product-hits {
+            display: grid;
+            grid-template-columns: 1fr; /* Default to single column */
+            gap: 1.5rem;
+        }
+        .product-card {
+            border: 1px solid #e5e7eb; /* border-gray-200 */
+            border-radius: 0.5rem; /* rounded-lg */
+            overflow: hidden;
+            background-color: #ffffff;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06); /* shadow-sm */
+            transition: box-shadow 0.3s ease-in-out;
+        }
+        .product-card:hover {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); /* hover:shadow-md */
+        }
+        .product-card img {
+            width: 100%;
+            height: 12rem; /* h-48 */
+            object-fit: cover;
+        }
+        .product-card .content {
+            padding: 1rem;
+        }
+        .product-card h4 {
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .product-card p {
+            font-size: 1.125rem; /* text-lg */
+            font-weight: 700;
+            color: #1d4ed8; /* text-blue-700 */
+            margin-top: 0.5rem;
+        }
+
+        /* --- Error Message --- */
+        #error-area {
+            background-color: #fee2e2; /* bg-red-100 */
+            border: 1px solid #f87171; /* border-red-400 */
+            color: #b91c1c; /* text-red-700 */
+            padding: 1rem;
+            border-radius: 0.5rem; /* rounded-lg */
+        }
+        #error-area strong {
+            font-weight: 700;
+        }
+
+        /* --- Utility --- */
+        .hidden {
+            display: none !important;
+        }
+
+        /* --- Footer --- */
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.875rem; /* text-sm */
+            color: #6b7280; /* text-gray-500 */
+        }
+        
+        /* --- Responsive Design --- */
+        /* For tablets and larger */
+        @media (min-width: 640px) {
+            #assistant-container {
+                padding: 2rem;
+            }
+            #options-area {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            #product-hits {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* For desktops */
+        @media (min-width: 1024px) {
+            #product-hits {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Find Your Perfect Guitar</h1>
+            <p>Let our assistant guide you to the best choice.</p>
+        </header>
+
+        <!-- Assistant UI Container -->
+        <div id="assistant-container">
+            
+            <!-- Loading Spinner -->
+            <div id="loading" class="hidden">
+                <svg class="spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <p>Finding recommendations...</p>
+            </div>
+
+            <!-- Question Area -->
+            <div id="question-area"></div>
+
+            <!-- Options Area -->
+            <div id="options-area"></div>
+
+            <!-- Restart Button -->
+            <div id="restart-button-container" class="hidden">
+                 <button id="restart-btn">Start Over</button>
+            </div>
+            
+            <!-- Horizontal Rule -->
+            <hr id="results-divider" class="hidden">
+
+            <!-- Results Area -->
+            <div id="results-area">
+                <h2 id="results-title" class="hidden">Matching Guitars (<span id="results-count">0</span>)</h2>
+                <div id="product-hits"></div>
+            </div>
+             <!-- Error Message Area -->
+            <div id="error-area" class="hidden">
+                <strong class="font-bold">Error:</strong>
+                <span id="error-message"></span>
+            </div>
+        </div>
+
+        <footer>
+            <p>Powered by Luigi's Box Assistant API</p>
+        </footer>
+    </div>
+
+    <script>
+        // --- CONFIGURATION ---
+        // IMPORTANT: Replace with your actual Tracker ID and Assistant Handle
+        const TRACKER_ID = '179075-204259';
+        // Corrected handle format - handles usually don't contain spaces.
+        // Please verify the exact handle in your Luigi's Box App.
+        const ASSISTANT_HANDLE = 'Webinar Guitars'; 
+        const ASSISTANT_VERSION = '200';
+        const API_ENDPOINT = `https://live.luigisbox.com/v1/assistant?tracker_id=${TRACKER_ID}&assistant_handle=${ASSISTANT_HANDLE}`;
+
+        // --- STATE MANAGEMENT ---
+        let conversationSteps = [];
+        let currentQuestionHandle = null;
+
+        // --- DOM ELEMENT REFERENCES ---
+        const loadingEl = document.getElementById('loading');
+        const questionAreaEl = document.getElementById('question-area');
+        const optionsAreaEl = document.getElementById('options-area');
+        const productHitsEl = document.getElementById('product-hits');
+        const resultsTitleEl = document.getElementById('results-title');
+        const resultsCountEl = document.getElementById('results-count');
+        const resultsDividerEl = document.getElementById('results-divider');
+        const restartBtn = document.getElementById('restart-btn');
+        const restartButtonContainerEl = document.getElementById('restart-button-container');
+        const errorAreaEl = document.getElementById('error-area');
+        const errorMessageEl = document.getElementById('error-message');
+
+        // --- API INTEGRATION ---
+        async function callAssistantAPI() {
+            setLoading(true);
+            clearUI();
+
+            const requestBody = {
+                assistant_version: ASSISTANT_VERSION,
+                steps: conversationSteps,
+            };
+
+            try {
+                // This now makes a real network request to the Luigi's Box API
+                const response = await fetch(API_ENDPOINT, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(requestBody)
+                });
+                
+                if (!response.ok) {
+                    // Improved error handling
+                    console.error("API Error Response:", response);
+                    const errorData = await response.json().catch(() => ({ message: "Failed to parse error response." }));
+                    throw new Error(errorData.message || `API Error: ${response.status} ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                
+                renderUI(data);
+
+            } catch (error) {
+                console.error("Failed to call Assistant API:", error);
+                renderError(error.message);
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        // --- UI RENDERING ---
+        function renderUI(data) {
+            renderProducts(data.hits);
+
+            if (data.question) {
+                currentQuestionHandle = data.question.handle;
+                renderQuestion(data.question);
+                renderOptions(data.question.options);
+                restartButtonContainerEl.classList.remove('hidden');
+            } else {
+                questionAreaEl.innerHTML = `<div class="end-message"><h3 style="font-size: 1.25rem; font-weight: 600; color: #059669;">All done!</h3><p style="color: #4b5563; margin-top: 0.5rem;">We've narrowed down the best options for you based on your selections.</p></div>`;
+            }
+        }
+        
+        function renderQuestion(question) {
+            questionAreaEl.innerHTML = `
+                <div>
+                    <h3>${question.title_html}</h3>
+                    ${question.description_html ? `<p style="margin-top: 0.5rem; color: #6b7280;">${question.description_html}</p>` : ''}
+                </div>
+            `;
+        }
+
+        function renderOptions(options) {
+            optionsAreaEl.innerHTML = options.map(option => `
+                <button 
+                    class="option-button"
+                    data-option-handle="${option.option_handle}"
+                >
+                    <div class="title">${option.title_html}</div>
+                    <div class="details">
+                        <span>${option.hits_count} products</span>
+                        ${option.price_range ? `<span style="margin: 0 0.5rem;">|</span><span>${option.price_range}</span>` : ''}
+                    </div>
+                </button>
+            `).join('');
+        }
+
+        function renderProducts(hits) {
+            resultsDividerEl.classList.toggle('hidden', hits.length === 0);
+            resultsTitleEl.classList.toggle('hidden', hits.length === 0);
+            resultsCountEl.textContent = hits.length;
+
+            if (hits.length === 0) {
+                productHitsEl.innerHTML = `<div style="text-align: center; color: #6b7280; grid-column: 1 / -1; padding: 2rem 0;">No products match the current selection.</div>`;
+                return;
+            }
+
+            productHitsEl.innerHTML = hits.map(hit => `
+                <div class="product-card">
+                    <img src="${hit.image_link}" alt="${hit.title}" onerror="this.onerror=null;this.src='https://placehold.co/600x400/eeeeee/aaaaaa?text=Image+Not+Found';">
+                    <div class="content">
+                        <h4>${hit.title}</h4>
+                        <p>$${hit.price_amount ? hit.price_amount.toLocaleString() : 'N/A'}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function renderError(message) {
+            errorMessageEl.textContent = message;
+            errorAreaEl.classList.remove('hidden');
+        }
+
+        function clearUI() {
+            questionAreaEl.innerHTML = '';
+            optionsAreaEl.innerHTML = '';
+            productHitsEl.innerHTML = '';
+            errorAreaEl.classList.add('hidden');
+        }
+
+        function setLoading(isLoading) {
+            loadingEl.classList.toggle('hidden', !isLoading);
+            if(isLoading) {
+                 clearUI();
+            }
+        }
+
+        // --- EVENT LISTENERS ---
+        optionsAreaEl.addEventListener('click', (event) => {
+            const button = event.target.closest('button.option-button');
+            if (!button) return;
+
+            const selectedOptionHandle = button.dataset.optionHandle;
+            
+            conversationSteps.push({
+                question_handle: currentQuestionHandle,
+                option_handles: [selectedOptionHandle]
+            });
+
+            callAssistantAPI();
+        });
+        
+        restartBtn.addEventListener('click', () => {
+            conversationSteps = [];
+            currentQuestionHandle = null;
+            callAssistantAPI();
+        });
+
+        // --- INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', callAssistantAPI);
+
+    </script>
+</body>
+</html>
