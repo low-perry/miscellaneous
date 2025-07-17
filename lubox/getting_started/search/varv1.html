@@ -379,68 +379,6 @@
               type: 'product'
             },
             Facets: ['brand', 'category', 'price_amount'],
-
-            // Custom function to render the results grid manually.
-            ResultsRenderer: function(results, element, next) {
-                return new Promise(function(resolve) {
-                    if (!next) {
-                        element.innerHTML = '';
-                    }
-
-                    const resultsHtml = results.map(result => {
-                        const imageUrl = result.attributes.image_link || 'https://placehold.co/400x400/eee/ccc?text=No+Image';
-                        const title = result.attributes.title || 'No Title Available';
-                        const brand = result.attributes.brand ? result.attributes.brand[0] : '';
-                        const price = result.attributes.price_amount ? `${result.attributes.price_amount} EUR` : '';
-                        
-                        let variantSwatches = '';
-                        const variants = result.attributes.nested?.filter(v => v.type === 'variant') || [];
-                        if (variants.length > 0) {
-                            const uniqueColors = new Map();
-                            variants.forEach(variant => {
-                                const colorName = variant.attributes.Colour?.[0] || variant.attributes.color?.[0];
-                                if (colorName) {
-                                    const normalizedColorName = colorName.toLowerCase();
-                                    if (!uniqueColors.has(normalizedColorName)) {
-                                        uniqueColors.set(normalizedColorName, {
-                                            colorCode: variant.attributes.color_code?.[0] || '#ccc',
-                                            image: variant.attributes.image_link || imageUrl
-                                        });
-                                    }
-                                }
-                            });
-
-                            if (uniqueColors.size > 0) {
-                                variantSwatches = '<div class="variant-swatches">';
-                                uniqueColors.forEach(data => {
-                                    variantSwatches += `<div class="variant-swatch" style="background-color: ${data.colorCode};" data-image="${data.image}"></div>`;
-                                });
-                                variantSwatches += '</div>';
-                            }
-                        }
-
-                        return `
-                            <div class="product-card" data-main-image="${imageUrl}">
-                                <a href="${result.url}" target="_blank" class="product-link">
-                                    <img src="${imageUrl}" alt="" class="product-image" onerror="this.onerror=null;this.src='https://placehold.co/400x400/eee/ccc?text=No+Image';">
-                                </a>
-                                <div class="product-info">
-                                    <h3 class="product-title">${title}</h3>
-                                    <p class="product-brand">${brand}</p>
-                                    ${variantSwatches}
-                                    <div class="product-price-section">
-                                        <div class="product-price">${price}</div>
-                                    </div>
-                                </div>
-                            </div>
-                        `;
-                    }).join('');
-
-                    element.insertAdjacentHTML('beforeend', resultsHtml);
-                    
-                    resolve(null);
-                });
-            }
             
             // --- Configuration End ---
           },

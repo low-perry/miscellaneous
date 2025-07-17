@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search.js with All Variants</title>
+    
+    <!-- Google Fonts for a clean look -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Basic styling for the page */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F9FAFB;
+            color: #1F2937;
+            margin: 0;
+            padding: 2rem;
+        }
+        .container {
+            max-width: 1280px;
+            margin: auto;
+        }
+        header {
+            margin-bottom: 2rem;
+        }
+        header input[type="search"] {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+            border: 1px solid #D1D5DB;
+            border-radius: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Search All Variants</h1>
+            <form action="" method="GET">
+                <input 
+                  type="search" 
+                  name="q" 
+                  placeholder="Search for products (e.g., smart piano)"
+                >
+            </form>
+        </header>
+
+        <main id="search-ui">
+            <!-- The Search.js library will render the UI here -->
+        </main>
+    </div>
+
+    <!-- Load the Search.js library -->
+    <script src="https://cdn.luigisbox.com/search.js"></script>
+
+    <!-- Initialize the library -->
+    <script>
+      function initLuigisBoxSearch() {
+        // Helper: Get search query from URL and put it in the search box
+        const urlParams = new URLSearchParams(window.location.search);
+        const query = urlParams.get('q');
+        const searchInput = document.querySelector('[name="q"]');
+        if (query) {
+          searchInput.value = query;
+        }
+
+        // Initialize the Luigi's Box Search UI
+        Luigis.Search(
+          {
+            // --- Configuration Start ---
+            
+            TrackerId: '179075-204259', 
+            Theme: 'boo', // Use the default theme for a quick setup
+            ISSPA: true, // Prevents URL changes in this sandboxed environment
+            
+            DefaultFilters: {
+              type: 'product'
+            },
+            Size: 9,
+
+            Facets: ['brand', 'category', 'price_amount', 'Colour'],
+
+            // This function intercepts the API request before it's sent
+            // and adds the non_collapsed_variants parameter.
+            ModifyRequestParams: function(params) {
+                params.non_collapsed_variants = true;
+                return params;
+            }
+            
+            // --- Configuration End ---
+          },
+          
+          '[name="q"]',
+          '#search-ui'
+        );
+      }
+
+      // Ensure the DOM is ready before initializing
+      if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', initLuigisBoxSearch);
+      } else {
+          initLuigisBoxSearch();
+      }
+    </script>
+
+</body>
+</html>
