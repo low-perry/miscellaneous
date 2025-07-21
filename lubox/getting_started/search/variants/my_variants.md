@@ -1,7 +1,7 @@
 ---
 title: "Quickstart: Implementing variant search" 
 layout: quickstart_layout
-description: "Learn how to variant search works"
+description: "Learn to configure different modes for searching and displaying product variants in your search results."
 ---
 
 ## Introduction
@@ -132,10 +132,9 @@ Properly tracking user interactions with variants is crucial for the feedback lo
 - **For Mode 2 (Retrieving the best variant)**: This mode requires careful analytics implementation. When a product tile is displayed, it represents the best variant for that query.
   - **View event (`view_item_list`):** The item list you report to analytics should contain the specific ID of the variant that was displayed, not the main product ID. This tells Luigi's Box's system which variant was chosen as the most relevant.
   - **Click event (`select_item` / `click`):** Similarly, when a user clicks the product tile, the event must report the ID of the specific variant that was clicked. This allows the system to learn which variants are most engaging for different queries, improving the "best variant" selection over time.
-- For Mode 3 (Retrieving all variants): Since all variants are returned, you should track the `view_item_list` event with all the variant IDs. The `select_item` / `click` event should report the ID of the specific variant that was clicked.
+- **For Mode 3 (Retrieving all variants):** Since all variants are returned, you should track the `view_item_list` event with all the variant IDs. The `select_item` / `click` event should report the ID of the specific variant that was clicked.
 
 ## Next steps
 
 - Influence ranking: The ranking of individual variants is determined by the same signals as standard products. Learn more in our "Understanding and Influencing Result Ranking" guide.
 - Check Your Data: Refer to the API or feed documentation to ensure your data is structured correctly for the variant mode you wish to use.
-- Implement Analytics: For more detailed instructions on tracking events, refer to our "Integrating Analytics for Better Results" guide.

@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luigi's Box Assistant - Live Demo</title>
+    <!-- Axios CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* --- General Styling --- */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f9fafb;
+            color: #1f2937;
+            margin: 0;
+            padding: 1rem;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 896px;
+            margin: 1rem auto;
+        }
+
+        /* --- Header --- */
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #111827;
+        }
+
+        header p {
+            color: #4b5563;
+            margin-top: 0.5rem;
+        }
+
+        /* --- Assistant Container --- */
+        #assistant-container {
+            background-color: #ffffff;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            padding: 1.5rem;
+        }
+
+        /* --- Loading Spinner --- */
+        #loading {
+            text-align: center;
+            padding: 2rem 0;
+        }
+        .spinner {
+            animation: spin 1s linear infinite;
+            height: 2rem;
+            width: 2rem;
+            color: #2563eb;
+            margin: 0 auto;
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        #loading p {
+            margin-top: 0.5rem;
+            color: #6b7280;
+        }
+
+        /* --- Question & Options --- */
+        #question-area {
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        #question-area h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #111827;
+        }
+        #options-area {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .option-button {
+            width: 100%;
+            text-align: left;
+            padding: 1rem;
+            background-color: #ffffff;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+        }
+        .option-button:hover {
+            background-color: #eff6ff;
+            border-color: #3b82f6;
+        }
+        .option-button:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+        }
+        .option-button .title {
+            font-weight: 700;
+            color: #1f2937;
+        }
+        .option-button .details {
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-top: 0.25rem;
+        }
+
+        /* --- Restart Button --- */
+        #restart-button-container {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        #restart-btn {
+            background-color: #e5e7eb;
+            color: #374151;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out;
+        }
+        #restart-btn:hover {
+            background-color: #d1d5db;
+        }
+
+        /* --- Results Area --- */
+        #results-divider {
+            margin: 1.5rem 0;
+            border: 0;
+            border-top: 1px solid #e5e7eb;
+        }
+        #results-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #111827;
+        }
+        #product-hits {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+        .product-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            background-color: #ffffff;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+            transition: box-shadow 0.2s ease-in-out;
+        }
+        .product-card:hover {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .product-card img {
+            width: 100%;
+            height: 12rem;
+            object-fit: cover;
+            background-color: #f3f4f6;
+        }
+        .product-card .content {
+            padding: 1rem;
+        }
+        .product-card h4 {
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .product-card p {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: #1d4ed8;
+            margin-top: 0.5rem;
+        }
+
+        /* --- Error Message --- */
+        #error-area {
+            background-color: #fee2e2;
+            border: 1px solid #f87171;
+            color: #b91c1c;
+            padding: 1rem;
+            border-radius: 0.5rem;
+        }
+        #error-area strong {
+            font-weight: 700;
+        }
+
+        /* --- Utility --- */
+        .hidden {
+            display: none !important;
+        }
+
+        /* --- Footer --- */
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+        
+        /* --- Debug Area --- */
+        #debug-container {
+            margin-top: 2rem;
+            padding: 1rem;
+            background-color: #f3f4f6;
+            border-radius: 0.5rem;
+            border: 1px solid #e5e7eb;
+        }
+        #toggle-debug-btn {
+            width: 100%;
+            padding: 0.5rem;
+            background-color: #e5e7eb;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        #debug-area {
+            margin-top: 1rem;
+        }
+        #debug-output {
+            background-color: #1f2937;
+            color: #d1d5db;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-size: 0.875rem;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        /* --- Responsive Design --- */
+        @media (min-width: 640px) {
+            header h1 {
+                font-size: 2.25rem;
+            }
+            #assistant-container {
+                padding: 2rem;
+            }
+            #options-area {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            #product-hits {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            #product-hits {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1 id="main-title">Find Your Perfect Item</h1>
+            <p id="main-subtitle">Let our assistant guide you to the best choice.</p>
+        </header>
+
+        <div id="assistant-container">
+            
+            <div id="loading" class="hidden">
+                <svg class="spinner" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle opacity="0.25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path opacity="0.75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <p>Finding recommendations...</p>
+            </div>
+
+            <div id="question-area"></div>
+            <div id="options-area"></div>
+            <div id="restart-button-container" class="hidden">
+                 <button id="restart-btn">Start Over</button>
+            </div>
+            
+            <hr id="results-divider" class="hidden">
+
+            <div id="results-area">
+                <h2 id="results-title" class="hidden">Matching Items (<span id="results-count">0</span>)</h2>
+                <div id="product-hits"></div>
+            </div>
+
+            <div id="error-area" class="hidden">
+                <strong class="font-bold">Error:</strong>
+                <span id="error-message"></span>
+            </div>
+        </div>
+
+        <div id="debug-container">
+            <button id="toggle-debug-btn">Show Debug Info</button>
+            <div id="debug-area" class="hidden">
+                <h3>Latest API Response/Error:</h3>
+                <pre id="debug-output"></pre>
+            </div>
+        </div>
+
+        <footer>
+            <p>Powered by Luigi's Box Assistant API</p>
+        </footer>
+    </div>
+
+    <script>
+        // --- 1. CONFIGURATION ---
+        // IMPORTANT: Replace these placeholder values with your actual credentials.
+        const UI_CONFIG = {
+            // This is your unique site identifier from the Luigi's Box App URL.
+            TRACKER_ID: '179075-204259', 
+            // The exact handle for your assistant. Spaces are allowed here.
+            ASSISTANT_HANDLE: 'Webinar Guitars', 
+            // Use -1 as an integer to get the latest version.
+            ASSISTANT_VERSION: -1,
+            // These will customize the text on the page.
+            PAGE_TITLE: 'Find Your Perfect Guitar',
+            PAGE_SUBTITLE: 'Let our assistant guide you to the best choice.',
+            RESULTS_TITLE: 'Matching Guitars'
+        };
+
+        // The URL uses `assistant_handle`. Axios will automatically URL-encode the space.
+        const API_ENDPOINT = `https://live.luigisbox.com/v1/assistant?tracker_id=${UI_CONFIG.TRACKER_ID}&assistant_handle=${UI_CONFIG.ASSISTANT_HANDLE}`;
+
+        // --- 2. STATE MANAGEMENT ---
+        let conversationSteps = [];
+        let currentQuestionHandle = null;
+
+        // --- 3. DOM ELEMENT REFERENCES ---
+        const loadingEl = document.getElementById('loading');
+        const questionAreaEl = document.getElementById('question-area');
+        const optionsAreaEl = document.getElementById('options-area');
+        const productHitsEl = document.getElementById('product-hits');
+        const resultsTitleEl = document.getElementById('results-title');
+        const resultsCountEl = document.getElementById('results-count');
+        const resultsDividerEl = document.getElementById('results-divider');
+        const restartBtn = document.getElementById('restart-btn');
+        const restartButtonContainerEl = document.getElementById('restart-button-container');
+        const errorAreaEl = document.getElementById('error-area');
+        const errorMessageEl = document.getElementById('error-message');
+        const toggleDebugBtn = document.getElementById('toggle-debug-btn');
+        const debugAreaEl = document.getElementById('debug-area');
+        const debugOutputEl = document.getElementById('debug-output');
+
+        // --- 4. API INTEGRATION ---
+        async function callAssistantAPI() {
+            setLoading(true);
+            clearUI();
+
+            const requestBody = {
+                assistant_version: UI_CONFIG.ASSISTANT_VERSION,
+                steps: conversationSteps,
+            };
+
+            // Log the request payload to the console for debugging
+            console.log("Sending Request Body:", JSON.stringify(requestBody, null, 2));
+
+            try {
+                const response = await axios.post(API_ENDPOINT, requestBody, {
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                
+                updateDebugOutput(response.data);
+                renderUI(response.data);
+
+            } catch (error) {
+                console.error("Full error details:", error);
+                let errorMessage = "An unknown error occurred.";
+                let errorDetails = error;
+
+                if (error.response) {
+                    const errorData = error.response.data;
+                    errorMessage = errorData.message || `Request failed with status ${error.response.status}. Please check credentials.`;
+                    errorDetails = error.response.data;
+                } else if (error.request) {
+                    errorMessage = "Could not connect to the server. Please check your network connection.";
+                } else {
+                    errorMessage = error.message;
+                }
+                
+                updateDebugOutput(errorDetails);
+                renderError(errorMessage);
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        // --- 5. UI RENDERING ---
+        function renderUI(data) {
+            // **FIXED**: The property name is `question_handle`, not `handle`.
+            if (data.question && data.question.question_handle) {
+                // This is the normal flow: a question was returned.
+                renderProducts(data.hits);
+                currentQuestionHandle = data.question.question_handle;
+                renderQuestion(data.question);
+                renderOptions(data.question.options);
+                restartButtonContainerEl.classList.remove('hidden');
+            } else {
+                // This block runs if the API did NOT return a question.
+                currentQuestionHandle = null; // Clear the handle to prevent errors on the next step.
+                optionsAreaEl.innerHTML = ''; // Ensure no options are displayed.
+
+                // Check if this was the very first API call.
+                if (conversationSteps.length === 0) {
+                    // If the first call has no question, it's a configuration issue.
+                    const setupErrorMessage = "The assistant started but did not provide an initial question. Please check the assistant's configuration in the Luigi's Box App to ensure it has a valid starting question.";
+                    renderError(setupErrorMessage);
+                } else {
+                    // If it's not the first call, it's a normal end to the conversation.
+                    renderProducts(data.hits); // Show the final product list.
+                    questionAreaEl.innerHTML = `<div class="end-message"><h3>All done!</h3><p>We've narrowed down the best options for you based on your selections.</p></div>`;
+                }
+            }
+        }
+        
+        function renderQuestion(question) {
+            questionAreaEl.innerHTML = `<h3>${question.title_html}</h3>${question.description_html ? `<p>${question.description_html}</p>` : ''}`;
+        }
+
+        function renderOptions(options) {
+            optionsAreaEl.innerHTML = options.map(option => `
+                <button class="option-button" data-option-handle="${option.option_handle}">
+                    <div class="title">${option.title_html}</div>
+                    <div class="details">
+                        <span>${option.hits_count} products</span>
+                        ${option.price_range ? `<span> | ${option.price_range}</span>` : ''}
+                    </div>
+                </button>
+            `).join('');
+        }
+        
+        /**
+         * Safely gets a value from a product's attributes.
+         * Handles cases where the value might be a string or the first element of an array.
+         */
+        function getAttributeValue(attributes, key, defaultValue = 'N/A') {
+            if (!attributes || typeof attributes[key] === 'undefined') {
+                return defaultValue;
+            }
+            const value = attributes[key];
+            if (Array.isArray(value) && value.length > 0) {
+                return value[0];
+            }
+            if (Array.isArray(value) && value.length === 0) {
+                return defaultValue;
+            }
+            return value;
+        }
+
+        function renderProducts(hits) {
+            // Ensure hits is an array before trying to access its properties
+            const products = Array.isArray(hits) ? hits : [];
+            
+            resultsDividerEl.classList.toggle('hidden', products.length === 0);
+            resultsTitleEl.classList.toggle('hidden', products.length === 0);
+            resultsCountEl.textContent = products.length;
+
+            if (products.length === 0) {
+                productHitsEl.innerHTML = `<div style="text-align: center; color: #6b7280; grid-column: 1 / -1; padding: 2rem 0;">No products match the current selection.</div>`;
+                return;
+            }
+
+            productHitsEl.innerHTML = products.map(hit => {
+                // **FIXED**: Accessing nested attributes for product info using a helper function.
+                const attributes = hit.attributes || {};
+                const title = getAttributeValue(attributes, 'title', 'Untitled Product');
+                const imageLink = getAttributeValue(attributes, 'image_link', 'https://placehold.co/600x400/eeeeee/aaaaaa?text=Image+Not+Found');
+                const price = getAttributeValue(attributes, 'price_amount', 'N/A');
+                const formattedPrice = typeof price === 'number' ? price.toLocaleString() : price;
+
+                return `
+                <div class="product-card">
+                    <img src="${imageLink}" alt="${title}" onerror="this.onerror=null;this.src='https://placehold.co/600x400/eeeeee/aaaaaa?text=Image+Not+Found';">
+                    <div class="content">
+                        <h4>${title}</h4>
+                        <p>$${formattedPrice}</p>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+        
+        function renderError(message) {
+            errorMessageEl.textContent = message;
+            errorAreaEl.classList.remove('hidden');
+        }
+
+        function clearUI() {
+            questionAreaEl.innerHTML = '';
+            optionsAreaEl.innerHTML = '';
+            productHitsEl.innerHTML = '';
+            errorAreaEl.classList.add('hidden');
+            resultsDividerEl.classList.add('hidden');
+            resultsTitleEl.classList.add('hidden');
+        }
+
+        function setLoading(isLoading) {
+            loadingEl.classList.toggle('hidden', !isLoading);
+            if(isLoading) clearUI();
+        }
+        
+        function setupStaticText() {
+            document.getElementById('main-title').textContent = UI_CONFIG.PAGE_TITLE;
+            document.getElementById('main-subtitle').textContent = UI_CONFIG.PAGE_SUBTITLE;
+            resultsTitleEl.textContent = `${UI_CONFIG.RESULTS_TITLE} (`;
+            resultsTitleEl.appendChild(resultsCountEl);
+            resultsTitleEl.append(')');
+        }
+
+        function updateDebugOutput(data) {
+            debugOutputEl.textContent = JSON.stringify(data, null, 2);
+        }
+
+        // --- 6. EVENT LISTENERS ---
+        optionsAreaEl.addEventListener('click', (event) => {
+            const button = event.target.closest('button.option-button');
+            if (!button) return;
+
+            const selectedOptionHandle = button.dataset.optionHandle;
+            
+            // Defensive check to make sure we have a handle before proceeding
+            if (!currentQuestionHandle) {
+                console.error("Cannot create step: currentQuestionHandle is null.");
+                renderError("An internal error occurred. Could not identify the last question.");
+                return;
+            }
+
+            conversationSteps.push({
+                question_handle: currentQuestionHandle,
+                option_handles: [selectedOptionHandle]
+            });
+
+            callAssistantAPI();
+        });
+        
+        restartBtn.addEventListener('click', () => {
+            conversationSteps = [];
+            currentQuestionHandle = null;
+            callAssistantAPI();
+        });
+
+        toggleDebugBtn.addEventListener('click', () => {
+            const isHidden = debugAreaEl.classList.toggle('hidden');
+            toggleDebugBtn.textContent = isHidden ? 'Show Debug Info' : 'Hide Debug Info';
+        });
+
+        // --- 7. INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', () => {
+            setupStaticText();
+            callAssistantAPI();
+        });
+
+    </script>
+</body>
+</html>
