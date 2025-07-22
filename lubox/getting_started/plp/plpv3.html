@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Example</title>
+    <style>
+        /* Basic styling for layout and readability */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 2rem;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            color: #007bff;
+        }
+        #search-form {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        #search-input {
+            width: 50%;
+            max-width: 400px;
+            padding: 0.75rem;
+            font-size: 1rem;
+            border-radius: 25px;
+            border: 1px solid #ccc;
+            transition: box-shadow 0.2s;
+        }
+        #search-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+            border-color: #80bdff;
+        }
+        #plp-ui-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 1rem;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Our Products</h1>
+
+    <!-- Add a search form and input -->
+    <form id="search-form" onsubmit="return false;">
+      <input type="search" id="search-input" placeholder="Search for products...">
+    </form>
+
+    <!-- 
+      This is the main placeholder where Search.js will render the entire UI.
+    -->
+    <div id="plp-ui-container">
+        <p>Please enter a search term to find products.</p>
+    </div>
+
+    <!-- 1. Include the Search.js library from the CDN -->
+    <script src="https://cdn.luigisbox.com/search.js"></script>
+
+    <!-- 2. Define custom templates for quicksearch results that match the 'boo' theme structure -->
+    <script type="text/x-template" id="template-quick-search-category">
+        <div v-if="items.length > 0" class="lb-quick-search-default lb-quick-search-default--category">
+            <div class="lb-quick-search-default__heading">Categories</div>
+            <div class="lb-quick-search-default__list">
+                <a v-for="item in items" href="#" class="lb-quick-search-default__item lb-search-text-color-primary-clickable quick-search-link" :data-filter-value="item.attributes.title" data-filter-type="category">
+                    <div class="lb-quick-search-default__item-title">{{ item.attributes.title }}</div>
+                </a>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/x-template" id="template-quick-search-brand">
+        <div v-if="items.length > 0" class="lb-quick-search-default lb-quick-search-default--brand">
+            <div class="lb-quick-search-default__heading">Brands</div>
+            <div class="lb-quick-search-default__list">
+                <a v-for="item in items" href="#" class="lb-quick-search-default__item lb-search-text-color-primary-clickable quick-search-link" :data-filter-value="item.attributes.title" data-filter-type="brand">
+                    <div class="lb-quick-search-default__item-title">{{ item.attributes.title }}</div>
+                </a>
+            </div>
+        </div>
+    </script>
+
+
+    <script>
+        // --- Full Implementation Script ---
+
+        // 3. Initialize the search UI.
+        Luigis.Search({
+            TrackerId: '179075-204259',
+            Locale: "en",
+            QuicksearchTypes: ["category", "brand"],
+            Theme: 'boo',
+            Facets: ['brand', 'price_amount', 'color'],
+            DefaultFilters: {
+                type: 'product'
+            }
+        }, 
+        '#search-input', 
+        '#plp-ui-container'
+        );
+
+        // 4. Add a robust event listener to the document to handle clicks on our custom quicksearch links.
+        document.addEventListener('click', function(e) {
+            const link = e.target.closest('.quick-search-link');
+            if (!link) {
+                return; // Exit if the click was not on a quicksearch link
+            }
+
+            e.preventDefault(); // Stop the link from navigating to a new page
+
+            const filterType = link.dataset.filterType;
+            const filterValue = link.dataset.filterValue;
+            
+            if (filterType && filterValue) {
+                // Clear the search input visually
+                document.getElementById('search-input').value = '';
+
+                // Create the search parameters object
+                const intentFilters = {};
+                intentFilters[filterType] = filterValue;
+
+                const searchParams = {
+                    ProductListingFilter: filterType,
+                    IntentFilters: intentFilters
+                };
+                
+                // Execute a new search for the clicked category or brand
+                Luigis.Search.Search(
+                    null,
+                    searchParams
+                );
+            }
+        });
+    </script>
+
+</body>
+</html>
