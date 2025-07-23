@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Filtered Listing</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      margin: 0;
+      padding: 2rem;
+      background-color: #f8f9fa;
+      color: #333;
+    }
+
+    h1 {
+      text-align: center;
+      color: #007bff;
+    }
+
+    #plp-ui-container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 1rem;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+
+  <h1 id="page-title">Filtered Results</h1>
+
+  <div id="plp-ui-container">
+    <p>Loading filtered products...</p>
+  </div>
+
+  <script src="https://cdn.luigisbox.com/search.js"></script>
+
+  <script>
+    function getQueryParams() {
+      const params = new URLSearchParams(window.location.search);
+      return {
+        type: params.get("type"),
+        value: params.get("value")
+      };
+    }
+
+    const { type, value } = getQueryParams();
+
+    if (!type || !value) {
+      document.getElementById("plp-ui-container").innerHTML = "<p>Missing filter parameters.</p>";
+      throw new Error("Missing filter parameters");
+    }
+
+    // Show heading based on filter
+    document.getElementById("page-title").textContent = `Results for ${value}`;
+
+    const filters = {};
+    filters[type] = value;
+
+    Luigis.Search({
+      TrackerId: '179075-204259',
+      Locale: "en",
+      Facets: ['brand', 'category', 'price_amount'],
+      DefaultFilters: {
+        type: 'product'
+      },
+      IntentFilters: filters,
+      ProductListingFilter: type
+    }, 
+    null,
+    '#plp-ui-container'
+    );
+  </script>
+
+</body>
+</html>

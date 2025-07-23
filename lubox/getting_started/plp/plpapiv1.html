@@ -426,7 +426,7 @@
           renderPagination(data.results.total_hits);
           updateURL(query, filters, page);
 
-          trackSearchView(query, data.results.hits);
+          trackSearchView(query, data.results.hits, plpType);
         } catch (error) {
           console.error("Error fetching search results:", error);
           resultsContainer.innerHTML =
@@ -676,8 +676,10 @@
         }
       }
 
-      function trackSearchView(query, hits) {
+      function trackSearchView(query, hits, plp = null) {
         if (!hits || hits.length === 0) return;
+
+        const listType = plp ? "Product Listing" : "Search Results";
 
         const analyticsPayload = {
           id: crypto.randomUUID(),
@@ -685,7 +687,7 @@
           tracker_id: TRACKER_ID,
           client_id: CLIENT_ID,
           lists: {
-            "Search Results": {
+            [listType]: {
               query: { string: query },
               items: hits.map((hit, index) => ({
                 title: hit.attributes.title,
