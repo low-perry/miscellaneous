@@ -1,0 +1,96 @@
+/* Solution 1: Force single line with flex and prevent wrapping */
+.lb-pagination__pager {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 4px;
+}
+
+.lb-pagination_page {
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+/* Solution 2: Make buttons smaller on mobile */
+@media (max-width: 768px) {
+    .lb-pagination_page {
+        padding: 6px 8px;
+        font-size: 14px;
+        min-width: 32px;
+    }
+    
+    .lb-pagination_page--button {
+        padding: 6px 6px;
+        min-width: 28px;
+    }
+    
+    /* Hide some elements on very small screens */
+    .lb-pagination_page--hidden {
+        display: none;
+    }
+}
+
+/* Solution 3: Alternative - Stack vertically on very small screens */
+@media (max-width: 480px) {
+    .lb-pagination__pager {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .lb-pagination__pager > div {
+        display: flex;
+        justify-content: center;
+        gap: 4px;
+    }
+    
+    /* Group navigation buttons */
+    .lb-pagination_page--button-first,
+    .lb-pagination_page--button-prev,
+    .lb-pagination_page--button-next,
+    .lb-pagination_page--button-last {
+        order: -1;
+    }
+}
+
+/* Solution 4: Horizontal scroll approach */
+.lb-pagination__pager-scroll {
+    display: flex;
+    align-items: center;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    gap: 2px;
+}
+
+.lb-pagination__pager-scroll::-webkit-scrollbar {
+    display: none;
+}
+
+.lb-pagination__pager-scroll .lb-pagination_page {
+    flex-shrink: 0;
+    min-width: 40px;
+    text-align: center;
+}
+
+/* Solution 5: Compact mobile version - hide page numbers, keep only nav buttons */
+@media (max-width: 576px) {
+    .lb-pagination__pager-compact .lb-pagination_page:not(.lb-pagination_page--button):not(.lb-pagination_page--active) {
+        display: none;
+    }
+    
+    .lb-pagination__pager-compact .lb-pagination_page--hidden {
+        display: none;
+    }
+    
+    .lb-pagination__pager-compact {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .lb-pagination__pager-compact .lb-pagination_page--active {
+        margin: 0 10px;
+    }
+}
