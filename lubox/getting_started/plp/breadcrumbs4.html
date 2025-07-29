@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Category Page | My Super Shop</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Axios Library -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #f9fafb;
+        color: #1f2937;
+        margin: 0;
+      }
+      .container {
+        width: 100%;
+        max-width: 1280px;
+        margin-left: auto;
+        margin-right: auto;
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+      header {
+        background-color: #ffffff;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        padding: 1rem 0;
+      }
+      .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      header h1 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #111827;
+      }
+      main {
+        padding-top: 2rem;
+        padding-bottom: 3rem;
+      }
+      footer {
+        background-color: #ffffff;
+        margin-top: 4rem;
+        padding: 2rem 0;
+        text-align: center;
+        color: #6b7280;
+        border-top: 1px solid #e5e7eb;
+      }
+      .search-layout {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+      }
+      @media (min-width: 768px) {
+        .search-layout {
+          flex-direction: row;
+        }
+      }
+      .search-main-content {
+        flex: 3;
+      }
+      .search-sidebar {
+        flex: 1;
+      }
+      .results-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin-top: 1.5rem;
+        margin-bottom: 1.5rem;
+      }
+      .product-card {
+        border: 1px solid #e5e7eb;
+        border-radius: 0.5rem;
+        background-color: #fff;
+        overflow: hidden;
+        transition: box-shadow 0.2s;
+        display: flex;
+        flex-direction: column;
+      }
+      .product-card:hover {
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+          0 2px 4px -2px rgba(0, 0, 0, 0.1);
+      }
+      .product-card a.product-link {
+        text-decoration: none;
+        color: inherit;
+      }
+      .product-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        background-color: #f3f4f6;
+      }
+      .product-info {
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+      }
+      .product-title {
+        font-size: 1rem;
+        font-weight: 600;
+        margin: 0 0 0.25rem 0;
+        min-height: 2.5rem; /* For 2 lines of text */
+      }
+      .product-brand {
+        font-size: 0.875rem;
+        color: #6b7280;
+        margin: 0 0 0.5rem 0;
+      }
+      .product-price-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: auto;
+      }
+      .product-price {
+        font-size: 1.125rem;
+        font-weight: 700;
+      }
+      .facet-block {
+        margin-bottom: 1.5rem;
+      }
+      .facet-title {
+        font-weight: 600;
+        margin-bottom: 0.75rem;
+        text-transform: capitalize;
+      }
+      .facet-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+      .facet-item label {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+      }
+      .facet-item input {
+        margin-right: 0.5rem;
+      }
+      .facet-item .count {
+        margin-left: auto;
+        color: #6b7280;
+        font-size: 0.875rem;
+      }
+      .pagination-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        margin-top: 2rem;
+      }
+      .pagination-button, .pagination-page {
+        padding: 0.5rem 1rem;
+        margin: 0.25rem;
+        border: 1px solid #d1d5db;
+        border-radius: 0.375rem;
+        background-color: #fff;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+      .pagination-page.active {
+        background-color: #3b82f6;
+        color: white;
+        border-color: #3b82f6;
+      }
+      .pagination-button:disabled {
+        color: #9ca3af;
+        cursor: not-allowed;
+      }
+      .breadcrumbs {
+        margin-bottom: 1.5rem;
+        font-size: 0.875rem;
+        color: #6b7280;
+      }
+      .breadcrumb-item {
+        text-decoration: none;
+        color: #3b82f6;
+      }
+      .breadcrumb-item:hover {
+        text-decoration: underline;
+      }
+      .breadcrumb-separator {
+        margin: 0 0.5rem;
+      }
+      .breadcrumb-current {
+        font-weight: 500;
+        color: #1f2937;
+      }
+      /* New styles for subcategory navigation */
+      .subcategories-container {
+        margin-bottom: 2rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid #e5e7eb;
+      }
+      .subcategories-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+      .subcategory-link {
+        display: block;
+        padding: 0.5rem 1rem;
+        background-color: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.5rem;
+        text-decoration: none;
+        color: #374151;
+        font-weight: 500;
+        transition: all 0.2s ease-in-out;
+      }
+      .subcategory-link:hover {
+        background-color: #f3f4f6;
+        border-color: #d1d5db;
+        color: #111827;
+      }
+    </style>
+</head>
+<body>
+    <header>
+      <div class="container header-content">
+        <h1>My Super Shop</h1>
+      </div>
+    </header>
+
+    <main class="container">
+      <nav id="breadcrumbs-container" class="breadcrumbs"></nav>
+      <div id="subcategories-container" class="subcategories-container"></div>
+      <div class="search-layout">
+        <aside class="search-sidebar" id="facets-container"></aside>
+        <div class="search-main-content">
+          <h2 id="results-heading">Loading...</h2>
+          <div class="results-grid" id="results-container"></div>
+          <div id="pagination-container"></div>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <div class="container">
+        &copy; 2025 My Super Shop. Powered by Luigi's Box.
+      </div>
+    </footer>
+
+    <script>
+      // --- CONFIGURATION ---
+      const TRACKER_ID = "179075-204259";
+      const API_ENDPOINT = "https://live.luigisbox.com/search";
+      const RESULTS_PER_PAGE = 9;
+
+      // --- DOM ELEMENTS ---
+      const resultsContainer = document.getElementById("results-container");
+      const facetsContainer = document.getElementById("facets-container");
+      const resultsHeading = document.getElementById("results-heading");
+      const paginationContainer = document.getElementById("pagination-container");
+      const breadcrumbsContainer = document.getElementById("breadcrumbs-container");
+      const subcategoriesContainer = document.getElementById("subcategories-container");
+
+      // --- STATE MANAGEMENT ---
+      let currentCategoryPath = '';
+      let activeFilters = {};
+      let currentPage = 1;
+
+      // --- API CALL ---
+      async function getProductListing(categoryPath, filters = {}, page = 1) {
+        resultsHeading.textContent = 'Loading...';
+        resultsContainer.innerHTML = ''; // Clear previous results
+        facetsContainer.innerHTML = '';
+        paginationContainer.innerHTML = '';
+        subcategoriesContainer.innerHTML = '';
+
+        const params = {
+          tracker_id: TRACKER_ID,
+          'f[]': ['type:product'],
+          facets: 'brand,price_amount,category_path',
+          hit_fields: 'title,url,price_amount,image_link,brand,id',
+          size: RESULTS_PER_PAGE,
+          page: page,
+        };
+        
+        if (categoryPath) {
+            // To get all products in a category AND its children for browsing,
+            // we filter by 'all_categories_path'. This also provides the necessary
+            // facet data to render subcategory links.
+            params['f[]'].push(`all_categories_path:${categoryPath}`);
+
+            // ** FIX: The 'plp' parameter must match the filter type. **
+            // This ensures merchandising rules are applied correctly.
+            params.plp = 'all_categories_path';
+        }
+
+        for (const key in filters) {
+          filters[key].forEach(value => {
+            params['f[]'].push(`${key}:${value}`);
+          });
+        }
+
+        try {
+          const response = await axios.get(API_ENDPOINT, { params });
+          const data = response.data;
+          
+          currentCategoryPath = categoryPath;
+          currentPage = page;
+          activeFilters = filters;
+
+          renderResults(data.results);
+          renderFacets(data.results.facets);
+          renderSubcategories(data.results.facets);
+          renderPagination(data.results.total_hits);
+          renderBreadcrumbs(currentCategoryPath);
+          updateURL(currentCategoryPath, activeFilters, currentPage);
+
+        } catch (error) {
+          console.error("Error fetching product listing:", error);
+          resultsHeading.textContent = "Error";
+          resultsContainer.innerHTML = "<p>Sorry, there was an error fetching products.</p>";
+        }
+      }
+
+      // --- RENDERING FUNCTIONS ---
+      function renderBreadcrumbs(pathString) {
+          if (!pathString) {
+              breadcrumbsContainer.innerHTML = `<span class="breadcrumb-current">Home</span>`;
+              return;
+          }
+          const pathParts = pathString.split('||');
+          let accumulatedPath = '';
+          const breadcrumbHTML = pathParts.map((part, index) => {
+              accumulatedPath += (index > 0 ? '||' : '') + part;
+              if (index === pathParts.length - 1) {
+                  return `<span class="breadcrumb-current">${part}</span>`;
+              } else {
+                  const categoryUrl = `?category=${encodeURIComponent(accumulatedPath)}`;
+                  return `<a href="${categoryUrl}" class="breadcrumb-item">${part}</a><span class="breadcrumb-separator">/</span>`;
+              }
+          }).join('');
+          breadcrumbsContainer.innerHTML = `<a href="?" class="breadcrumb-item">Home</a><span class="breadcrumb-separator">/</span>` + breadcrumbHTML;
+      }
+
+      function renderSubcategories(facetsData) {
+          const categoryFacet = facetsData.find(f => f.name === 'category_path');
+          if (!categoryFacet || categoryFacet.values.length === 0) {
+              subcategoriesContainer.innerHTML = '';
+              return;
+          }
+
+          // Filter for direct children only
+          const currentDepth = currentCategoryPath ? currentCategoryPath.split('||').length : 0;
+          const subcategories = categoryFacet.values.filter(v => {
+              const pathParts = v.value.split('||');
+              // Ensure the subcategory path starts with the current path
+              const startsWithCurrent = currentCategoryPath ? v.value.startsWith(currentCategoryPath + '||') : true;
+              return pathParts.length === currentDepth + 1 && (currentDepth === 0 || startsWithCurrent);
+          });
+
+
+          if (subcategories.length === 0) {
+              subcategoriesContainer.innerHTML = '';
+              return;
+          }
+          
+          const listItems = subcategories.map(cat => {
+              const displayName = cat.value.split('||').pop();
+              const categoryUrl = `?category=${encodeURIComponent(cat.value)}`;
+              return `<li><a href="${categoryUrl}" class="subcategory-link">${displayName} (${cat.hits_count})</a></li>`;
+          }).join('');
+
+          subcategoriesContainer.innerHTML = `<h3>Browse Subcategories</h3><ul class="subcategories-list">${listItems}</ul>`;
+      }
+
+
+      function renderResults(resultsData) {
+        const categoryName = currentCategoryPath.split('||').pop() || 'All Products';
+        resultsHeading.textContent = `Showing ${resultsData.total_hits} results for "${categoryName}"`;
+
+        if (resultsData.hits.length === 0) {
+          resultsContainer.innerHTML = "<p>No products found in this category.</p>";
+          return;
+        }
+
+        resultsContainer.innerHTML = resultsData.hits.map(result => {
+          const { url, attributes } = result;
+          const imageUrl = attributes.image_link || "https://placehold.co/400x400/eee/ccc?text=No+Image";
+          const title = attributes.title || "No Title Available";
+          const brand = attributes.brand ? attributes.brand[0] : "";
+          const price = attributes.price_amount ? `${attributes.price_amount} EUR` : "";
+          const productId = attributes.id ? attributes.id[0] : "";
+
+          return `
+            <div class="product-card">
+              <a href="${url}" target="_blank" class="product-link" data-product-id="${productId}">
+                <img src="${imageUrl}" alt="${title}" class="product-image" onerror="this.onerror=null;this.src='https://placehold.co/400x400/eee/ccc?text=No+Image';">
+              </a>
+              <div class="product-info">
+                <h3 class="product-title">${title}</h3>
+                <p class="product-brand">${brand}</p>
+                <div class="product-price-section">
+                  <div class="product-price">${price}</div>
+                </div>
+              </div>
+            </div>`;
+        }).join('');
+      }
+      
+      function renderFacets(facetsData) {
+          const filteredFacets = facetsData.filter(f => f.name !== 'category_path');
+          if (!filteredFacets || filteredFacets.length === 0) {
+              facetsContainer.innerHTML = "";
+              return;
+          }
+          facetsContainer.innerHTML = filteredFacets.map(facet => {
+              if (facet.values.length === 0) return '';
+              const content = facet.values.map(val => {
+                  const isChecked = activeFilters[facet.name]?.includes(val.value) ? "checked" : "";
+                  let label = val.value;
+                   if (facet.name === "price_amount") {
+                        const [min, max] = val.value.split("|");
+                        label = `${parseInt(min, 10)} - ${parseInt(max, 10)} EUR`;
+                    }
+                  return `
+                      <li class="facet-item">
+                          <label>
+                              <input type="checkbox" name="${facet.name}" value="${val.value}" ${isChecked}>
+                              <span>${label}</span>
+                              <span class="count">${val.hits_count}</span>
+                          </label>
+                      </li>`;
+              }).join('');
+              const displayTitle = facet.name.replace(/_/g, ' ');
+              return `
+                  <div class="facet-block">
+                      <h3 class="facet-title">${displayTitle}</h3>
+                      <ul class="facet-list">${content}</ul>
+                  </div>`;
+          }).join('');
+      }
+
+      function renderPagination(totalHits) {
+        const totalPages = Math.ceil(totalHits / RESULTS_PER_PAGE);
+        paginationContainer.innerHTML = "";
+        if (totalPages <= 1) return;
+
+        let paginationHTML = '';
+        for (let i = 1; i <= totalPages; i++) {
+            paginationHTML += `<button class="pagination-page ${i === currentPage ? 'active' : ''}" data-page="${i}">${i}</button>`;
+        }
+        paginationContainer.innerHTML = paginationHTML;
+      }
+
+      // --- URL MANAGEMENT ---
+      function updateURL(categoryPath, filters, page) {
+        const urlParams = new URLSearchParams();
+        if (categoryPath) {
+            urlParams.set('category', categoryPath);
+        }
+        if (page > 1) {
+            urlParams.set("page", page);
+        }
+        for (const key in filters) {
+          filters[key].forEach(value => {
+            urlParams.append('f[]', `${key}:${value}`);
+          });
+        }
+        
+        const newQueryString = urlParams.toString();
+        const newRelativePath = newQueryString ? `?${newQueryString}` : window.location.pathname;
+
+        try {
+            if (window.location.search !== (newQueryString ? `?${newQueryString}`: '')) {
+                history.pushState({ categoryPath, filters, page }, null, newRelativePath);
+            }
+        } catch (e) {
+            console.warn("history.pushState failed.", e.message);
+        }
+      }
+
+      // --- EVENT LISTENERS ---
+      function initializePage() {
+          const urlParams = new URLSearchParams(window.location.search);
+          const pathFromUrl = urlParams.get('category') || ''; 
+          const pageFromUrl = parseInt(urlParams.get('page'), 10) || 1;
+          const filtersFromUrl = {};
+          urlParams.getAll('f[]').forEach(filterString => {
+              const [key, value] = filterString.split(':', 2);
+              if (key && value) {
+                  if (!filtersFromUrl[key]) filtersFromUrl[key] = [];
+                  filtersFromUrl[key].push(value);
+              }
+          });
+          
+          getProductListing(pathFromUrl, filtersFromUrl, pageFromUrl);
+      }
+
+      breadcrumbsContainer.addEventListener('click', e => {
+          if (e.target.matches('.breadcrumb-item')) {
+              e.preventDefault();
+              const url = new URL(e.target.href, window.location.origin);
+              const newPath = url.searchParams.get('category') || '';
+              getProductListing(newPath, {}, 1);
+          }
+      });
+      
+      subcategoriesContainer.addEventListener('click', e => {
+          if (e.target.matches('.subcategory-link')) {
+              e.preventDefault();
+              const url = new URL(e.target.href, window.location.origin);
+              const newPath = url.searchParams.get('category') || '';
+              getProductListing(newPath, {}, 1);
+          }
+      });
+
+      facetsContainer.addEventListener('change', e => {
+          if (e.target.type === 'checkbox') {
+              const facetName = e.target.name;
+              const facetValue = e.target.value;
+              const newFilters = JSON.parse(JSON.stringify(activeFilters));
+
+              if (!newFilters[facetName]) newFilters[facetName] = [];
+
+              if (e.target.checked) {
+                  newFilters[facetName].push(facetValue);
+              } else {
+                  newFilters[facetName] = newFilters[facetName].filter(v => v !== facetValue);
+                  if (newFilters[facetName].length === 0) delete newFilters[facetName];
+              }
+              getProductListing(currentCategoryPath, newFilters, 1);
+          }
+      });
+
+      paginationContainer.addEventListener('click', e => {
+          if (e.target.matches('.pagination-page')) {
+              const page = parseInt(e.target.dataset.page, 10);
+              if (page !== currentPage) {
+                  getProductListing(currentCategoryPath, activeFilters, page);
+              }
+          }
+      });
+
+      window.addEventListener('popstate', (e) => {
+          if (e.state && typeof e.state.categoryPath !== 'undefined') {
+              getProductListing(e.state.categoryPath, e.state.filters, e.state.page);
+          } else {
+              initializePage();
+          }
+      });
+      
+      // Initial load
+      document.addEventListener('DOMContentLoaded', initializePage);
+    </script>
+</body>
+</html>
