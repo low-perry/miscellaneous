@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Assistant | Webinar Guitars</title>
+    <!-- Axios for making HTTP requests -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- Google Fonts for a nicer look -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Plain CSS for all styling -->
+    <style>
+        :root {
+            --primary-color: #7c3aed;
+            --primary-hover-color: #6d28d9;
+            --danger-color: #ef4444;
+            --danger-hover-color: #dc2626;
+            --text-dark: #1f2937;
+            --text-light: #4b5563;
+            --bg-light: #f3f4f6;
+            --bg-white: #ffffff;
+            --border-color: #e5e7eb;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-light);
+            margin: 0;
+            padding: 1rem;
+            color: var(--text-dark);
+        }
+
+        .container {
+            max-width: 80rem;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        header h1 {
+            font-size: 2.25rem;
+            font-weight: 700;
+        }
+
+        header p {
+            color: var(--text-light);
+            margin-top: 0.5rem;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        .card {
+            background-color: var(--bg-white);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            height: 80vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        #assistant-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        #assistant-avatar {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 9999px;
+            margin-right: 1rem;
+        }
+        
+        #assistant-header h2 {
+            font-weight: 700;
+            font-size: 1.125rem;
+        }
+
+        #assistant-header p {
+            font-size: 0.875rem;
+            color: #22c55e;
+            font-weight: 600;
+        }
+
+        #restart-btn {
+            margin-left: auto;
+            background-color: var(--danger-color);
+            color: white;
+            font-weight: 600;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            font-size: 0.875rem;
+        }
+        #restart-btn:hover {
+            background-color: var(--danger-hover-color);
+        }
+
+        #chat-area {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding-right: 0.5rem;
+        }
+        
+        .product-results-container h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        #product-results {
+            flex-grow: 1;
+            overflow-y: auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 1.5rem;
+            padding-right: 0.5rem;
+        }
+
+        .product-card {
+            background-color: var(--bg-white);
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 14rem; /* *** FIX: Increased height for better image display *** */
+            object-fit: cover;
+            background-color: #f8f8f8;
+        }
+
+        .product-card-content {
+            padding: 1rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .product-card-content h3 {
+            font-weight: 700;
+            flex-grow: 1;
+        }
+        
+        .product-card-content p {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-top: 0.5rem;
+        }
+
+        .product-card-content a {
+            margin-top: 1rem;
+            text-align: center;
+            background-color: var(--text-dark);
+            color: white;
+            font-weight: 700;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            transition: background-color 0.2s;
+        }
+        
+        .product-card-content a:hover {
+            background-color: #000;
+        }
+
+        .assistant-message {
+            margin-bottom: 1.5rem;
+        }
+        
+        .assistant-bubble {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            border-bottom-left-radius: 0;
+            max-width: 90%;
+            word-wrap: break-word;
+        }
+        
+        .user-message {
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .user-bubble {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            border-bottom-right-radius: 0;
+            max-width: 90%;
+            word-wrap: break-word;
+        }
+
+        .options-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            justify-content: flex-start;
+            margin-top: 0.5rem;
+        }
+
+        .option-button {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .option-button:hover {
+            background-color: var(--primary-hover-color);
+        }
+        
+        .option-button:disabled {
+            background-color: #9ca3af;
+            cursor: not-allowed;
+        }
+
+        .loading-spinner {
+            text-align: center;
+            padding: 1rem;
+        }
+        
+        .hidden {
+            display: none;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .spinner {
+            animation: spin 1s linear infinite;
+            height: 2rem;
+            width: 2rem;
+            margin: 0 auto;
+            border: 4px solid rgba(124, 58, 237, 0.2);
+            border-left-color: var(--primary-color);
+            border-radius: 50%;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar { width: 8px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f1f1; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #888; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #555; }
+
+        @media (min-width: 768px) {
+            .main-grid {
+                grid-template-columns: 1fr 2fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Guitar Finder Assistant</h1>
+            <p>Let us help you find the perfect guitar!</p>
+        </header>
+
+        <div class="main-grid">
+            <!-- Assistant Chat Column -->
+            <div class="card">
+                <div id="assistant-header">
+                     <img id="assistant-avatar" src="https://placehold.co/48x48/7c3aed/ffffff?text=🎸" alt="Assistant Avatar">
+                     <div>
+                        <h2>Webinar Guitars</h2>
+                        <p>Online</p>
+                     </div>
+                     <button id="restart-btn">Restart</button>
+                </div>
+                <div id="chat-area" class="custom-scrollbar">
+                    <!-- Conversation history will be built here -->
+                </div>
+                 <div id="loading-spinner" class="loading-spinner hidden">
+                    <div class="spinner"></div>
+                    <p>Finding options...</p>
+                </div>
+            </div>
+
+            <!-- Product Results Column -->
+            <div class="card product-results-container">
+                 <h2>Matching Guitars (<span id="hits-count">0</span>)</h2>
+                 <div id="product-results" class="custom-scrollbar">
+                    <!-- Product cards will be injected here -->
+                 </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- CONFIGURATION ---
+        const TRACKER_ID = '179075-204259';
+        const ASSISTANT_HANDLE = 'Webinar Guitars';
+        const ASSISTANT_VERSION = -1;
+        const API_ENDPOINT = 'https://live.luigisbox.com/v1/assistant';
+
+        // --- STATE MANAGEMENT ---
+        const userId = crypto.randomUUID();
+        let steps = [];
+        let isLoading = false;
+
+        // --- UI ELEMENTS ---
+        const chatArea = document.getElementById('chat-area');
+        const productResults = document.getElementById('product-results');
+        const hitsCountEl = document.getElementById('hits-count');
+        const loadingSpinner = document.getElementById('loading-spinner');
+        const assistantAvatar = document.getElementById('assistant-avatar');
+        const restartBtn = document.getElementById('restart-btn');
+
+        /**
+         * Main function to call the Luigi's Box Assistant API
+         * @param {string|null} nextQuestionHandle - The handle for the next question, if specified.
+         */
+        async function callAssistantAPI(nextQuestionHandle = null) {
+            if (isLoading) return;
+            isLoading = true;
+            updateLoadingUI();
+
+            const url = `${API_ENDPOINT}?tracker_id=${TRACKER_ID}&assistant_handle=${encodeURIComponent(ASSISTANT_HANDLE)}&user_id=${userId}`;
+            const payload = {
+                assistant_version: ASSISTANT_VERSION,
+                steps: steps
+            };
+
+            if (nextQuestionHandle) {
+                payload.next_question_handle = nextQuestionHandle;
+            }
+            
+            console.log("Sending payload to Assistant API:", JSON.stringify(payload, null, 2));
+
+            try {
+                const response = await axios.post(url, payload);
+                const data = response.data;
+                
+                appendAssistantMessage(data);
+                updateProductsUI(data.hits);
+
+            } catch (error) {
+                console.error('Error fetching from Assistant API:', error);
+                displayError(error);
+            } finally {
+                isLoading = false;
+                updateLoadingUI();
+            }
+        }
+
+        /**
+         * Appends a new message from the assistant to the chat.
+         * @param {object} data - The full response data from the API.
+         */
+        function appendAssistantMessage(data) {
+            if (data.avatar_image_link) {
+                assistantAvatar.src = data.avatar_image_link;
+            }
+
+            const assistantMessageContainer = document.createElement('div');
+            assistantMessageContainer.className = 'assistant-message';
+
+            if (data.question && data.question.options && data.question.options.length > 0) {
+                const question = data.question;
+
+                const questionBubble = document.createElement('div');
+                questionBubble.className = 'assistant-bubble';
+                questionBubble.innerHTML = `
+                    ${question.title_html}
+                    ${question.description_html ? `<div style="font-size: 0.875rem; margin-top: 0.5rem; opacity: 0.8;">${question.description_html}</div>` : ''}
+                `;
+                
+                const optionsContainer = document.createElement('div');
+                optionsContainer.className = 'options-container';
+                
+                question.options.forEach(option => {
+                    const button = document.createElement('button');
+                    button.className = 'option-button';
+                    
+                    button.innerHTML = `${option.title_html} (${option.hits_count})`;
+                    button.onclick = () => handleOptionClick(question.question_handle, option, optionsContainer);
+                    optionsContainer.appendChild(button);
+                });
+                questionBubble.appendChild(optionsContainer);
+                assistantMessageContainer.appendChild(questionBubble);
+            } else {
+                 assistantMessageContainer.innerHTML = `
+                    <div class="assistant-bubble" style="background-color: #dcfce7; color: #166534; text-align: center;">
+                        <h3 style="font-weight: 700;">All done!</h3>
+                        <p>We've narrowed down the results for you based on your selections.</p>
+                    </div>
+                 `;
+            }
+            chatArea.appendChild(assistantMessageContainer);
+            chatArea.scrollTop = chatArea.scrollHeight;
+        }
+        
+        /**
+         * Handles the click event for an option button, creating a proper chat flow.
+         * @param {string} questionHandle - The handle of the question being answered.
+         * @param {object} selectedOption - The full option object that was clicked.
+         * @param {HTMLElement} optionsContainer - The container of the buttons to disable them.
+         */
+        function handleOptionClick(questionHandle, selectedOption, optionsContainer) {
+            if (!questionHandle) {
+                const errorMessage = "A critical error occurred: The question from the API is missing a 'handle'.";
+                console.error(errorMessage);
+                displayError({ message: errorMessage });
+                optionsContainer.querySelectorAll('button').forEach(btn => btn.disabled = true);
+                return;
+            }
+
+            optionsContainer.querySelectorAll('button').forEach(btn => {
+                btn.disabled = true;
+            });
+
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = selectedOption.title_html;
+            const plainTitle = tempDiv.textContent || tempDiv.innerText || "";
+
+            const userMessageContainer = document.createElement('div');
+            userMessageContainer.className = 'user-message';
+            userMessageContainer.innerHTML = `<div class="user-bubble">${plainTitle}</div>`;
+            chatArea.appendChild(userMessageContainer);
+
+            steps.push({
+                question_handle: questionHandle,
+                option_handles: [selectedOption.option_handle]
+            });
+
+            callAssistantAPI(selectedOption.next_question_handle);
+        }
+
+        /**
+         * Renders the product hits in the results area
+         * @param {Array} hits - The array of product objects
+         */
+        function updateProductsUI(hits = []) {
+            productResults.innerHTML = '';
+            hitsCountEl.textContent = hits.length;
+
+            if (hits.length === 0) {
+                productResults.innerHTML = `<p style="color: #6b7280; text-align: center; grid-column: 1 / -1;">No guitars match the current selection.</p>`;
+                return;
+            }
+
+            hits.forEach(hit => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                
+                const price = hit.attributes.price_amount ? `$${Number(hit.attributes.price_amount).toFixed(2)}` : 'Price not available';
+                
+                card.innerHTML = `
+                    <img src="${hit.attributes.image_link || 'https://placehold.co/600x400/e2e8f0/64748b?text=No+Image'}" 
+                         alt="${hit.attributes.title}" 
+                         onerror="this.onerror=null;this.src='https://placehold.co/600x400/e2e8f0/64748b?text=No+Image';">
+                    <div class="product-card-content">
+                        <h3>${hit.attributes.title}</h3>
+                        <p>${price}</p>
+                        <a href="${hit.url || '#'}" target="_blank">View Details</a>
+                    </div>
+                `;
+                productResults.appendChild(card);
+            });
+        }
+
+        /**
+         * Displays an error message in the UI
+         */
+        function displayError(error) {
+            let message = 'An unknown error occurred.';
+            if (error.response) {
+                const errorData = error.response.data;
+                if (typeof errorData === 'string') message = errorData;
+                else if (Array.isArray(errorData)) message = errorData.join(', ');
+                else if (errorData.reason) message = errorData.reason;
+                else message = `Error ${error.response.status}: ${error.response.statusText}`;
+            } else if (error.request) {
+                message = 'Could not connect to the server.';
+            } else {
+                message = error.message;
+            }
+            
+            chatArea.innerHTML = `
+                <div style="background-color: #fee2e2; border: 1px solid #f87171; color: #b91c1c; padding: 1rem; border-radius: 0.5rem;" role="alert">
+                    <strong style="font-weight: 700;">Oops! An Error Occurred.</strong>
+                    <span>${message}</span>
+                </div>
+            `;
+        }
+        
+        /** Shows or hides the loading spinner */
+        function updateLoadingUI() {
+            loadingSpinner.classList.toggle('hidden', !isLoading);
+        }
+
+        /** Resets the conversation state and starts over. */
+        function restartConversation() {
+            steps = [];
+            chatArea.innerHTML = '';
+            callAssistantAPI();
+        }
+
+        // --- INITIALIZATION ---
+        restartBtn.addEventListener('click', restartConversation);
+        document.addEventListener('DOMContentLoaded', () => {
+            callAssistantAPI();
+        });
+    </script>
+</body>
+</html>
