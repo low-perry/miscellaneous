@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PLP & Search Example</title>
+    
+    <!-- The default CSS theme for the Search.js widget -->
+    <link rel="stylesheet" href="https://cdn.luigisbox.com/search/boo.css">
+    
+    <style>
+        /* Basic styling for layout and readability */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 2rem;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            color: #007bff;
+        }
+        #search-form {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        #search-input {
+            width: 50%;
+            max-width: 400px;
+            padding: 0.75rem;
+            font-size: 1rem;
+            border-radius: 25px;
+            border: 1px solid #ccc;
+        }
+        #plp-ui-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 1rem;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        /* The 'boo' theme from search.js will handle most of the complex styling */
+    </style>
+</head>
+<body>
+
+    <h1>Our Products</h1>
+
+    <!-- A visible search input is required for Search.js to initialize correctly -->
+    <form id="search-form" onsubmit="return false;">
+      <input type="search" id="search-input" placeholder="Search for products...">
+    </form>
+
+    <!-- 
+      This is the main placeholder where Search.js will render the entire UI.
+      The loading message provides a better user experience while the initial data is fetched.
+    -->
+    <div id="plp-ui-container">
+        <p>Loading products, please wait...</p>
+    </div>
+
+    <!-- 1. Include the Search.js library from the CDN -->
+    <script src="https://cdn.luigisbox.com/search.js"></script>
+
+    <script>
+        // --- Full Implementation Script ---
+
+        // We wrap our code in a DOMContentLoaded event listener to ensure the library is loaded.
+        document.addEventListener('DOMContentLoaded', function() {
+            // 2. First, INITIALIZE the search UI with all desired features and facets.
+            // This call prepares the UI components but does not fetch any data yet.
+            Luigis.Search({
+                // Your specific Tracker ID
+                TrackerId: '179075-204259',
+
+                // Use a pre-built theme for a good default look and feel.
+                Theme: 'boo',
+
+                // Define which facets (filters) should be available.
+                Facets: ['brand', 'price_amount'],
+
+                // Set a default filter to ensure we only get results of type 'product'.
+                DefaultFilters: {
+                    type: 'product'
+                },
+            }, 
+            '#search-input', // The second argument points to our visible search bar.
+            '#plp-ui-container' // The third argument is the CSS selector for the main UI container.
+            );
+
+            // 3. Immediately after initialization, EXECUTE the search for the specific category.
+            // This call fetches and renders the initial view (the PLP).
+            Luigis.Search.Search(
+                null, // The query is null because this is a category listing, not a keyword search.
+                {
+                    // This string must match a key in IntentFilters. It tells Luigi's Box which filter defines this PLP.
+                    ProductListingFilter: "all_categories_path",
+
+                    // This object contains the specific filter to apply for the initial view.
+                    IntentFilters: { 
+                        all_categories_path: "Musicians||Guitars" 
+                    }
+                }
+            );
+        });
+    </script>
+
+</body>
+</html>
