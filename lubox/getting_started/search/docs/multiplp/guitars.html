@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guitars | My Super Shop</title>
+    <link rel="stylesheet" href="main.css"> <!-- Link to your main stylesheet -->
+</head>
+<!-- 
+  The data- attributes are crucial. They tell our reusable script 
+  what kind of page this is and what to filter by.
+-->
+<body data-plp-type="all_categories_path" data-plp-value="Musicians||Guitars">
+
+    <!-- This placeholder will be filled by layout.js -->
+    <header id="main-header"></header>
+
+    <main>
+        <h1>Guitars</h1>
+        <!-- The container where Search.js will render the PLP UI -->
+        <div id="plp-ui-container">
+            <p>Loading products...</p>
+        </div>
+    </main>
+
+    <!-- Load the libraries and your custom scripts -->
+    <script src="https://cdn.luigisbox.com/search.js"></script>
+    <script src="layout.js"></script> <!-- This script loads the header -->
+    <script src="plp-loader.js"></script> <!-- This script initializes the PLP -->
+
+</body>
+</html>
