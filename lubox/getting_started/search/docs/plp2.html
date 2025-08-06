@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Simple Product Listing</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+      body { font-family: "Inter", sans-serif; background-color: #f9fafb; margin: 0; padding: 2rem; }
+      .container { max-width: 1200px; margin: auto; background-color: #fff; padding: 2rem; border-radius: 0.5rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+      h1 { border-bottom: 1px solid #e5e7eb; padding-bottom: 0.5rem; margin-bottom: 1.5rem; }
+      .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.5rem; }
+      .product-card { border: 1px solid #e5e7eb; border-radius: 0.5rem; }
+      .product-card a { text-decoration: none; color: inherit; }
+      .product-card img { width: 100%; height: 200px; object-fit: cover; border-top-left-radius: 0.5rem; border-top-right-radius: 0.5rem; background-color: #f3f4f6;}
+      .product-info { padding: 1rem; }
+      .product-title { font-size: 1rem; font-weight: 600; margin: 0 0 0.25rem 0; }
+      .product-brand { font-size: 0.875rem; color: #6b7280; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 id="page-title">Loading...</h1>
+        <div id="product-grid" class="product-grid"></div>
+    </div>
+
+    <script>
+        // --- CONFIGURATION ---
+        const TRACKER_ID = "179075-204259"; // Replace with your Tracker ID
+        const CATEGORY_NAME = "Kalimbas";
+        const API_ENDPOINT = "https://live.luigisbox.com/search";
+        const ANALYTICS_API_URL = "https://api.luigisbox.com/";
+        // In a real application, this should be a persistent ID stored in a cookie or localStorage
+        const CLIENT_ID = Math.floor(Math.random() * 1e18); 
+
+        // --- DOM ELEMENTS ---
+        const productGrid = document.getElementById("product-grid");
+        const pageTitle = document.getElementById("page-title");
+
+        // --- API & RENDERING ---
+        async function displayCategoryProducts() {
+            pageTitle.textContent = `Products in category: "${CATEGORY_NAME}"`;
+            productGrid.innerHTML = "<p>Fetching products...</p>";
+
+            try {
+                const response = await axios.get(API_ENDPOINT, {
+                    params: {
+                        tracker_id: TRACKER_ID,
+                        'f[]': [
+                            'type:product',
+                            `category:${CATEGORY_NAME}`
+                        ],
+                        plp: 'category',
+                        hit_fields: 'title,brand,image_link,id,url' // Add id and url for tracking
+                    }
+                });
+
+                const products = response.data.results.hits;
+
+                if (products.length === 0) {
+                    productGrid.innerHTML = "<p>No products found in this category.</p>";
+                    return;
+                }
+
+                productGrid.innerHTML = "";
+
+                products.forEach(product => {
+                    const imageUrl = product.attributes.image_link || `https://placehold.co/300x300/eee/ccc?text=No+Image`;
+                    const card = document.createElement("div");
+                    card.className = "product-card";
+
+                    // ** FIX: Check if product ID exists before creating the data attribute **
+                    const productId = (product.attributes.id && product.attributes.id[0]) ? product.attributes.id[0] : null;
+                    const productIdAttribute = productId ? `data-product-id="${productId}"` : '';
+
+                    card.innerHTML = `
+                        <a href="${product.url}" class="product-link" ${productIdAttribute}>
+                            <img src="${imageUrl}" alt="${product.attributes.title}" onerror="this.onerror=null;this.src='https://placehold.co/300x300/eee/ccc?text=No+Image';">
+                        </a>
+                        <div class="product-info">
+                            <p class="product-title">${product.attributes.title || 'Untitled'}</p>
+                            <p class="product-brand">${(product.attributes.brand && product.attributes.brand[0]) || 'No Brand'}</p>
+                        </div>
+                    `;
+                    productGrid.appendChild(card);
+                });
+
+                // Track the view event after rendering the products
+                trackListView(products);
+
+            } catch (error) {
+                console.error("Error fetching products:", error);
+                productGrid.innerHTML = "<p>Sorry, there was an error loading products.</p>";
+            }
+        }
+
+        // --- ANALYTICS FUNCTIONS ---
+        async function sendAnalyticsEvent(payload) {
+            try {
+                await axios.post(ANALYTICS_API_URL, payload);
+                console.log('Analytics event sent:', payload.type);
+            } catch (error) {
+                console.error('Failed to send analytics event:', error);
+            }
+        }
+
+        function trackListView(hits) {
+            if (!hits || hits.length === 0) return;
+
+            const analyticsPayload = {
+                id: crypto.randomUUID(),
+                type: "event",
+                tracker_id: TRACKER_ID,
+                client_id: CLIENT_ID,
+                lists: {
+                    "Product Listing": {
+                        items: hits.map((hit, index) => ({
+                            title: hit.attributes.title,
+                            url: hit.url,
+                            position: index + 1
+                        }))
+                    }
+                }
+            };
+            sendAnalyticsEvent(analyticsPayload);
+        }
+
+        function trackClickEvent(productId) {
+            const clickPayload = {
+                id: crypto.randomUUID(),
+                type: "click",
+                tracker_id: TRACKER_ID,
+                client_id: CLIENT_ID,
+                action: {
+                    type: "click",
+                    resource_identifier: productId
+                }
+            };
+            sendAnalyticsEvent(clickPayload);
+        }
+
+        // --- EVENT LISTENERS ---
+        productGrid.addEventListener('click', function(e) {
+            const productLink = e.target.closest('.product-link');
+            if (productLink) {
+                const productId = productLink.dataset.productId;
+                
+                // ** FIX: Only track the click if a product ID was found **
+                if (productId) {
+                    // We prevent the default link behavior for this demo to ensure the analytics event has time to send.
+                    // In a real application, you might use more advanced techniques.
+                    e.preventDefault(); 
+                    trackClickEvent(productId);
+                    console.log(`Tracked click for product ID: ${productId}. In a real app, you would now navigate to: ${productLink.href}`);
+                }
+            }
+        });
+
+        // --- INITIAL LOAD ---
+        document.addEventListener("DOMContentLoaded", displayCategoryProducts);
+    </script>
+</body>
+</html>
