@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yamaha | My Super Shop</title>
+    <link rel="stylesheet" href="main.css">
+</head>
+<!-- The data- attributes are set for the Yamaha brand -->
+<body data-plp-type="brand" data-plp-value="Yamaha">
+
+    <!-- This placeholder will be filled by layout.js -->
+    <header id="main-header"></header>
+
+    <main>
+        <div class="layout">
+            <aside id="facets-container"></aside>
+            <div class="content">
+                <h1 id="page-title"></h1>
+                <div id="product-grid" class="product-grid"></div>
+                <div id="pagination-container" class="pagination-container"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Load the same scripts as the other page -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="layout.js"></script>
+    <script src="plp-loader.js"></script>
+
+</body>
+</html>
