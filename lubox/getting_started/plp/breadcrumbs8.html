@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Category Page | My Super Shop</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f8f9fa; margin: 2rem; }
+        main { max-width: 1200px; margin: auto; }
+        .search-layout { display: grid; grid-template-columns: 1fr 3fr; gap: 2rem; }
+        .product-card { border: 1px solid #ddd; padding: 1rem; margin-bottom: 1rem; background-color: #fff; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .product-card img { max-width: 100%; height: auto; border-radius: 4px; }
+        ul { list-style: none; padding: 0; }
+        a { color: #007bff; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        #results-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+        @media (max-width: 768px) {
+            .search-layout { grid-template-columns: 1fr; }
+            #results-container { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 480px) {
+            #results-container { grid-template-columns: 1fr; }
+        }
+        .pagination-container { display: flex; justify-content: center; align-items: center; gap: 0.5rem; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid #e5e7eb;}
+        .pagination-button, .pagination-page, .pagination-ellipsis { padding: 0.5rem 1rem; border: 1px solid #d1d5db; border-radius: 0.375rem; background-color: #fff; }
+        .pagination-button, .pagination-page { cursor: pointer; transition: background-color 0.2s; }
+        .pagination-button:hover, .pagination-page:hover { background-color: #f3f4f6; }
+        .pagination-page.active { background-color: #3b82f6; color: white; border-color: #3b82f6; }
+        .pagination-button:disabled { color: #9ca3af; cursor: not-allowed; }
+        .pagination-ellipsis { border: none; background: none; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>My Super Shop</h1>
+    </header>
+    <main>
+      <nav id="breadcrumbs-container"></nav>
+      <div id="subcategories-container"></div>
+      <div class="search-layout">
+        <aside id="facets-container"></aside>
+        <div class="search-main-content">
+          <h2 id="results-heading">Loading...</h2>
+          <div id="results-container"></div>
+          <div id="pagination-container"></div>
+        </div>
+      </div>
+    </main>
+    <script>
+        // --- CONFIGURATION ---
+        const TRACKER_ID = "179075-204259";
+        const API_ENDPOINT = "https://live.luigisbox.com/search";
+        const ANALYTICS_API_URL = "https://api.luigisbox.com/";
+        const RESULTS_PER_PAGE = 9;
+        const CLIENT_ID = Math.floor(Math.random() * 1e18);
+
+        // --- DOM ELEMENTS ---
+        const resultsContainer = document.getElementById("results-container");
+        const facetsContainer = document.getElementById("facets-container");
+        const resultsHeading = document.getElementById("results-heading");
+        const paginationContainer = document.getElementById("pagination-container");
+        const breadcrumbsContainer = document.getElementById("breadcrumbs-container");
+        const subcategoriesContainer = document.getElementById("subcategories-container");
+
+        // --- STATE MANAGEMENT ---
+        let currentCategoryPath = '';
+        let activeFilters = {};
+        let currentPage = 1;
+
+        // --- API CALL ---
+        async function getProductListing(categoryPath, filters = {}, page = 1) {
+            resultsHeading.textContent = 'Loading...';
+            resultsContainer.innerHTML = ''; 
+            facetsContainer.innerHTML = '';
+            paginationContainer.innerHTML = '';
+            subcategoriesContainer.innerHTML = '';
+
+            const params = {
+                tracker_id: TRACKER_ID,
+                'f[]': ['type:product'],
+                facets: 'brand,price_amount,category_path',
+                hit_fields: 'title,url,price_amount,image_link,brand,id',
+                size: RESULTS_PER_PAGE,
+                page: page,
+            };
+            
+            if (categoryPath) {
+                params['f[]'].push(`all_categories_path:${categoryPath}`);
+                params.plp = 'all_categories_path';
+            }
+
+            for (const key in filters) {
+                filters[key].forEach(value => {
+                params['f[]'].push(`${key}:${value}`);
+                });
+            }
+
+            try {
+                const response = await axios.get(API_ENDPOINT, { params });
+                const data = response.data;
+                
+                currentCategoryPath = categoryPath;
+                currentPage = page;
+                activeFilters = filters;
+
+                renderResults(data.results);
+                renderFacets(data.results.facets);
+                renderSubcategories(data.results.facets);
+                renderPagination(data.results.total_hits);
+                renderBreadcrumbs(currentCategoryPath);
+                updateURL(currentCategoryPath, activeFilters, currentPage);
+                trackListView(data.results.hits);
+
+            } catch (error) {
+                console.error("Error fetching product listing:", error);
+                resultsHeading.textContent = "Error";
+            }
+        }
+
+        // --- NAVIGATION RENDERING ---
+        function renderBreadcrumbs(pathString) {
+            if (!pathString) {
+                breadcrumbsContainer.innerHTML = `<strong>Home</strong>`;
+                return;
+            }
+            const pathParts = pathString.split('||');
+            let accumulatedPath = '';
+            const breadcrumbHTML = pathParts.map((part, index) => {
+                accumulatedPath += (index > 0 ? '||' : '') + part;
+                if (index === pathParts.length - 1) {
+                    return ` / <strong>${part}</strong>`;
+                } else {
+                    return ` / <a href="#" class="breadcrumb-item" data-path="${accumulatedPath}">${part}</a>`;
+                }
+            }).join('');
+            breadcrumbsContainer.innerHTML = `<a href="#" class="breadcrumb-item" data-path="">Home</a>` + breadcrumbHTML;
+        }
+
+        function renderSubcategories(facetsData) {
+            const categoryFacet = facetsData.find(f => f.name === 'category_path');
+            if (!categoryFacet || !categoryFacet.values) return;
+
+            let nodesToRender = [];
+            if (!currentCategoryPath) {
+                nodesToRender = categoryFacet.values;
+            } else {
+                const pathParts = currentCategoryPath.split('||');
+                let currentLevelNodes = categoryFacet.values;
+                let targetNode = null;
+                for (const part of pathParts) {
+                    targetNode = currentLevelNodes.find(node => node.value === part);
+                    if (targetNode && targetNode.children) {
+                        currentLevelNodes = targetNode.children;
+                    } else {
+                        targetNode = null;
+                        break;
+                    }
+                }
+                if (targetNode) {
+                    nodesToRender = targetNode.children || [];
+                }
+            }
+
+            if (nodesToRender.length === 0) return;
+            
+            const listItems = nodesToRender.map(cat => {
+                const fullPath = currentCategoryPath ? `${currentCategoryPath}||${cat.value}` : cat.value;
+                return `<li><a href="#" class="subcategory-link" data-path="${fullPath}">${cat.value} (${cat.hits_count})</a></li>`;
+            }).join('');
+
+            subcategoriesContainer.innerHTML = `<h3>Browse Subcategories</h3><ul>${listItems}</ul>`;
+        }
+
+        // --- MAIN CONTENT RENDERING ---
+        function renderResults(resultsData) {
+            const categoryName = currentCategoryPath.split('||').pop() || 'All Products';
+            resultsHeading.textContent = `Showing ${resultsData.total_hits} results for "${categoryName}"`;
+
+            if (resultsData.hits.length === 0) {
+                resultsContainer.innerHTML = "<p>No products found in this category.</p>";
+                return;
+            }
+
+            resultsContainer.innerHTML = resultsData.hits.map(result => {
+                const imageUrl = result.attributes.image_link || "https://placehold.co/200x200/eee/ccc?text=No+Image";
+                const productId = result.attributes.id ? result.attributes.id[0] : null;
+                return `
+                <div class="product-card">
+                    <a href="${result.url}" target="_blank" class="product-link" data-product-id="${productId}">
+                    <img src="${imageUrl}" alt="${result.attributes.title}" style="width:100%;">
+                    </a>
+                    <div class="product-info">
+                    <h3>${result.attributes.title}</h3>
+                    <p>${result.attributes.brand?.[0]}</p>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function renderFacets(facetsData) {
+            const filteredFacets = facetsData.filter(f => f.name !== 'category_path');
+            facetsContainer.innerHTML = filteredFacets.map(facet => {
+                const content = facet.values.map(val => {
+                    const isChecked = activeFilters[facet.name]?.includes(val.value) ? "checked" : "";
+                    return `
+                        <li>
+                            <label>
+                                <input type="checkbox" name="${facet.name}" value="${val.value}" ${isChecked}>
+                                ${val.value} <span>(${val.hits_count})</span>
+                            </label>
+                        </li>`;
+                }).join('');
+                return `
+                    <div>
+                        <h3>${facet.name.replace(/_/g, ' ')}</h3>
+                        <ul style="list-style:none;padding:0;">${content}</ul>
+                    </div>`;
+            }).join('');
+        }
+
+        function renderPagination(totalHits) {
+            const totalPages = Math.ceil(totalHits / RESULTS_PER_PAGE);
+            paginationContainer.innerHTML = "";
+            if (totalPages <= 1) return;
+
+            let paginationHTML = '';
+            paginationHTML += `<button class="pagination-button" data-page="1" ${currentPage === 1 ? 'disabled' : ''}>&laquo; First</button>`;
+            paginationHTML += `<button class="pagination-button" data-page="${currentPage - 1}" ${currentPage === 1 ? 'disabled' : ''}>&lt; Prev</button>`;
+
+            const maxPagesToShow = 5;
+            const halfPages = Math.floor(maxPagesToShow / 2);
+            let startPage = Math.max(1, currentPage - halfPages);
+            let endPage = Math.min(totalPages, currentPage + halfPages);
+
+            if (currentPage - halfPages < 1) endPage = Math.min(totalPages, maxPagesToShow);
+            if (currentPage + halfPages > totalPages) startPage = Math.max(1, totalPages - maxPagesToShow + 1);
+
+            if (startPage > 1) {
+                paginationHTML += `<button class="pagination-page" data-page="1">1</button>`;
+                if (startPage > 2) paginationHTML += `<span class="pagination-ellipsis">...</span>`;
+            }
+            for (let i = startPage; i <= endPage; i++) {
+                paginationHTML += `<button class="pagination-page ${i === currentPage ? 'active' : ''}" data-page="${i}">${i}</button>`;
+            }
+            if (endPage < totalPages) {
+                if (endPage < totalPages - 1) paginationHTML += `<span class="pagination-ellipsis">...</span>`;
+                paginationHTML += `<button class="pagination-page" data-page="${totalPages}">${totalPages}</button>`;
+            }
+
+            paginationHTML += `<button class="pagination-button" data-page="${currentPage + 1}" ${currentPage === totalPages ? 'disabled' : ''}>Next &gt;</button>`;
+            paginationHTML += `<button class="pagination-button" data-page="${totalPages}" ${currentPage === totalPages ? 'disabled' : ''}>Last &raquo;</button>`;
+
+            paginationContainer.innerHTML = paginationHTML;
+        }
+
+        function updateURL(categoryPath, filters, page) {
+            const urlParams = new URLSearchParams();
+            if (categoryPath) urlParams.set('category', categoryPath);
+            if (page > 1) urlParams.set("page", page);
+            for (const key in filters) {
+                filters[key].forEach(value => urlParams.append('f[]', `${key}:${value}`));
+            }
+            const newQueryString = urlParams.toString();
+            const newRelativePath = newQueryString ? `?${newQueryString}` : window.location.pathname;
+            try {
+                if (window.location.search !== (newQueryString ? `?${newQueryString}` : '')) {
+                    history.pushState({ categoryPath, filters, page }, null, newRelativePath);
+                }
+            } catch (e) {
+                console.warn("history.pushState failed.", e.message);
+            }
+        }
+
+        // --- ANALYTICS ---
+        async function sendAnalyticsEvent(payload) {
+            try {
+                await axios.post(ANALYTICS_API_URL, payload);
+                console.log('Analytics event sent:', payload.type);
+            } catch (error) {
+                console.error('Failed to send analytics event:', error);
+            }
+        }
+
+        function trackListView(hits) {
+            if (!hits || hits.length === 0) return;
+            const analyticsPayload = {
+                id: crypto.randomUUID(), type: "event", tracker_id: TRACKER_ID, client_id: CLIENT_ID,
+                lists: {
+                    "Product Listing": {
+                        items: hits.map((hit, index) => ({
+                            title: hit.attributes.title,
+                            url: hit.url,
+                            position: (currentPage - 1) * RESULTS_PER_PAGE + index + 1
+                        }))
+                    }
+                }
+            };
+            sendAnalyticsEvent(analyticsPayload);
+        }
+
+        function trackClickEvent(productId) {
+            if (!productId) return;
+            const clickPayload = {
+                id: crypto.randomUUID(), type: "click", tracker_id: TRACKER_ID, client_id: CLIENT_ID,
+                action: { type: "click", resource_identifier: productId }
+            };
+            sendAnalyticsEvent(clickPayload);
+        }
+
+        // --- EVENT LISTENERS ---
+        function initializePage() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const pathFromUrl = urlParams.get('category') || ''; 
+            const pageFromUrl = parseInt(urlParams.get('page'), 10) || 1;
+            const filtersFromUrl = {};
+            urlParams.getAll('f[]').forEach(filterString => {
+                const [key, value] = filterString.split(':', 2);
+                if (key && value) {
+                    if (!filtersFromUrl[key]) filtersFromUrl[key] = [];
+                    filtersFromUrl[key].push(value);
+                }
+            });
+            getProductListing(pathFromUrl, filtersFromUrl, pageFromUrl);
+        }
+
+        document.addEventListener('click', e => {
+            const breadcrumbLink = e.target.closest('.breadcrumb-item');
+            if (breadcrumbLink) {
+                e.preventDefault();
+                getProductListing(breadcrumbLink.dataset.path, {}, 1);
+                return;
+            }
+            const subcategoryLink = e.target.closest('.subcategory-link');
+            if (subcategoryLink) {
+                e.preventDefault();
+                getProductListing(subcategoryLink.dataset.path, {}, 1);
+                return;
+            }
+            const paginationButton = e.target.closest('#pagination-container button');
+            if(paginationButton && !paginationButton.disabled) {
+                getProductListing(currentCategoryPath, activeFilters, parseInt(paginationButton.dataset.page, 10));
+                return;
+            }
+            const productLink = e.target.closest('.product-link');
+            if(productLink) {
+                trackClickEvent(productLink.dataset.productId);
+            }
+        });
+
+        facetsContainer.addEventListener('change', e => {
+            if (e.target.type === 'checkbox') {
+                const facetName = e.target.name;
+                const facetValue = e.target.value;
+                const newFilters = JSON.parse(JSON.stringify(activeFilters));
+                if (!newFilters[facetName]) newFilters[facetName] = [];
+                if (e.target.checked) {
+                    newFilters[facetName].push(facetValue);
+                } else {
+                    newFilters[facetName] = newFilters[facetName].filter(v => v !== facetValue);
+                    if (newFilters[facetName].length === 0) delete newFilters[facetName];
+                }
+                getProductListing(currentCategoryPath, newFilters, 1);
+            }
+        });
+
+        window.addEventListener('popstate', (e) => {
+            if (e.state && typeof e.state.categoryPath !== 'undefined') {
+                getProductListing(e.state.categoryPath, e.state.filters, e.state.page);
+            } else {
+                initializePage();
+            }
+        });
+        
+        document.addEventListener('DOMContentLoaded', initializePage);
+    </script>
+</body>
+</html>
