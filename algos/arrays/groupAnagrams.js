@@ -9,3 +9,4 @@ const groupAnagrams = (strs) => {
   }
   return Array.from(anagramMap.values());
 }
+
