@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recco.js Working Example</title>
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts for a modern look -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Basic styling for the page and product cards */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+        /* Style for the Luigi's Box recommender UI */
+        .luigisbox-recommender .lbx-recommend-item {
+            border-radius: 0.5rem;
+            border: 1px solid #e5e7eb;
+            background-color: white;
+            transition: box-shadow 0.2s ease-in-out;
+        }
+        .luigisbox-recommender .lbx-recommend-item:hover {
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <!-- Main Page Container -->
+    <div class="container mx-auto max-w-6xl p-4 sm:p-6 lg:p-8">
+
+        <!-- Mock Product Detail Section -->
+        <div class="bg-white p-8 rounded-lg shadow-md mb-12">
+            <div class="grid grid-cols-1 md-grid-cols-2 gap-8">
+                <div>
+                    <img src="https://cdn.myshoptet.com/usr/demoshop.luigisbox.com/user/shop/detail/1778046-2.jpg" alt="Gibson Les Paul Guitar" class="rounded-lg w-full">
+                </div>
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-900 mb-2">Gibson Les Paul Studio</h1>
+                    <p class="text-gray-500 mb-4">Product ID: /gibson-les-paul-studio/</p>
+                    <p class="text-2xl font-semibold text-blue-600 mb-6">€1359.00</p>
+                    <p class="text-gray-700 leading-relaxed mb-6">
+                        The Les Paul Studio combines the classic Gibson formula with modern enhancements for playability and tonal versatility. Features a slim taper mahogany neck for a comfortable feel.
+                    </p>
+                    <button class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-blue-700 transition duration-300">
+                        Add to Cart
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 
+          STEP 1: ADD A SINGLE PLACEHOLDER FOR THE RECOMMENDATIONS
+        -->
+        <div id="recommender-placeholder" class="mb-12"></div>
+
+    </div>
+
+    <!-- 
+      STEP 2: INITIALIZE THE RECOMMENDER WITH A FALLBACK
+    -->
+    <script src="https://cdn.luigisbox.com/recco.js"></script>
+    <script>
+      // This function will contain our fallback logic
+      function showRecommendations() {
+        // First, try to get item-specific alternatives
+        Luigis.Recommend({
+            TrackerId: '179075-204259',
+            Theme: 'luigis',
+            Size: 4,
+            Type: 'item_detail_alternatives',
+            GetItemIds: function() {
+              return ['/gibson-les-paul-studio/'];
+            },
+            // The OnDone callback function is executed after the results are rendered.
+            // It receives an array of the recommended items.
+            OnDone: function(items) {
+              // If the 'alternatives' model returns no items...
+              if (items.length === 0) {
+                console.log("No alternatives found. Falling back to trends.");
+                // ...then call the recommender again to show 'trends' instead.
+                Luigis.Recommend({
+                  TrackerId: '179075-204259',
+                  Theme: 'luigis',
+                  Size: 4,
+                  Type: 'trends'
+                }, '#recommender-placeholder');
+              }
+            }
+          },
+          '#recommender-placeholder' // The CSS selector for the placeholder element.
+        );
+      }
+
+      // Run the function to show recommendations
+      showRecommendations();
+    </script>
+
+</body>
+</html>
