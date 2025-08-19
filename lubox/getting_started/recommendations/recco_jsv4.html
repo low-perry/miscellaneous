@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Custom Recommender UI with API</title>
+
+    <!-- Google Fonts for a clean look -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Axios Library -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #f9fafb;
+        color: #1f2937;
+        margin: 0;
+      }
+      .container {
+        width: 100%;
+        max-width: 1280px;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 2rem 1rem;
+      }
+      .product-section {
+        background-color: #fff;
+        padding: 2rem;
+        border-radius: 0.5rem;
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        margin-bottom: 3rem;
+      }
+      .product-image-main {
+        width: 100%;
+        border-radius: 0.5rem;
+      }
+      .product-title-main {
+        font-size: 2.25rem;
+        font-weight: 700;
+        margin: 0;
+      }
+      .product-id-main {
+        color: #6b7280;
+        margin-bottom: 1rem;
+      }
+      .product-price-main {
+        font-size: 1.875rem;
+        font-weight: 600;
+        color: #2563eb;
+        margin-bottom: 1.5rem;
+      }
+      .product-description-main {
+        line-height: 1.6;
+        color: #4b5563;
+        margin-bottom: 1.5rem;
+      }
+      .add-to-cart-main {
+        width: 100%;
+        background-color: #2563eb;
+        color: white;
+        border: none;
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+        font-weight: 600;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+      .add-to-cart-main:hover {
+        background-color: #1d4ed8;
+      }
+      .recommender-section h2 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+      }
+      .recommender-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1.5rem;
+      }
+      .product-card {
+        border: 1px solid #e5e7eb;
+        border-radius: 0.5rem;
+        background-color: #fff;
+        overflow: hidden;
+        transition: box-shadow 0.2s;
+      }
+      .product-card:hover {
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+          0 2px 4px -2px rgba(0, 0, 0, 0.1);
+      }
+      .product-card a {
+        text-decoration: none;
+        color: inherit;
+      }
+      .product-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        background-color: #f3f4f6;
+      }
+      .product-info {
+        padding: 1rem;
+      }
+      .product-title {
+        font-size: 1rem;
+        font-weight: 600;
+        margin: 0 0 0.25rem 0;
+      }
+      .product-brand {
+        font-size: 0.875rem;
+        color: #6b7280;
+        margin: 0 0 0.5rem 0;
+      }
+      .product-price {
+        font-size: 1.125rem;
+        font-weight: 700;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="container">
+      <!-- Mock Product Detail Section -->
+      <div class="product-section">
+        <div class="product-image-container">
+          <img
+            src="https://cdn.myshoptet.com/usr/demoshop.luigisbox.com/user/shop/detail/1778046-2.jpg"
+            alt="Gibson Les Paul Guitar"
+            class="product-image-main"
+          />
+        </div>
+        <div class="product-details">
+          <h1 class="product-title-main">Gibson Les Paul Studio</h1>
+          <p class="product-id-main">ID: 2376063</p>
+          <p class="product-price-main">€1359.00</p>
+          <p class="product-description-main">
+            The Les Paul Studio combines the classic Gibson formula with modern
+            enhancements for playability and tonal versatility. Features a slim
+            taper mahogany neck for a comfortable feel.
+          </p>
+          <button class="add-to-cart-main">Add to Cart</button>
+        </div>
+      </div>
+
+      <!-- Recommender Section -->
+      <div id="recommender-container" class="recommender-section"></div>
+    </main>
+
+    <script>
+      // --- CONFIGURATION ---
+      const TRACKER_ID = "179075-204259";
+      const API_ENDPOINT = `https://live.luigisbox.com/v1/recommend?tracker_id=${TRACKER_ID}`;
+      const ANALYTICS_API_URL = "https://api.luigisbox.com/";
+      const CLIENT_ID = String(Math.floor(Math.random() * 1e18)); // Use a persistent ID in production
+      const CURRENT_PRODUCT_ID = "2500086"; // UPDATED: Using the specific product ID
+      let currentRecommendationId = null; // To store the ID for click tracking
+
+      // --- DOM ELEMENTS ---
+      const recommenderContainer = document.getElementById("recommender-container");
+
+      // --- API CALL ---
+      async function getRecommendations() {
+        const payload = [
+          {
+            recommendation_type: "item_detail_alternatives", // UPDATED: Asking for alternatives
+            item_ids: [CURRENT_PRODUCT_ID],
+            size: 4,
+            hit_fields: ["title", "url", "price_amount", "image_link", "brand", "id"],
+            user_id: CLIENT_ID, 
+          },
+        ];
+
+        try {
+          const response = await axios.post(API_ENDPOINT, payload);
+          const recommendationData = response.data[0];
+
+          if (recommendationData && recommendationData.hits.length > 0) {
+            currentRecommendationId = recommendationData.recommendation_id;
+            renderRecommendations(recommendationData.hits, "Similar Products");
+            trackRecommendationView(
+              currentRecommendationId,
+              recommendationData.hits
+            );
+          } else {
+             recommenderContainer.innerHTML = "<h2>Similar Products</h2><p>No specific alternatives found for this item.</p>";
+          }
+        } catch (error) {
+          console.error("Error fetching recommendations:", error);
+          recommenderContainer.innerHTML = "<p>Could not load recommendations.</p>";
+        }
+      }
+
+      // --- RENDERING FUNCTIONS ---
+      function renderRecommendations(hits, title = "Similar Products") {
+        const productsHTML = hits
+          .map((hit) => {
+            const { url, attributes } = hit;
+            const imageUrl =
+              attributes.image_link ||
+              "https://placehold.co/400x400/eee/ccc?text=No+Image";
+            const productTitle = attributes.title || "No Title Available";
+            const brand = attributes.brand ? attributes.brand[0] : "";
+            const price = attributes.price_amount
+              ? `${attributes.price_amount} EUR`
+              : "";
+            const productId = attributes.id ? attributes.id[0] : url;
+
+            return `
+              <div class="product-card">
+                <a href="${url}" target="_blank" class="product-link" data-product-id="${productId}">
+                  <img src="${imageUrl}" alt="${productTitle}" class="product-image" onerror="this.onerror=null;this.src='https://placehold.co/400x400/eee/ccc?text=No+Image';">
+                  <div class="product-info">
+                    <h3 class="product-title">${productTitle}</h3>
+                    <p class="product-brand">${brand}</p>
+                    <div class="product-price">${price}</div>
+                  </div>
+                </a>
+              </div>`;
+          })
+          .join("");
+
+        recommenderContainer.innerHTML = `
+            <h2>${title}</h2>
+            <div class="recommender-grid">${productsHTML}</div>
+        `;
+      }
+
+      // --- ANALYTICS TRACKING ---
+      async function sendAnalyticsEvent(payload) {
+        try {
+          await axios.post(ANALYTICS_API_URL, payload);
+          console.log("Analytics event sent:", payload.type, payload);
+        } catch (error) {
+          console.error("Failed to send analytics event:", error);
+        }
+      }
+
+      function trackRecommendationView(recommendationId, hits) {
+        const viewPayload = {
+          id: crypto.randomUUID(),
+          type: "event",
+          tracker_id: TRACKER_ID,
+          client_id: CLIENT_ID,
+          lists: {
+            Recommendation: {
+              query: { string: "" }, 
+              recommendation_id: recommendationId,
+              items: hits.map((hit, index) => ({
+                title: hit.attributes.title,
+                url: hit.url,
+                position: index + 1,
+              })),
+            },
+          },
+        };
+        sendAnalyticsEvent(viewPayload);
+      }
+
+      function trackClickEvent(productId, recommendationId) {
+        const clickPayload = {
+          id: crypto.randomUUID(),
+          type: "click",
+          tracker_id: TRACKER_ID,
+          client_id: CLIENT_ID,
+          action: {
+            type: "click",
+            resource_identifier: productId,
+            recommendation_id: recommendationId,
+          },
+        };
+        sendAnalyticsEvent(clickPayload);
+      }
+
+      // --- EVENT LISTENERS ---
+      document.addEventListener("DOMContentLoaded", getRecommendations);
+
+      recommenderContainer.addEventListener("click", function (e) {
+        const productLink = e.target.closest(".product-link");
+        if (productLink) {
+          const productId = productLink.dataset.productId;
+          if (productId && currentRecommendationId) {
+            trackClickEvent(productId, currentRecommendationId);
+          }
+        }
+      });
+    </script>
+  </body>
+</html>
