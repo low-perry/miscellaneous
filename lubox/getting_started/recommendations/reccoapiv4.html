@@ -16,13 +16,6 @@
     <!-- Axios Library -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
-    <!-- Swiper.js for Carousel -->
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/swiper/swiper-bundle.min.css"
-    />
-    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
-
     <style>
       body {
         font-family: "Inter", sans-serif;
@@ -86,17 +79,15 @@
       .add-to-cart-main:hover {
         background-color: #1d4ed8;
       }
-      .recommender-section {
-        position: relative;
-      }
       .recommender-section h2 {
         font-size: 1.5rem;
         font-weight: 700;
         margin-bottom: 1.5rem;
       }
-      .swiper-container {
-        width: 100%;
-        padding-bottom: 2.5rem; /* Space for pagination */
+      .recommender-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1.5rem;
       }
       .product-card {
         border: 1px solid #e5e7eb;
@@ -104,7 +95,6 @@
         background-color: #fff;
         overflow: hidden;
         transition: box-shadow 0.2s;
-        height: auto;
       }
       .product-card:hover {
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
@@ -137,18 +127,6 @@
         font-size: 1.125rem;
         font-weight: 700;
       }
-      .swiper-button-next, .swiper-button-prev {
-        color: #1f2937;
-        background-color: rgba(255, 255, 255, 0.8);
-        border-radius: 50%;
-        width: 44px;
-        height: 44px;
-        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-      }
-      .swiper-button-next:after, .swiper-button-prev:after {
-        font-size: 20px;
-        font-weight: bold;
-      }
     </style>
   </head>
   <body>
@@ -157,17 +135,17 @@
       <div class="product-section">
         <div class="product-image-container">
           <img
-            src="https://cdn.myshoptet.com/usr/demoshop.luigisbox.com/user/shop/detail/1778046-2.jpg"
-            alt="Gibson Les Paul Guitar"
+            src="https://placehold.co/600x600/1d4ed8/ffffff?text=Rider+Slipper"
+            alt="Rider Aqua Thong Slipper"
             class="product-image-main"
           />
         </div>
         <div class="product-details">
-          <h1 class="product-title-main">Our Featured Product</h1>
-          <p class="product-id-main">Gibson Les Paul Studio</p>
-          <p class="product-price-main">€1359.00</p>
+          <h1 class="product-title-main">Rider Aqua Thong Slipper</h1>
+          <p class="product-id-main">ID: /rider-aqua-thong-slipper-blue-green-38/</p>
+          <p class="product-price-main">€19.90</p>
           <p class="product-description-main">
-            Explore our collection of high-quality instruments. Below are some of our most popular and trending items right now.
+            Comfortable and stylish slippers perfect for the beach or casual wear. Made with durable materials for long-lasting comfort.
           </p>
           <button class="add-to-cart-main">Add to Cart</button>
         </div>
@@ -182,36 +160,45 @@
       const TRACKER_ID = "179075-204259";
       const API_ENDPOINT = `https://live.luigisbox.com/v1/recommend?tracker_id=${TRACKER_ID}`;
       const ANALYTICS_API_URL = "https://api.luigisbox.com/";
-      const CLIENT_ID = String(Math.floor(Math.random() * 1e18)); // Use a persistent ID in production
-      let currentRecommendationId = null; // To store the ID for click tracking
+      const CLIENT_ID = String(Math.floor(Math.random() * 1e18));
+      const CURRENT_PRODUCT_ID = "/rider-aqua-thong-slipper-blue-green-38/";
+      
+      // Store response data for analytics
+      let analyticsData = {};
 
       // --- DOM ELEMENTS ---
       const recommenderContainer = document.getElementById("recommender-container");
 
       // --- API CALL ---
       async function getRecommendations() {
-        const payload = [
-          {
-            recommendation_type: "trends",
-            size: 6,
+        const requestPayload = {
+            recommendation_type: "item_detail_complements_1",
+            recommender_client_identifier: "item_detail_complements_1", // For analytics
+            item_ids: [CURRENT_PRODUCT_ID],
+            size: 4,
             hit_fields: ["title", "url", "price_amount", "image_link", "brand", "id"],
             user_id: CLIENT_ID, 
-          },
-        ];
+        };
 
         try {
-          const response = await axios.post(API_ENDPOINT, payload);
+          const response = await axios.post(API_ENDPOINT, [requestPayload]);
           const recommendationData = response.data[0];
 
           if (recommendationData && recommendationData.hits.length > 0) {
-            currentRecommendationId = recommendationData.recommendation_id;
-            renderRecommendations(recommendationData.hits, "Trending Products");
-            trackRecommendationView(
-              currentRecommendationId,
-              recommendationData.hits
-            );
+            // Store all necessary data for the analytics payload
+            analyticsData = {
+                RecommendationId: recommendationData.recommendation_id,
+                Recommender: recommendationData.recommender,
+                Type: recommendationData.recommendation_type,
+                RecommenderClientId: recommendationData.recommender_client_identifier,
+                ItemIds: requestPayload.item_ids
+            };
+            
+            renderRecommendations(recommendationData.hits);
+            trackRecommendationView(recommendationData.hits);
+
           } else {
-             recommenderContainer.innerHTML = "<p>Could not load recommendations.</p>";
+             recommenderContainer.innerHTML = "<h2>Similar Products</h2><p>No specific alternatives found for this item.</p>";
           }
         } catch (error) {
           console.error("Error fetching recommendations:", error);
@@ -220,7 +207,7 @@
       }
 
       // --- RENDERING FUNCTIONS ---
-      function renderRecommendations(hits, title = "Trending Products") {
+      function renderRecommendations(hits, title = "Similar Products") {
         const productsHTML = hits
           .map((hit) => {
             const { url, attributes } = hit;
@@ -235,52 +222,23 @@
             const productId = attributes.id ? attributes.id[0] : url;
 
             return `
-              <div class="swiper-slide">
-                <div class="product-card">
-                  <a href="${url}" target="_blank" class="product-link" data-product-id="${productId}">
-                    <img src="${imageUrl}" alt="${productTitle}" class="product-image" onerror="this.onerror=null;this.src='https://placehold.co/400x400/eee/ccc?text=No+Image';">
-                    <div class="product-info">
-                      <h3 class="product-title">${productTitle}</h3>
-                      <p class="product-brand">${brand}</p>
-                      <div class="product-price">${price}</div>
-                    </div>
-                  </a>
-                </div>
+              <div class="product-card">
+                <a href="${url}" target="_blank" class="product-link" data-product-id="${productId}">
+                  <img src="${imageUrl}" alt="${productTitle}" class="product-image" onerror="this.onerror=null;this.src='https://placehold.co/400x400/eee/ccc?text=No+Image';">
+                  <div class="product-info">
+                    <h3 class="product-title">${productTitle}</h3>
+                    <p class="product-brand">${brand}</p>
+                    <div class="product-price">${price}</div>
+                  </div>
+                </a>
               </div>`;
           })
           .join("");
 
         recommenderContainer.innerHTML = `
             <h2>${title}</h2>
-            <div class="swiper-container">
-              <div class="swiper-wrapper">${productsHTML}</div>
-              <!-- Add Pagination -->
-              <div class="swiper-pagination"></div>
-              <!-- Add Navigation -->
-              <div class="swiper-button-next"></div>
-              <div class="swiper-button-prev"></div>
-            </div>
+            <div class="recommender-grid">${productsHTML}</div>
         `;
-
-        // Initialize Swiper
-        new Swiper('.swiper-container', {
-          loop: true,
-          slidesPerView: 4,
-          spaceBetween: 24,
-          pagination: {
-            el: '.swiper-pagination',
-            clickable: true,
-          },
-          navigation: {
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev',
-          },
-          breakpoints: {
-            320: { slidesPerView: 1, spaceBetween: 16 },
-            640: { slidesPerView: 2, spaceBetween: 20 },
-            1024: { slidesPerView: 4, spaceBetween: 24 }
-          }
-        });
       }
 
       // --- ANALYTICS TRACKING ---
@@ -293,7 +251,7 @@
         }
       }
 
-      function trackRecommendationView(recommendationId, hits) {
+      function trackRecommendationView(hits) {
         const viewPayload = {
           id: crypto.randomUUID(),
           type: "event",
@@ -301,20 +259,30 @@
           client_id: CLIENT_ID,
           lists: {
             Recommendation: {
-              query: { string: "" }, 
-              recommendation_id: recommendationId,
               items: hits.map((hit, index) => ({
                 title: hit.attributes.title,
-                url: hit.url,
+                type: "item",
+                url: hit.attributes.id ? hit.attributes.id[0] : hit.url, // Object identity
                 position: index + 1,
+                price: hit.attributes.price_amount
               })),
+              // UPDATED: Building the query object as per your requirements
+              query: {
+                filters: {
+                  RecommendationId: analyticsData.RecommendationId,
+                  RecommenderClientId: analyticsData.RecommenderClientId,
+                  ItemIds: analyticsData.ItemIds,
+                  Recommender: analyticsData.Recommender,
+                  Type: analyticsData.Type,
+                }
+              }
             },
           },
         };
         sendAnalyticsEvent(viewPayload);
       }
 
-      function trackClickEvent(productId, recommendationId) {
+      function trackClickEvent(productId) {
         const clickPayload = {
           id: crypto.randomUUID(),
           type: "click",
@@ -323,7 +291,7 @@
           action: {
             type: "click",
             resource_identifier: productId,
-            recommendation_id: recommendationId,
+            recommendation_id: analyticsData.RecommendationId,
           },
         };
         sendAnalyticsEvent(clickPayload);
@@ -335,9 +303,11 @@
       recommenderContainer.addEventListener("click", function (e) {
         const productLink = e.target.closest(".product-link");
         if (productLink) {
+          e.preventDefault(); // Prevent navigation for this demo
           const productId = productLink.dataset.productId;
-          if (productId && currentRecommendationId) {
-            trackClickEvent(productId, currentRecommendationId);
+          if (productId && analyticsData.RecommendationId) {
+            trackClickEvent(productId);
+            alert(`Tracked click for product ID: ${productId}`);
           }
         }
       });
