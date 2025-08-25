@@ -1,33 +1,33 @@
-# Quickstart: Publishing Batch Recommendations
+---
+title: "Quickstart: Publishing batch recommendations" 
+layout: quickstart_layout
+category: API integration
+description: "Learn how to publish batch recommendations using Luigi's Box Recommender API."
+---
 
 ## Introduction
 
-This guide shows you how to use Luigi’s Box **Recommendation Batch Publisher** to:
-
-1. Upload a list of users to generate recommendations for.  
-2. Retrieve the published recommendations.  
-3. Understand how recommendations integrate into your system.  
+This guide walks you through setting up Luigi's Box Recommendation Batch Publisher, which generates scheduled, personalized recommendation batches (e.g., for newsletters). Instead of real-time API calls, the batch publisher pre-computes results for a defined user set and uploads them to your integration platform (SmartEmailing, Klaviyo, or custom
 
 <% note_content = capture do %>
-  <p>This guide shows a basic integration example. In production, consult the <a href="/recommender/api.html">full Batch Publisher API reference</a> for advanced options and scaling.</p>
-<% end %>
+
+<p>This guide shows a basic integration example. In production, consult the <a href="/recommendations/recommendation_batch_publisher.html">full Batch Publisher API reference</a> for advanced options and scaling.</p> <% end %> 
 <%= callout("warning", note_content) %>
 
-### What you’ll learn
+### What you'll learn
 
-- How to prepare and upload a list of users (`auth_user_id`) via the **Batching Users API**.
-- How Luigi’s Box generates scheduled recommendation batches.
+- How to prepare and upload a list of users (`auth_user_id`) via the [Batching users API](/recommendations/recommendation_batch_publisher.html#step-1-the-client-defines-set-of-users-to-be-recommended-for-other-integrations-batching-users-api).
+- How Luigi's Box generates scheduled recommendation batches.
 - How to access the recommendation output (JSON, XML, or direct integration).
-- How analytics is automatically tracked using `recommendation_id`.
 
 ### Who is this guide for
 
-- Developers setting up newsletter or campaign integrations with Luigi’s Box.
+- Developers setting up newsletter or campaign integrations with Luigi's Box.
 - Technical teams integrating recommendation results with third-party platforms like **SmartEmailing** or **Klaviyo**.
 
 ### Prerequisites
 
-- Your Luigi’s Box **Tracker ID**.
+- Your Luigi's Box `TrackerId`.
 - **Public & Private API keys** (for HMAC authentication).
 - A list of user identifiers (`auth_user_id`) to upload.
 - Basic ability to make HTTP requests.
@@ -36,7 +36,7 @@ This guide shows you how to use Luigi’s Box **Recommendation Batch Publisher**
 
 ### Step 1: Prepare a user list
 
-The Batch Publisher generates recommendations only for known users (by `auth_user_id`).  
+The Batch publisher generates recommendations only for known users (by `auth_user_id`).  
 Format your user file as JSON Lines or CSV.
 
 #### Example: JSON Lines
@@ -169,7 +169,7 @@ const HOST = "https://live.luigisbox.com";
 })();
 ```
 
-### Step 3: Luigi’s Box generates recommendations
+### Step 3: Luigi's Box generates recommendations
 
 Once users are uploaded, Luigi's Box prepares recommendations at the configured schedule.  
 
@@ -184,7 +184,7 @@ How you fetch recommendations depends on your integration:
 
 Luigi's Box writes recommendations directly into user profiles under `attributes.properties`.  
 
-**Example Klaviyo profile with recommendations:**
+#### Example: Klaviyo profile with recommendations
 
 ```json
 {
@@ -208,8 +208,66 @@ Luigi's Box writes recommendations directly into user profiles under `attributes
 }
 ```
 
-#### Example: Fetch with Node.js
+#### Example: Fetch recommendations
+```ruby
+require 'faraday'
+require 'json'
 
+API_KEY = "your_private_key"
+
+begin
+  conn = Faraday.new(url: "https://a.klaviyo.com")
+  res = conn.get("/api/profiles") do |req|
+    req.headers["Authorization"] = "Klaviyo-Private-API-Key #{API_KEY}"
+  end
+
+  data = JSON.parse(res.body)
+  data["data"].each do |profile|
+    props = profile.dig("attributes", "properties")
+    recs = props["mail-recommender-1"] if props
+    if recs
+      puts "#{profile.dig("attributes", "email")}: #{recs}"
+    end
+  end
+rescue => e
+  puts "Error: #{e.message}"
+end
+```
+
+```php
+<?php
+require 'vendor/autoload.php';
+
+use GuzzleHttp\Client;
+
+$API_KEY = "your_private_key";
+
+try {
+    $client = new Client([
+        'base_uri' => 'https://a.klaviyo.com'
+    ]);
+
+    $response = $client->get('/api/profiles', [
+        'headers' => [
+            'Authorization' => "Klaviyo-Private-API-Key $API_KEY"
+        ]
+    ]);
+
+    $body = $response->getBody();
+    $data = json_decode($body, true);
+
+    foreach ($data['data'] as $profile) {
+        $props = $profile['attributes']['properties'] ?? null;
+        if ($props && isset($props['mail-recommender-1'])) {
+            echo $profile['attributes']['email'] . ": ";
+            print_r($props['mail-recommender-1']);
+            echo "\n";
+        }
+    }
+} catch (\Exception $e) {
+    echo "Error: " . $e->getMessage();
+}
+```
 ```javascript
 const axios = require("axios");
 
@@ -235,9 +293,15 @@ const axios = require("axios");
 
 ### Option B: Custom integration (XML export)
 
-For non-SmartEmailing/Klaviyo setups, Luigi's Box provides an **XML file** link with recommendations.
+After Luigi's Box generates the batch, it can provide you with an **XML file** (or JSON file) containing recommendations for each user. This option is useful when you are building a **custom newsletter pipeline** or integrating with a system that cannot directly receive recommendations (unlike Klaviyo or SmartEmailing).
 
-**Example XML structure:**
+By parsing this XML, you can:
+
+- Access the recommendations for each user.
+- Insert product titles, images, and links into your newsletter templates.
+- Handle fallback logic (e.g., show trending products if no personalized recs are available).
+
+#### Example: XML structure
 
 ```xml
 <users>
@@ -268,7 +332,7 @@ For non-SmartEmailing/Klaviyo setups, Luigi's Box provides an **XML file** link 
 require 'net/http'
 require 'nokogiri'
 
-url = URI("https://live.luigisbox.com/recommendations/export.xml")
+url = URI("https://example.com/recommendations/export.xml")
 res = Net::HTTP.get(url)
 doc = Nokogiri::XML(res)
 
@@ -284,7 +348,7 @@ end
 
 ```php
 <?php
-$xml = file_get_contents("https://live.luigisbox.com/recommendations/export.xml");
+$xml = file_get_contents("https://example.com/recommendations/export.xml");
 $data = new SimpleXMLElement($xml);
 
 foreach ($data->user as $user) {
@@ -304,7 +368,7 @@ const xml2js = require("xml2js");
 
 (async () => {
   try {
-    const res = await axios.get("https://live.luigisbox.com/recommendations/export.xml");
+    const res = await axios.get("https://example.com/recommendations/export.xml");
     const json = await xml2js.parseStringPromise(res.data);
 
     for (const user of json.users.user) {
@@ -332,9 +396,14 @@ Luigi's Box does **not** send emails, your integrated platform is responsible fo
 - **Keep user lists fresh**: Only upload IDs of active users (last 6 months recommended).  
 - **Handle file size limits**: Max 300MB, 10-minute upload window.  
 - **Test before production**: Validate uploaded user IDs exist in your analytics data.  
-- **Monitor analytics**: Use the dashboard to measure newsletter recommendation performance.  
+- **Monitor analytics**: Use the dashboard to measure newsletter recommendation performance.
 
 ## Next steps
 
-- Automate batch uploads from your CRM or email platform.  
-- Implement fallback flows using the `default` recommendations set.  
+<% content_for :next_steps do %>
+  <ul>
+  <li>
+    <strong>TODO:</strong>
+  </li>
+</ul>
+<% end %>
