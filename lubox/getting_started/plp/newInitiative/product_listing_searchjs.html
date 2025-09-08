@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Product Listing: Guitars</title>
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          Helvetica, Arial, sans-serif;
+        background-color: #f8f9fa;
+        color: #212529;
+        margin: 0;
+        padding: 20px;
+      }
+      .header {
+        max-width: 1200px;
+        margin: 0 auto 20px auto;
+        border-bottom: 1px solid #dee2e6;
+        padding-bottom: 10px;
+      }
+      /* Although required for initialization, we can hide the search bar if it's not needed for the page UI */
+      #search-input {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h1>Guitars</h1>
+      <p>Browse our collection of high-quality guitars.</p>
+
+      <input
+        type="search"
+        id="search-input"
+        placeholder="Search within our products..."
+      />
+    </div>
+
+    <div id="plp-ui-container">
+      <p style="text-align: center; padding: 50px">Loading products...</p>
+    </div>
+
+    <script src="https://cdn.luigisbox.com/search.js"></script>
+
+    <script>
+      // Step 2: Initialize the Search.js widget and execute the listing for the "Guitars" category.
+      document.addEventListener("DOMContentLoaded", function () {
+        // 1. First, INITIALIZE the search UI.
+        // This sets up the components (facets, sorting, etc.) and links the library to your HTML.
+        Luigis.Search(
+          {
+            // IMPORTANT: Replace with your actual Tracker ID
+            TrackerId: "179075-204259",
+            Locale: "en",
+
+            // 'boo' is a modern, recommended theme
+            Theme: "boo",
+
+            // Define which filters (facets) should appear on the side
+            Facets: ["brand", "price_amount"],
+
+            // Ensure that only items of type 'product' are ever shown
+            DefaultFilters: {
+              type: "product",
+            },
+
+            Size: 9, // Number of products per page
+          },
+          "#search-input", // The CSS selector for the search input
+          "#plp-ui-container" // The CSS selector for the UI container
+        );
+
+        // 2. Immediately after initialization, EXECUTE the listing for a specific category.
+        // This performs the initial data fetch and renders the results.
+        Luigis.Search.Search(
+          null, // The search query is 'null' because this is a category listing, not a text search.
+          {
+            // Tells Luigi's Box this is a "category" listing for merchandising purposes.
+            ProductListingFilter: "category",
+
+            // Specifies the exact category to display.
+            // This object tells the API: "filter where 'category' is 'Guitars'".
+            IntentFilters: {
+              category: "Guitars",
+            },
+          }
+        );
+      });
+    </script>
+  </body>
+</html>

@@ -97,31 +97,15 @@
       <div id="autocomplete-results"></div>
     </div>
 
-    <!-- Axios for making HTTP requests -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <!-- UUID library for generating unique event IDs -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/uuid/8.3.2/uuid.min.js"></script>
 
     <script>
       // --- CONFIGURATION ---
-      const TRACKER_ID = "179075-204259"; // Using a demo tracker ID
+      const TRACKER_ID = "179075-204259";
       const AUTOCOMPLETE_API_URL = "https://live.luigisbox.com/autocomplete/v2";
       const ANALYTICS_API_URL = "https://api.luigisbox.com/";
       const CLIENT_ID = Math.floor(Math.random() * 1e18);
-      const API_ENDPOINT = "https://live.luigisbox.com/v2/trending_queries";
-
-      async function getTrendingQueries() {
-        try {
-          const response = await axios.get(API_ENDPOINT, {
-            params: { tracker_id: TRACKER_ID },
-          });
-          console.log(response.data);
-          return response.data;
-        } catch (error) {
-          console.error("Failed to fetch trending queries:", error);
-          return [];
-        }
-      }
 
       // --- DOM ELEMENTS ---
       const searchInput = document.getElementById("search-input");
@@ -139,12 +123,11 @@
       async function sendAnalyticsEvent(payload) {
         try {
           axios.post(ANALYTICS_API_URL, payload);
-          console.log("Analytics event sent:", payload.type, payload);
+          console.log("Analytics event sent:", payload.type);
         } catch (error) {
           console.error("Failed to send analytics event:", error);
         }
       }
-
       function renderResults(hits) {
         resultsContainer.innerHTML = "";
         if (!hits || hits.length === 0) {
@@ -205,7 +188,7 @@
         }
 
         try {
-          // 1. FETCH DATA FROM THE AUTOCOMPLETE API
+          // 1. Fetch data from the Autocomplete API
           const response = await axios.get(AUTOCOMPLETE_API_URL, {
             params: {
               tracker_id: TRACKER_ID,
@@ -217,10 +200,10 @@
 
           const hits = response.data.hits;
 
-          // 2. RENDER THE DATA ON THE BROWSER
+          // 2. Render the data
           renderResults(hits);
 
-          // 3. SEND ANALYTICS FOR THE VIEW
+          // 3. Send analytics for the view event
           if (hits && hits.length > 0) {
             const analyticsPayload = {
               id: uuid.v4(),
@@ -246,6 +229,7 @@
         }
       };
 
+      // --- EVENT LISTENERS ---
       searchInput.addEventListener(
         "input",
         debounce((e) => {
@@ -280,59 +264,6 @@
           resultsContainer.innerHTML = "";
         }
       });
-
-      async function animatePlaceholder() {
-        const searchInput = document.getElementById("search-input");
-        const trendingItems = await getTrendingQueries();
-        const queries = trendingItems.map((item) => item.title);
-
-        if (!queries || queries.length === 0) return;
-
-        const typingSpeed = 100; // Time in ms between each character
-        const pauseBeforeDelete = 2000; // Time in ms to wait before deleting
-        const deletingSpeed = 50; // Time in ms between each character deletion
-        const pauseAfterDelete = 500; // Time in ms to wait after a word is deleted
-
-        let queryIndex = 0;
-
-        // Helper function to create a delay using promises
-        const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
-        // Infinite loop to cycle through queries
-        while (true) {
-          const currentQuery = queries[queryIndex];
-
-          // --- Typing effect ---
-          for (let i = 0; i < currentQuery.length; i++) {
-            searchInput.placeholder = `Search... ${currentQuery.substring(
-              0,
-              i + 1
-            )}`;
-            await sleep(typingSpeed);
-          }
-
-          // Pause with the full query displayed
-          await sleep(pauseBeforeDelete);
-
-          // --- Deleting effect ---
-          for (let i = currentQuery.length; i > 0; i--) {
-            searchInput.placeholder = `Search... ${currentQuery.substring(
-              0,
-              i - 1
-            )}`;
-            await sleep(deletingSpeed);
-          }
-
-          // Pause after deletion before starting the next word
-          await sleep(pauseAfterDelete);
-
-          // Move to the next query, or loop back to the first
-          queryIndex = (queryIndex + 1) % queries.length;
-        }
-      }
-
-      // Call the function when the page loads
-      document.addEventListener("DOMContentLoaded", animatePlaceholder);
     </script>
   </body>
 </html>

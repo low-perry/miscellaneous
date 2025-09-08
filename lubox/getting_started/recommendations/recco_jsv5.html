@@ -1,113 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Recco.js Homepage Example</title>
-    <!-- Google Fonts for a modern look -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
     <style>
-        /* Basic styling for the page */
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f3f4f6;
-            color: #1f2937;
-            margin: 0;
-            padding: 0;
-        }
+      /* Basic styling for the page */
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #f3f4f6;
+        color: #1f2937;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        max-width: 1152px; 
+        margin-left: auto;
+        margin-right: auto;
+        padding: 1rem;
+      }
 
-        /* Main container for centering content */
+      @media (min-width: 640px) {
         .container {
-            max-width: 1152px; /* Equivalent to max-w-6xl */
-            margin-left: auto;
-            margin-right: auto;
-            padding: 1rem;
+          padding: 1.5rem;
         }
+      }
+      @media (min-width: 1024px) {
+        .container {
+          padding: 2rem;
+        }
+      }
 
-        /* Responsive padding for the container */
-        @media (min-width: 640px) {
-            .container {
-                padding: 1.5rem;
-            }
-        }
-        @media (min-width: 1024px) {
-            .container {
-                padding: 2rem;
-            }
-        }
+      .hero-section {
+        background-color: white;
+        padding: 2rem;
+        border-radius: 0.5rem;
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1),
+          0 2px 4px -2px rgb(0 0 0 / 0.1);
+        margin-bottom: 3rem;
+        text-align: center;
+      }
+      .hero-section h1 {
+        font-size: 2.25rem;
+        line-height: 2.5rem;
+        font-weight: 700;
+        color: #111827;
+        margin-bottom: 0.5rem;
+      }
+      .hero-section p {
+        font-size: 1.125rem;
+        line-height: 1.75rem;
+        color: #4b5563;
+      }
 
-        /* Hero Section Styling */
-        .hero-section {
-            background-color: white;
-            padding: 2rem;
-            border-radius: 0.5rem;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-            margin-bottom: 3rem;
-            text-align: center;
-        }
-        .hero-section h1 {
-            font-size: 2.25rem; /* Equivalent to text-4xl */
-            line-height: 2.5rem;
-            font-weight: 700;
-            color: #111827;
-            margin-bottom: 0.5rem;
-        }
-        .hero-section p {
-            font-size: 1.125rem; /* Equivalent to text-lg */
-            line-height: 1.75rem;
-            color: #4b5563;
-        }
-        
-        /* Recommender Section Styling */
-        .recommender-section h2 {
-            font-size: 1.5rem; /* Equivalent to text-2xl */
-            line-height: 2rem;
-            font-weight: 700;
-            color: #111827;
-            margin-bottom: 1.5rem;
-            text-align: center;
-        }
+      /* Recommender Section Styling */
+      .recommender-section h2 {
+        font-size: 1.5rem;
+        line-height: 2rem;
+        font-weight: 700;
+        color: #111827;
+        margin-bottom: 1.5rem;
+        text-align: center;
+      }
 
-        /* Style for the Luigi's Box recommender UI (from original code) */
-        .luigisbox-recommender .lbx-recommend-item {
-            border-radius: 0.5rem;
-            border: 1px solid #e5e7eb;
-            background-color: white;
-            transition: box-shadow 0.2s ease-in-out;
-        }
-        .luigisbox-recommender .lbx-recommend-item:hover {
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-        }
+      /* Style for the Luigi's Box recommender UI (from original code) */
+      .luigisbox-recommender .lbx-recommend-item {
+        border-radius: 0.5rem;
+        border: 1px solid #e5e7eb;
+        background-color: white;
+        transition: box-shadow 0.2s ease-in-out;
+      }
+      .luigisbox-recommender .lbx-recommend-item:hover {
+        box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1),
+          0 2px 4px -2px rgb(0 0 0 / 0.1);
+      }
     </style>
-</head>
-<body>
-
+  </head>
+  <body>
     <!-- Main Page Container -->
     <div class="container">
+      <!-- Mock Homepage Hero Section -->
+      <div class="hero-section">
+        <h1>Welcome to Our Shop</h1>
+        <p>Discover the best products, curated for you.</p>
+      </div>
 
-        <!-- Mock Homepage Hero Section -->
-        <div class="hero-section">
-            <h1>Welcome to Our Shop</h1>
-            <p>Discover the best products, curated for you.</p>
-        </div>
-
-        <!-- 
+      <!-- 
           HOMEPAGE CONTENT
           You would have your normal homepage content here, like featured categories, banners, etc.
         -->
 
-        <!-- 
+      <!-- 
           RECOMMENDER SECTION
           This is where we will display the trending products.
         -->
-        <div class="recommender-section">
-            <h2>Trending Products</h2>
-            <!-- This is the placeholder where Recco.js will render the UI -->
-            <div id="recommender-trends"></div>
-        </div>
-
+      <div class="recommender-section">
+        <h2>Trending Products</h2>
+        <!-- This is the placeholder where Recco.js will render the UI -->
+        <div id="recommender-trends"></div>
+      </div>
     </div>
 
     <!-- 
@@ -120,16 +117,15 @@
       Luigis.Recommend(
         {
           // --- Configuration ---
-          TrackerId: '179075-204259', 
-          Theme: 'luigis',
+          TrackerId: "179075-204259",
+          Theme: "luigis",
           Size: 4, // You can set this to how many trending items you want to show
-          
+
           // Use the 'trends' model for a homepage. It requires no item ID.
-          Type: 'trends',
+          Type: "trends",
         },
-        '#recommender-trends' // The CSS selector for the placeholder element.
+        "#recommender-trends" // The CSS selector for the placeholder element.
       );
     </script>
-
-</body>
+  </body>
 </html>
