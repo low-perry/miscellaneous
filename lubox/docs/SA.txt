@@ -18,11 +18,11 @@ The assistant endpoint is publicly available and requires no authentication.
 
 ### Query parameters
 
-&nbsp; | &nbsp;
---------- | -----------
-`tracker_id` | Your site identifier within Luigi's Box. You can find this identifier in every URL in [the Luigi's Box app](https://app.luigisbox.com) once you are logged in.
-`assistant_handle` | The unique handler of the assistant to use.
-`user_id` | The unique identifier of the end-user. If it matches the user ID collected in analytics, it can drive personalization of the assistant results.
+| &nbsp;             | &nbsp;                                                                                                                                                         |
+| ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `tracker_id`       | Your site identifier within Luigi's Box. You can find this identifier in every URL in [the Luigi's Box app](https://app.luigisbox.com) once you are logged in. |
+| `assistant_handle` | The unique handler of the assistant to use.                                                                                                                    |
+| `user_id`          | The unique identifier of the end-user. If it matches the user ID collected in analytics, it can drive personalization of the assistant results.                |
 
 ### Request body parameters
 
@@ -90,12 +90,12 @@ The assistant endpoint is publicly available and requires no authentication.
 ### Example request
 
 <%= partial "includes/code/examples", locals: {
-  method: "POST",
-  auth: false,
-  path: '/v1/assistant?tracker_id=1234-5678&assistant_handle=piano_finder&user_id=123456',
-  headers: { "Content-Type" => "application/json" },
-  payload: {"assistant_version": 1,"steps": [{"question_handle": "color","option_handles": ["color-blue"]}]}
-  }
+method: "POST",
+auth: false,
+path: '/v1/assistant?tracker_id=1234-5678&assistant_handle=piano_finder&user_id=123456',
+headers: { "Content-Type" => "application/json" },
+payload: {"assistant_version": 1,"steps": [{"question_handle": "color","option_handles": ["color-blue"]}]}
+}
 %>
 
 ## HTTP response
@@ -108,26 +108,26 @@ A successful response includes the current state of the conversation, such as th
 
 **Response fields**
 
-&nbsp; | &nbsp;
------ | -----------
-`assistant_handle` | The handle of the assistant being used.
-`tracker_id` | Your site identifier within Luigi's Box.
-`hits` | An array of product results that match the current state of the conversation.
-`important_attributes` | An array of important attributes that should be displayed for each product in the results.
-`avatar_image_link` | The URL to an avatar image for the assistant, if available.
-`question.title_html` | An HTML-formatted title of the current question.
-`question.description_html` | An HTML-formatted description of the current question, if available.
-`question.image_link` | The URL to an image related to the current question, if available.
-`question.type` | The type of the question, which can be `single_choice` or `multi_choice`.
-`question.handle` | The unique identifier for the current question.
-`question.options[].title_html` | An HTML-formatted title of the option.
-`question.options[].description_html` | A HTML-formatted description of the option, if available.
-`question.options[].option_handle` | The unique identifier for the option.
-`question.options[].next_question_handle` | The handle of the next question to be presented if this option is selected.
-`question.options[].image_link` | The URL to an image related to the option, if available.
-`question.options[].color_code` | The color code associated with the option, if applicable.
-`question.options[].hits_count` | The number of products that match this option.
-`question.options[].price_range` | The price range of products matching this option, formatted as "min - max".
+| &nbsp;                                    | &nbsp;                                                                                     |
+| ----------------------------------------- | ------------------------------------------------------------------------------------------ |
+| `assistant_handle`                        | The handle of the assistant being used.                                                    |
+| `tracker_id`                              | Your site identifier within Luigi's Box.                                                   |
+| `hits`                                    | An array of product results that match the current state of the conversation.              |
+| `important_attributes`                    | An array of important attributes that should be displayed for each product in the results. |
+| `avatar_image_link`                       | The URL to an avatar image for the assistant, if available.                                |
+| `question.title_html`                     | An HTML-formatted title of the current question.                                           |
+| `question.description_html`               | An HTML-formatted description of the current question, if available.                       |
+| `question.image_link`                     | The URL to an image related to the current question, if available.                         |
+| `question.type`                           | The type of the question, which can be `single_choice` or `multi_choice`.                  |
+| `question.handle`                         | The unique identifier for the current question.                                            |
+| `question.options[].title_html`           | An HTML-formatted title of the option.                                                     |
+| `question.options[].description_html`     | A HTML-formatted description of the option, if available.                                  |
+| `question.options[].option_handle`        | The unique identifier for the option.                                                      |
+| `question.options[].next_question_handle` | The handle of the next question to be presented if this option is selected.                |
+| `question.options[].image_link`           | The URL to an image related to the option, if available.                                   |
+| `question.options[].color_code`           | The color code associated with the option, if applicable.                                  |
+| `question.options[].hits_count`           | The number of products that match this option.                                             |
+| `question.options[].price_range`          | The price range of products matching this option, formatted as "min - max".                |
 
 **Example success response**
 
@@ -177,7 +177,7 @@ The API uses standard HTTP status codes. Note that the format of the error respo
 
 These errors indicate a problem with the request that was sent.
 
-- **`400 Bad Request`**: 
+- **`400 Bad Request`**:
   Indicates malformed input, such as a missing parameter or incorrect data type. The response is a structured JSON object.
 
 ```json
@@ -189,7 +189,8 @@ These errors indicate a problem with the request that was sent.
   }
 }
 ```
-- **`404 Not Found`**: 
+
+- **`404 Not Found`**:
   Indicates that the requested assistant or question does not exist.
 
 ```json
@@ -202,11 +203,11 @@ These errors indicate a problem with the request that was sent.
 
 These indicate a temporary problem with the service. You should retry the request after a short delay. If the problem persists, contact support.
 
-Status code | Response body (`text/plain`) | Reason |
-|-------------|-------------------------------|--------|
-| `408 Request Timeout` | `Request timed out` | The request took too long to process. |
-| `500 Internal Server Error` | `Internal server error Request-Id: ...` | Indicates a generic server error. |
-| `503 Service Unavailable` | `Service Unavailable` | A backend service is temporarily down. Please retry after a short delay. |
+| Status code                 | Response body (`text/plain`)            | Reason                                                                   |
+| --------------------------- | --------------------------------------- | ------------------------------------------------------------------------ |
+| `408 Request Timeout`       | `Request timed out`                     | The request took too long to process.                                    |
+| `500 Internal Server Error` | `Internal server error Request-Id: ...` | Indicates a generic server error.                                        |
+| `503 Service Unavailable`   | `Service Unavailable`                   | A backend service is temporarily down. Please retry after a short delay. |
 
 ## Integration guide
 
@@ -223,63 +224,63 @@ The Assistant API is designed to create a conversational product discovery exper
 **Example conversation flow**
 
 ```javascript
-const TRACKER_ID = 'YOUR_TRACKER_ID'; 
-const ASSISTANT_HANDLE = 'Webinar Guitars';
+const TRACKER_ID = "YOUR_TRACKER_ID";
+const ASSISTANT_HANDLE = "Webinar Guitars";
 const ASSISTANT_VERSION = -1;
-const API_ENDPOINT = 'https://live.luigisbox.com/v1/assistant';
-const USER_ID = 'some_user_id';
+const API_ENDPOINT = "https://live.luigisbox.com/v1/assistant";
+const USER_ID = "some_user_id";
 
 let steps = []; // This array will store the history of the conversation.
 
 // Initial API call to start the conversation
 async function startConversation() {
-    const url = `${API_ENDPOINT}?tracker_id=${TRACKER_ID}&assistant_handle=${ASSISTANT_HANDLE}&user_id=${USER_ID}`;
-    const payload = {
-        assistant_version: ASSISTANT_VERSION,
-        steps: [] // Sending an empty array
-    };
+  const url = `${API_ENDPOINT}?tracker_id=${TRACKER_ID}&assistant_handle=${ASSISTANT_HANDLE}&user_id=${USER_ID}`;
+  const payload = {
+    assistant_version: ASSISTANT_VERSION,
+    steps: [], // Sending an empty array
+  };
 
-    const response = await axios.post(url, payload);
-    renderQuestion(response.data); 
+  const response = await axios.post(url, payload);
+  renderQuestion(response.data);
 }
 
 function handleOptionClick(questionHandle, selectedOption) {
-    // 1. Record the answer by adding it to our state array
-    steps.push({
-        question_handle: questionHandle,
-        option_handles: [selectedOption.option_handle] // API expects an array
-    });
+  // 1. Record the answer by adding it to our state array
+  steps.push({
+    question_handle: questionHandle,
+    option_handles: [selectedOption.option_handle], // API expects an array
+  });
 
-    // 2. Get the handle for the next question from the selected option
-    const nextQuestionHandle = selectedOption.next_question_handle;
+  // 2. Get the handle for the next question from the selected option
+  const nextQuestionHandle = selectedOption.next_question_handle;
 
-    // 3. Call the API again with the updated steps and the next question handle
-    callAssistantAPI(nextQuestionHandle);
+  // 3. Call the API again with the updated steps and the next question handle
+  callAssistantAPI(nextQuestionHandle);
 }
 
 async function callAssistantAPI(nextQuestionHandle = null) {
-    const url = `${API_ENDPOINT}?tracker_id=${TRACKER_ID}&assistant_handle=${ASSISTANT_HANDLE}&user_id=${USER_ID}`;
-    const payload = {
-        assistant_version: ASSISTANT_VERSION,
-        steps: steps // The steps array now contains the user's history
-    };
+  const url = `${API_ENDPOINT}?tracker_id=${TRACKER_ID}&assistant_handle=${ASSISTANT_HANDLE}&user_id=${USER_ID}`;
+  const payload = {
+    assistant_version: ASSISTANT_VERSION,
+    steps: steps, // The steps array now contains the user's history
+  };
 
-    // Add the handle to the payload to continue the conversation flow
-    if (nextQuestionHandle) {
-        payload.next_question_handle = nextQuestionHandle;
-    }
-    
-    const response = await axios.post(url, payload);
-    renderQuestion(response.data);
+  // Add the handle to the payload to continue the conversation flow
+  if (nextQuestionHandle) {
+    payload.next_question_handle = nextQuestionHandle;
+  }
+
+  const response = await axios.post(url, payload);
+  renderQuestion(response.data);
 }
 
 function renderQuestion(data) {
-    if (data.question && data.question.options.length > 0) {
-        // Render the question and options...
-    } else {
-        // No more questions, the conversation is over.
-        displayCompletionMessage();
-    }
+  if (data.question && data.question.options.length > 0) {
+    // Render the question and options...
+  } else {
+    // No more questions, the conversation is over.
+    displayCompletionMessage();
+  }
 }
 ```
 
