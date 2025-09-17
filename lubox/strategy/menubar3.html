@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Documentation Menu Mock</title>
+    <style>
+        /* --- Basic Reset & Body --- */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+            background-color: #f7f8fa;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* --- Main Container --- */
+        .container {
+            display: flex;
+            gap: 20px;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        /* --- Navigation Menu Styling --- */
+        .nav-menu {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            padding: 16px;
+            width: 280px;
+            height: fit-content;
+        }
+
+        .nav-menu ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        /* --- Hub & Top-level Item Styling --- */
+        .nav-menu > ul > li {
+            margin-bottom: 12px;
+        }
+
+        .nav-menu .hub-title,
+        .nav-menu .top-level-item > a {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #586474;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: background-color 0.2s, color 0.2s;
+            cursor: pointer;
+        }
+        
+        /* --- SVG Icon Styling --- */
+        .nav-menu .hub-title svg,
+        .nav-menu .top-level-item > a svg {
+            margin-right: 10px;
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+            opacity: 0.8;
+            flex-shrink: 0;
+        }
+
+
+        /* --- Sub-menu Styling --- */
+        .nav-menu .sub-menu {
+            padding-left: 15px;
+            margin-top: 4px;
+            border-left: 2px solid #eef0f2;
+            display: none; /* Hidden by default */
+        }
+        
+        .nav-menu .sub-menu li a {
+            display: block;
+            padding: 6px 12px 6px 27px; /* Indent text */
+            font-size: 14px;
+            color: #4a5461;
+            text-decoration: none;
+            border-radius: 6px;
+            position: relative;
+        }
+        
+        .nav-menu .sub-menu li a::before {
+             content: '';
+             position: absolute;
+             left: 12px;
+             top: 50%;
+             transform: translateY(-50%);
+             width: 4px;
+             height: 4px;
+             background-color: #c1c9d3;
+             border-radius: 50%;
+        }
+
+        /* --- Hover & Active States --- */
+        .nav-menu .hub-title:hover,
+        .nav-menu li a:hover {
+            background-color: #f2f4f7;
+            color: #1c2025;
+        }
+        
+        .nav-menu .hub-item.open > .hub-title {
+            color: #1c2025;
+        }
+
+        .nav-menu li a.active,
+        .nav-menu li a.active:hover {
+            background-color: #e8ebf0;
+            color: #000;
+            font-weight: 600;
+        }
+
+        /* --- Arrow Icon for Expandable Items --- */
+        .nav-menu .hub-title .arrow {
+            margin-left: auto;
+            transition: transform 0.2s ease-in-out;
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+
+        /* --- State for Expanded Items --- */
+        .nav-menu li.open > .hub-title .arrow {
+            transform: rotate(90deg);
+        }
+
+        .nav-menu li.open > .sub-menu {
+            display: block;
+        }
+        
+        /* --- Mock Content Area --- */
+        .content-area {
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 20px 40px;
+            flex-grow: 1;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <nav class="nav-menu">
+            <ul>
+                <li class="hub-item open"> <div class="hub-title">
+                        <svg viewBox="0 0 24 24"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z"></path></svg>
+                        <span>Platform Foundations</span>
+                        <svg class="arrow" viewBox="0 0 24 24"><path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z"></path></svg>
+                    </div>
+                    <ul class="sub-menu">
+                        <li><a href="#">Authentication</a></li>
+                        <li><a href="#">Identity</a></li>
+                        <li><a href="#">API Principles</a></li>
+                    </ul>
+                </li>
+
+                 <li class="hub-item">
+                    <div class="hub-title">
+                        <svg viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M10,16.5L16,12L10,7.5V16.5Z"></path></svg>
+                        <span>Quickstart</span>
+                        <svg class="arrow" viewBox="0 0 24 24"><path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z"></path></svg>
+                    </div>
+                    <ul class="sub-menu">
+                        <li><a href="#">Search</a></li>
+                        <li><a href="#">Autocomplete</a></li>
+                        <li><a href="#">Recommendations</a></li>
+                    </ul>
+                </li>
+                
+                <li class="hub-item open">
+                    <div class="hub-title">
+                        <svg viewBox="0 0 24 24"><path d="M14,3V5H17.59L7.76,14.83L9.17,16.24L19,6.41V10H21V3M19,19H5V5H12V3H5C3.89,3 3,3.9 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V12H19V19Z"></path></svg>
+                        <span>Indexing</span>
+                        <svg class="arrow" viewBox="0 0 24 24"><path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z"></path></svg>
+                    </div>
+                    <ul class="sub-menu">
+                        <li><a href="#">Overview</a></li>
+                        <li><a href="#" class="active">Data Layout</a></li>
+                        <li><a href="#">API Reference</a></li>
+                        <li><a href="#">Feeds Reference</a></li>
+                        <li><a href="#">Migration Guides</a></li>
+                    </ul>
+                </li>
+
+                <li class="hub-item">
+                    <div class="hub-title">
+                        <svg viewBox="0 0 24 24"><path d="M9,22A1,1 0 0,1 8,21V18H4A2,2 0 0,1 2,16V4C2,2.89 2.9,2 4,2H20A2,2 0 0,1 22,4V16A2,2 0 0,1 20,18H16V21A1,1 0 0,1 15,22H9M16,16V11H8V16H16M20,4V6H4V4H20Z"></path></svg>
+                        <span>Analytics</span>
+                        <svg class="arrow" viewBox="0 0 24 24"><path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z"></path></svg>
+                    </div>
+                     <ul class="sub-menu">
+                        <li><a href="#">Overview</a></li>
+                        <li><a href="#">Events API</a></li>
+                        <li><a href="#">Data Layer Collector</a></li>
+                        <li><a href="#">Reporting API</a></li>
+                    </ul>
+                </li>
+
+                <li class="hub-item">
+                    <div class="hub-title">
+                        <svg viewBox="0 0 24 24"><path d="M7,13V11H17V13H7M7,19V17H17V19H7M7,7V5H17V7H7M3,3V21H21V3H3Z"></path></svg>
+                        <span>Autocomplete</span>
+                        <svg class="arrow" viewBox="0 0 24 24"><path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z"></path></svg>
+                    </div>
+                    <ul class="sub-menu">
+                        <li><a href="#">Overview</a></li>
+                        <li><a href="#">Autocomplete.js</a></li>
+                        <li><a href="#">API Reference</a></li>
+                        <li><a href="#">Trending Queries</a></li>
+                    </ul>
+                </li>
+
+                <li class="hub-item">
+                    <div class="hub-title">
+                        <svg viewBox="0 0 24 24"><path d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5A4.5,4.5 0 0,0 5,9.5A4.5,4.5 0 0,0 9.5,14A4.5,4.5 0 0,0 14,9.5A4.5,4.5 0 0,0 9.5,5Z"></path></svg>
+                        <span>Search</span>
+                        <svg class="arrow" viewBox="0 0 24 24"><path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z"></path></svg>
+                    </div>
+                    <ul class="sub-menu">
+                        <li><a href="#">Overview</a></li>
+                        <li><a href="#">Search.js</a></li>
+                        <li><a href="#">API Reference</a></li>
+                        <li><a href="#">Ranking</a></li>
+                        <li><a href="#">Variant Search</a></li>
+                    </ul>
+                </li>
+
+                <li class="hub-item">
+                    <div class="hub-title">
+                        <svg viewBox="0 0 24 24"><path d="M16,11V5H8V11H2V17H8V23H16V17H22V11H16M14,13V15H10V13H4V9H10V7H14V9H20V13H14M12,17V19H10V17H12M14,19V21H12V19H14M12,5V7H14V5H12Z"></path></svg>
+                        <span>Product Listing</span>
+                        <svg class="arrow" viewBox="0 0 24 24"><path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z"></path></svg>
+                    </div>
+                     <ul class="sub-menu">
+                        <li><a href="#">Overview</a></li>
+                        <li><a href="#">API Reference</a></li>
+                        <li><a href="#">Pairing</a></li>
+                    </ul>
+                </li>
+
+                <li class="hub-item">
+                    <div class="hub-title">
+                        <svg viewBox="0 0 24 24"><path d="M23,10C23,8.89 22.1,8 21,8H14.68L15.64,3.43L15.67,3.24C15.67,2.96 15.55,2.71 15.38,2.53L14.37,1.5L7.44,8.44C7.15,8.72 7,9.11 7,9.5V19C7,20.1 7.9,21 9,21H18C18.83,21 19.54,20.5 19.84,19.78L22.86,12.73C22.95,12.5 23,12.26 23,12V10M1,21H5V9H1V21Z"></path></svg>
+                        <span>Recommendations</span>
+                        <svg class="arrow" viewBox="0 0 24 24"><path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z"></path></svg>
+                    </div>
+                    <ul class="sub-menu">
+                        <li><a href="#">Overview</a></li>
+                        <li><a href="#">Core Concepts</a></li>
+                        <li><a href="#">Recommender API</a></li>
+                        <li><a href="#">Recco.js</a></li>
+                        <li><a href="#">Brain Data Import</a></li>
+                    </ul>
+                </li>
+
+                <li class="top-level-item">
+                    <a href="#">
+                        <svg viewBox="0 0 24 24"><path d="M14,16.23L18.2,19L17,14L21,10.6L16.5,10.2L14.5,6L12.5,10.2L8,10.6L12,14L10.8,19L14,16.23M20,2H4C2.9,2 2,2.9 2,4V22L4,20H20C21.1,20 22,19.1 22,18V4C22,2.9 21.1,2 20,2Z"></path></svg>
+                        <span>Changelog</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <main class="content-area">
+            <h1>Data Layout</h1>
+            <p>This is a mock of the Data Layout page within the <strong>Indexing</strong> hub. This page would detail the conventions for structuring your data, including special fields and data types.</p>
+            <p>The navigation menu is now populated with relevant sub-items for each product, providing a complete and realistic view of the final structure.</p>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const hubTitles = document.querySelectorAll('.nav-menu .hub-title');
+            hubTitles.forEach(title => {
+                title.addEventListener('click', function() {
+                    this.parentElement.classList.toggle('open');
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>

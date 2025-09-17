@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Documentation Menu Mock</title>
+    <style>
+        /* --- Basic Reset & Body --- */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+            background-color: #f7f8fa;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* --- Main Container --- */
+        .container {
+            display: flex;
+            gap: 20px;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        /* --- Navigation Menu Styling --- */
+        .nav-menu {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            padding: 16px;
+            width: 280px;
+            height: fit-content;
+        }
+
+        .nav-menu ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        /* --- Hub & Top-level Item Styling --- */
+        .nav-menu > ul > li {
+            margin-bottom: 12px;
+        }
+
+        .nav-menu .hub-title,
+        .nav-menu .top-level-item > a {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #586474;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: background-color 0.2s, color 0.2s;
+            cursor: pointer;
+        }
+
+        .nav-menu .hub-title::before,
+        .nav-menu .top-level-item > a::before {
+            content: '📁'; /* Default Icon */
+            margin-right: 10px;
+            font-size: 16px;
+        }
+
+        /* --- Sub-menu Styling --- */
+        .nav-menu .sub-menu {
+            padding-left: 15px;
+            margin-top: 4px;
+            border-left: 2px solid #eef0f2;
+            display: none; /* Hidden by default */
+        }
+        
+        .nav-menu .sub-menu li a {
+            display: block;
+            padding: 6px 12px 6px 27px; /* Indent text */
+            font-size: 14px;
+            color: #4a5461;
+            text-decoration: none;
+            border-radius: 6px;
+            position: relative;
+        }
+        
+        .nav-menu .sub-menu li a::before {
+             content: '';
+             position: absolute;
+             left: 12px;
+             top: 50%;
+             transform: translateY(-50%);
+             width: 4px;
+             height: 4px;
+             background-color: #c1c9d3;
+             border-radius: 50%;
+        }
+
+        /* --- Hover & Active States --- */
+        .nav-menu .hub-title:hover,
+        .nav-menu li a:hover {
+            background-color: #f2f4f7;
+            color: #1c2025;
+        }
+
+        .nav-menu li a.active,
+        .nav-menu li a.active:hover {
+            background-color: #e8ebf0;
+            color: #000;
+            font-weight: 600;
+        }
+
+        /* --- Arrow Icon for Expandable Items --- */
+        .nav-menu .hub-title .arrow {
+            margin-left: auto;
+            transition: transform 0.2s ease-in-out;
+            font-size: 12px;
+        }
+
+        /* --- State for Expanded Items --- */
+        .nav-menu li.open > .hub-title .arrow {
+            transform: rotate(90deg);
+        }
+
+        .nav-menu li.open > .sub-menu {
+            display: block;
+        }
+        
+        /* --- Custom Icons for Hubs --- */
+        .hub-foundations > .hub-title::before { content: '🏛️'; }
+        .hub-indexing > .hub-title::before { content: '📥'; }
+        .hub-search > .hub-title::before { content: '🔍'; }
+        .hub-autocomplete > .hub-title::before { content: '⚡️'; }
+        .hub-recommendations > .hub-title::before { content: '👍'; }
+        .hub-analytics > .hub-title::before { content: '📊'; }
+        .item-migrations > a::before { content: '🚀'; }
+
+
+        /* --- Mock Content Area --- */
+        .content-area {
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 20px 40px;
+            flex-grow: 1;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <nav class="nav-menu">
+            <ul>
+                <li class="hub-item hub-foundations open"> <div class="hub-title">Platform Foundations <span class="arrow">▶</span></div>
+                    <ul class="sub-menu">
+                        <li><a href="#">Authentication</a></li>
+                        <li><a href="#">Identity</a></li>
+                        <li><a href="#">API Principles</a></li>
+                    </ul>
+                </li>
+                
+                <li class="hub-item hub-indexing open"> <div class="hub-title">1. Indexing Content <span class="arrow">▶</span></div>
+                    <ul class="sub-menu">
+                        <li><a href="#">Overview</a></li>
+                        <li><a href="#">Quickstart</a></li>
+                        <li><a href="#" class="active">Core Concepts</a></li>
+                        <li><a href="#">Implementation Guides</a></li>
+                        <li><a href="#">API Reference</a></li>
+                    </ul>
+                </li>
+
+                <li class="hub-item hub-search">
+                    <div class="hub-title">2. Implementing Search <span class="arrow">▶</span></div>
+                    <ul class="sub-menu">
+                        <li><a href="#">Overview</a></li>
+                        <li><a href="#">Quickstart</a></li>
+                        <li><a href="#">Core Concepts</a></li>
+                        <li><a href="#">Implementation Guides</a></li>
+                        <li><a href="#">API Reference</a></li>
+                        <li><a href="#">Advanced Recipes</a></li>
+                    </ul>
+                </li>
+
+                <li class="hub-item hub-autocomplete">
+                    <div class="hub-title">3. Implementing Autocomplete <span class="arrow">▶</span></div>
+                    <ul class="sub-menu">
+                         </ul>
+                </li>
+
+                <li class="hub-item hub-recommendations">
+                    <div class="hub-title">4. Implementing Recommendations <span class="arrow">▶</span></div>
+                    <ul class="sub-menu">
+                         </ul>
+                </li>
+                
+                 <li class="hub-item hub-analytics">
+                    <div class="hub-title">5. Analytics <span class="arrow">▶</span></div>
+                    <ul class="sub-menu">
+                         </ul>
+                </li>
+
+                <li class="top-level-item item-migrations">
+                    <a href="#">Migration Guides</a>
+                </li>
+            </ul>
+        </nav>
+
+        <main class="content-area">
+            <h1>Core Concepts</h1>
+            <p>This page would explain the fundamental ideas behind indexing data in Luigi's Box, such as the Object Model, Data Layout, and Special Fields.</p>
+            <p>The new navigation on the left provides a clear, scalable, and predictable structure. Each major product is a "Hub" that contains a consistent set of "Spokes" like 'Overview', 'Quickstart', and 'Reference'. Shared concepts are grouped in 'Platform Foundations' to reduce redundancy.</p>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Find all the hub titles that have a sub-menu
+            const hubTitles = document.querySelectorAll('.nav-menu .hub-title');
+
+            hubTitles.forEach(title => {
+                // Add a click event listener to each hub title
+                title.addEventListener('click', function() {
+                    // Toggle the 'open' class on the parent list item
+                    this.parentElement.classList.toggle('open');
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
