@@ -1,0 +1,420 @@
+{
+    "exportFormatVersion": 2,
+    "exportTime": "2024-02-06 10:05:52",
+    "containerVersion": {
+        "path": "accounts/6126268681/containers/130355351/versions/0",
+        "accountId": "6126268681",
+        "containerId": "130355351",
+        "containerVersionId": "0",
+        "container": {
+            "path": "accounts/6126268681/containers/130355351",
+            "accountId": "6126268681",
+            "containerId": "130355351",
+            "name": "www.lbxtest.com",
+            "publicId": "GTM-KCV6336",
+            "usageContext": [
+                "WEB"
+            ],
+            "fingerprint": "1688028241648",
+            "tagManagerUrl": "https://tagmanager.google.com/#/container/accounts/6126268681/containers/130355351/workspaces?apiLink=container",
+            "features": {
+                "supportUserPermissions": true,
+                "supportEnvironments": true,
+                "supportWorkspaces": true,
+                "supportGtagConfigs": false,
+                "supportBuiltInVariables": true,
+                "supportClients": false,
+                "supportFolders": true,
+                "supportTags": true,
+                "supportTemplates": true,
+                "supportTriggers": true,
+                "supportVariables": true,
+                "supportVersions": true,
+                "supportZones": true,
+                "supportTransformations": false
+            },
+            "tagIds": [
+                "GTM-KCV6336"
+            ]
+        },
+        "tag": [
+            {
+                "accountId": "6126268681",
+                "containerId": "130355351",
+                "tagId": "7",
+                "name": "GA4 - Luigi's Box Event",
+                "type": "gaawe",
+                "parameter": [
+                    {
+                        "type": "BOOLEAN",
+                        "key": "sendEcommerceData",
+                        "value": "false"
+                    },
+                    {
+                        "type": "LIST",
+                        "key": "eventSettingsTable",
+                        "list": [
+                            {
+                                "type": "MAP",
+                                "map": [
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameter",
+                                        "value": "service"
+                                    },
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameterValue",
+                                        "value": "{{DL - luigisbox.service}}"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "MAP",
+                                "map": [
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameter",
+                                        "value": "interaction"
+                                    },
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameterValue",
+                                        "value": "{{DL - luigisbox.interaction}}"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "MAP",
+                                "map": [
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameter",
+                                        "value": "result_type"
+                                    },
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameterValue",
+                                        "value": "{{DL - luigisbox.result_type}}"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "MAP",
+                                "map": [
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameter",
+                                        "value": "result_id"
+                                    },
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameterValue",
+                                        "value": "{{DL - luigisbox.result_id}}"
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "MAP",
+                                "map": [
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameter",
+                                        "value": "user_input"
+                                    },
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "parameterValue",
+                                        "value": "{{DL - luigisbox.user_input}}"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "enhancedUserId",
+                        "value": "false"
+                    },
+                    {
+                        "type": "LIST",
+                        "key": "userProperties",
+                        "list": [
+                            {
+                                "type": "MAP",
+                                "map": [
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "name",
+                                        "value": "ab_test"
+                                    },
+                                    {
+                                        "type": "TEMPLATE",
+                                        "key": "value",
+                                        "value": "{{DL - ab_test}}"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "eventName",
+                        "value": "luigisbox"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "measurementIdOverride",
+                        "value": "{{GA4_tracking_id}}"
+                    }
+                ],
+                "fingerprint": "1707213903021",
+                "firingTriggerId": [
+                    "3"
+                ],
+                "tagFiringOption": "ONCE_PER_EVENT",
+                "monitoringMetadata": {
+                    "type": "MAP"
+                },
+                "consentSettings": {
+                    "consentStatus": "NOT_SET"
+                }
+            }
+        ],
+        "trigger": [
+            {
+                "accountId": "6126268681",
+                "containerId": "130355351",
+                "triggerId": "3",
+                "name": "Event - luigisbox",
+                "type": "CUSTOM_EVENT",
+                "customEventFilter": [
+                    {
+                        "type": "EQUALS",
+                        "parameter": [
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg0",
+                                "value": "{{_event}}"
+                            },
+                            {
+                                "type": "TEMPLATE",
+                                "key": "arg1",
+                                "value": "luigisbox"
+                            }
+                        ]
+                    }
+                ],
+                "fingerprint": "1688028291886"
+            }
+        ],
+        "variable": [
+            {
+                "accountId": "6126268681",
+                "containerId": "130355351",
+                "variableId": "4",
+                "name": "DL - luigisbox.result_type",
+                "type": "v",
+                "parameter": [
+                    {
+                        "type": "INTEGER",
+                        "key": "dataLayerVersion",
+                        "value": "2"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "setDefaultValue",
+                        "value": "false"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "name",
+                        "value": "luigisbox.result_type"
+                    }
+                ],
+                "fingerprint": "1707209395909",
+                "formatValue": {}
+            },
+            {
+                "accountId": "6126268681",
+                "containerId": "130355351",
+                "variableId": "5",
+                "name": "DL - luigisbox.interaction",
+                "type": "v",
+                "parameter": [
+                    {
+                        "type": "INTEGER",
+                        "key": "dataLayerVersion",
+                        "value": "2"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "setDefaultValue",
+                        "value": "false"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "name",
+                        "value": "luigisbox.interaction"
+                    }
+                ],
+                "fingerprint": "1707209366400",
+                "formatValue": {}
+            },
+            {
+                "accountId": "6126268681",
+                "containerId": "130355351",
+                "variableId": "6",
+                "name": "DL - luigisbox.service",
+                "type": "v",
+                "parameter": [
+                    {
+                        "type": "INTEGER",
+                        "key": "dataLayerVersion",
+                        "value": "2"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "setDefaultValue",
+                        "value": "false"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "name",
+                        "value": "luigisbox.service"
+                    }
+                ],
+                "fingerprint": "1707209385394",
+                "formatValue": {}
+            },
+            {
+                "accountId": "6126268681",
+                "containerId": "130355351",
+                "variableId": "8",
+                "name": "DL - luigisbox.result_id",
+                "type": "v",
+                "parameter": [
+                    {
+                        "type": "INTEGER",
+                        "key": "dataLayerVersion",
+                        "value": "2"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "setDefaultValue",
+                        "value": "false"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "name",
+                        "value": "luigisbox.result_id"
+                    }
+                ],
+                "fingerprint": "1707209412449",
+                "formatValue": {}
+            },
+            {
+                "accountId": "6126268681",
+                "containerId": "130355351",
+                "variableId": "9",
+                "name": "DL - luigisbox.user_input",
+                "type": "v",
+                "parameter": [
+                    {
+                        "type": "INTEGER",
+                        "key": "dataLayerVersion",
+                        "value": "2"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "setDefaultValue",
+                        "value": "false"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "name",
+                        "value": "luigisbox.user_input"
+                    }
+                ],
+                "fingerprint": "1707209435619",
+                "formatValue": {}
+            },
+            {
+                "accountId": "6126268681",
+                "containerId": "130355351",
+                "variableId": "10",
+                "name": "GA4_tracking_id",
+                "type": "c",
+                "parameter": [
+                    {
+                        "type": "TEMPLATE",
+                        "key": "value",
+                        "value": "xxx"
+                    }
+                ],
+                "fingerprint": "1707209550446",
+                "formatValue": {}
+            },
+            {
+                "accountId": "6126268681",
+                "containerId": "130355351",
+                "variableId": "13",
+                "name": "DL - ab_test",
+                "type": "v",
+                "parameter": [
+                    {
+                        "type": "INTEGER",
+                        "key": "dataLayerVersion",
+                        "value": "2"
+                    },
+                    {
+                        "type": "BOOLEAN",
+                        "key": "setDefaultValue",
+                        "value": "false"
+                    },
+                    {
+                        "type": "TEMPLATE",
+                        "key": "name",
+                        "value": "luigisbox.ab_test"
+                    }
+                ],
+                "fingerprint": "1707213051542",
+                "formatValue": {}
+            }
+        ],
+        "builtInVariable": [
+            {
+                "accountId": "6126268681",
+                "containerId": "130355351",
+                "type": "PAGE_URL",
+                "name": "Page URL"
+            },
+            {
+                "accountId": "6126268681",
+                "containerId": "130355351",
+                "type": "PAGE_HOSTNAME",
+                "name": "Page Hostname"
+            },
+            {
+                "accountId": "6126268681",
+                "containerId": "130355351",
+                "type": "PAGE_PATH",
+                "name": "Page Path"
+            },
+            {
+                "accountId": "6126268681",
+                "containerId": "130355351",
+                "type": "REFERRER",
+                "name": "Referrer"
+            },
+            {
+                "accountId": "6126268681",
+                "containerId": "130355351",
+                "type": "EVENT",
+                "name": "Event"
+            }
+        ],
+        "fingerprint": "1707213952603",
+        "tagManagerUrl": "https://tagmanager.google.com/#/versions/accounts/6126268681/containers/130355351/versions/0?apiLink=version"
+    }
+}
