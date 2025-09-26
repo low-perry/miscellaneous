@@ -91,7 +91,7 @@
   scrollbar-width: thin;
 }
 
-/* WebKit scrollbar styling (Chrome, Safari, Edge) */
+ 
 .navbar.lb-sticky-offset::-webkit-scrollbar {
   width: 6px;
 }
@@ -144,6 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!icon) return;
     icon.style.setProperty('transform', `rotate(${deg}deg)`, 'important');
   }
+  
 
   function syncIcon(btn) {
     const icon = btn.querySelector('.bi-chevron-right');
@@ -151,22 +152,48 @@ document.addEventListener('DOMContentLoaded', () => {
     rotateIcon(icon, expanded ? 90 : 0);
   }
 
-  nav.querySelectorAll('.collapse-panel').forEach(panel => panel.style.display = 'none');
-
-  nav.addEventListener('click', (e) => {
-    const btn = e.target.closest('.btn-toggle');
-    if (!btn) return;
+  function togglePanel(btn) {
     const ownerLi = btn.closest('li.nav-item');
     const panel = ownerLi?.nextElementSibling;
-    if (!panel || !panel.classList.contains('collapse-panel')) return;
+    if (!panel || !panel.classList.contains('collapse-panel')) return false;
+    
     const expanded = btn.getAttribute('aria-expanded') === 'true';
     btn.setAttribute('aria-expanded', String(!expanded));
     panel.style.display = expanded ? 'none' : 'block';
     syncIcon(btn);
+    return true;
+  }
+
+  nav.querySelectorAll('.collapse-panel').forEach(panel => panel.style.display = 'none');
+
+  nav.addEventListener('click', (e) => {
+ 
+    const btn = e.target.closest('.btn-toggle');
+    if (btn) {
+      togglePanel(btn);
+      return;
+    }
+
+ 
+    const navLink = e.target.closest('.nav-link');
+    if (navLink) {
+      const parentDiv = navLink.parentElement;
+ 
+      if (parentDiv && parentDiv.classList.contains('d-flex') && parentDiv.classList.contains('align-items-center')) {
+        const toggleBtn = parentDiv.querySelector('.btn-toggle');
+        if (toggleBtn) {
+ 
+          togglePanel(toggleBtn);
+ 
+        }
+      }
+    }
   });
 
+ 
   const active = nav.querySelector('.nav-link.active');
   if (active) {
+ 
     let panel = active.closest('.collapse-panel');
     while (panel && nav.contains(panel)) {
       panel.style.display = 'block';
@@ -177,6 +204,20 @@ document.addEventListener('DOMContentLoaded', () => {
         syncIcon(ownerBtn);
       }
       panel = panel.parentElement?.closest('.collapse-panel');
+    }
+    
+ 
+    const parentDiv = active.parentElement;
+    if (parentDiv && parentDiv.classList.contains('d-flex') && parentDiv.classList.contains('align-items-center')) {
+      const toggleBtn = parentDiv.querySelector('.btn-toggle');
+      const ownerLi = active.closest('li.nav-item');
+      const hubPanel = ownerLi?.nextElementSibling;
+      
+      if (toggleBtn && hubPanel && hubPanel.classList.contains('collapse-panel')) {
+        hubPanel.style.display = 'block';
+        toggleBtn.setAttribute('aria-expanded', 'true');
+        syncIcon(toggleBtn);
+      }
     }
   }
 });
