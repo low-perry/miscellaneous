@@ -23,7 +23,6 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
   <link rel="stylesheet" href="/styles/quickstart.css">
 
-
 <script src="https://cdn.jsdelivr.net/npm/ua-parser-js/dist/ua-parser.min.js"></script>
 <script>
   let os;
@@ -48,7 +47,6 @@
 
   <link rel="dns-prefetch" href="//live.luigisbox.com" />
   <link rel="stylesheet" href="https://cdn.luigisbox.com/autocomplete.css" />
-
 
   <title><%= discover_title(page_content) || current_page.data.title || "API Documentation" %></title>
 
