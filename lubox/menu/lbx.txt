@@ -1,0 +1,44 @@
+menu:
+  - title: LBX integration
+    link: /lbx.html
+    icon: bandaid
+  - title: Questionnaire
+    link: /lbx/form.html
+    icon: patch-question
+  - title: Design
+    link: /lbx/design.html
+    icon: file-earmark-image
+  - title: Requirements
+    link: /lbx/requirements.html
+    icon: columns-gap
+    children:
+      - title: Product identification
+        link: /lbx/requirements/product_identification.html
+      - title: Platforms
+        link: /lbx/requirements/platforms.html
+      - title: SPA events
+        link: /lbx/requirements/spa_events.html
+      - title: Add to cart
+        link: /lbx/requirements/add_to_cart.html
+      - title: Add to wishlist
+        link: /lbx/requirements/add_to_wishlist.html
+      - title: Recommender wrappers
+        link: /lbx/requirements/recommender_wrappers.html
+      - title: Product listing instructions
+        link: /lbx/requirements/plp_instructions.html
+  - title: Robustness
+    link: /lbx/robustness.html
+    icon: tsunami
+    children:
+      - title: Marking search fields
+        link: /lbx/robustness/marking_search_fields.html
+      - title: Marking wrapper
+        link: /lbx/robustness/wrapper.html
+  - title: Solutions
+    link: /lbx/solutions.html
+    icon: easel2-fill
+    children:
+      - title: Pricing API
+        link: /lbx/solutions/pricing_api.html
+      - title: Pricing levels
+        link: /lbx/solutions/pricing_levels.html
