@@ -1,0 +1,33 @@
+<aside class="col-lg-2 pb-5 bg-light nav-main" data-bs-theme="lbx">
+      <nav class="navbar navbar-light navbar-expand-lg overflow-y-scroll position-sticky lb-sticky-offset">
+        <div class="offcanvas offcanvas-start" id="offcanvasNavbar">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Navigation</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <ul class="navbar-nav flex-column vh-full" data-bs-theme="lbx">
+              <% if current_page.path == "lbx.html" || current_page.path.start_with?('lbx/') %>
+                <% main_menu = data.lbx %>
+              <% else %>
+                <% main_menu = data.menu %>
+              <% end %>
+              <% main_menu.menu.each do |data| %>
+                <li class="nav-item">
+                  <a class="nav-link fw-semibold py-1 <%= current_page.url == data.link ? 'active' : ''%>" href="<%= data.link %>"><i class="me-1 bi-<%= data.icon %>"></i><%= data.title %></a>
+                </li>
+                <% if data.children %>
+                  <ul class="navbar-nav ms-3 flex-column lb-nav-bl">
+                    <% data.children&.each do |child| %>
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-2 <%= current_page.url == child.link ? 'active' : ''%>" href="<%= child.link %>"><%= child.title %></a>
+                      </li>
+                    <% end %>
+                  </ul>
+                <% end %>
+              <% end %>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </aside>
