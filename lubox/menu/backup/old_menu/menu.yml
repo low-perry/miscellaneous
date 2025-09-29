@@ -1,0 +1,215 @@
+menu:
+  - title: Home
+    link: /index.html
+    icon: house
+    summary: Luigi's Box API documentation.
+  - title: Crossroads
+    link: /crossroads.html
+    icon: signpost-split
+    summary: Understand the options and the best way for you to integrate.
+  - title: Quickstart
+    link: /quickstartguides/index.html
+    icon: lightning-charge
+    summary: A set of quick start guides to get you up and running with Luigi's Box.
+    children:
+      - title: Analytics
+        link: /quickstartguides/analytics.html
+        summary: Integrate Luigi's Box Analytics.
+      - title: Indexing
+        link: /quickstartguides/indexing.html
+        summary: Get data into Luigi's Box catalog. 
+      - title: Autocomplete
+        link: /quickstartguides/autocomplete.html
+        summary: Integrate Luigi's Box Autocomplete.
+      - title: Search
+        link: /quickstartguides/search.html
+        summary: Integrate Luigi's Box Search.
+      - title: Product listing
+        link: /quickstartguides/product%20listing.html
+        summary: Integrate Luigi's Box Product listing.
+      - title: Recommendations
+        link: /quickstartguides/recommendations.html
+        summary: Integrate Luigi's Box Recommendations.
+  - title: Getting started
+    link: /guidelines.html
+    icon: compass
+    summary: Follow the guidelines for the most frequent integration scenarios
+    children:
+      - title: Small business
+        link: /guidelines/small_business.html
+      - title: B2B business
+        link: /guidelines/b2b.html
+      - title: Medium-to-large business
+        link: /guidelines/large_business.html
+      - title: Mobile apps
+        link: /guidelines/mobile_apps.html
+      - title: Migrating LBX to API
+        link: /guidelines/lbx-to-be.html
+  - title: Changelog
+    link: /changelog.html
+    icon: journal-code
+    summary: News and deprecations in the API.
+  - title: API Principles
+    link: /api_principles.html
+    icon: key
+    summary: The basics to start using the API.
+  - title: LBX script
+    link: /lbx-script.html
+    icon: code-slash
+    summary: Understand the Luigi's Box script.
+  - title: Identity
+    link: /identity.html
+    icon: transparency
+    summary: Understand object identities and the role that they play.
+  - title: Analytics
+    link: /analytics.html
+    icon: tornado
+    summary: Analytics for the feedback loop that allows Luigi's Box AI to learn.
+    children:
+      - title: DataLayer collector
+        link: /analytics/collector.html
+      - title: Events API
+        link: /analytics/api.html
+      - title: Debugging
+        link: /analytics/debugging.html
+      - title: Past and offline transactions import
+        link: /analytics/past_transactions_import.html
+      - title: JSON+LD (deprecated)
+        link: /analytics/json+ld.html
+  - title: Indexing data
+    link: /indexing.html
+    icon: database-fill-gear
+    summary: Get data into Luigi's Box catalog.
+    children:
+      - title: Data layout
+        link: /indexing/data_layout.html
+      - title: Content Updates API
+        link: /indexing/api.html
+      - title: Exports API
+        link: /indexing/export.html
+      - title: Feeds
+        link: /indexing/feeds.html
+      - title: Migrating feeds to API
+        link: /indexing/feeds-to-api.html
+  - title: Autocomplete
+    link: /autocomplete.html
+    icon: speedometer2
+    summary: Integrate fast search-as-you-type autocomplete widget.
+    children:
+      - title: Autocomplete API
+        link: /autocomplete/api.html
+      - title: Top Items API
+        link: /autocomplete/top_items.html
+      - title: Trending queries
+        link: /autocomplete/trending_queries.html
+      - title: Autocomplete.js
+        link: /autocomplete/autocomplete_js.html
+  - title: Search
+    link: /search.html
+    icon: search
+    summary: Integrate search with pagination and filtering.
+    children:
+      - title: Search API
+        subtitle: Recommended
+        link: /search/api.html
+        summary: Use HTTP API to build a search experience for your end-users. Using the raw API gives you unparalleled possibilities.
+      - title: Search.js
+        subtitle: FE integration
+        link: /search/search_js.html
+        summary: Use our frontend library which integrates all of the Luigi's Box search features in a customizable package.
+      - title: Variant search
+        subtitle: Working with product variants
+        link: /search/variants.html
+        summary: What are product variants and how Luigi's Box can search them.
+      - title: Ranking
+        subtitle: Understand how results are sorted
+        link: /search/ranking.html
+        summary: A highlevel overview of how search ranking works
+      - title: Facet value search
+        subtitle: Working with facet value search
+        link: /search/facet_value.html
+      - title: Shopping Assistant
+        subtitle: Guide your users to the right products
+        link: /search/shopping_assistant.html
+  - title: Product listing
+    link: /plp.html
+    icon: boxes
+    summary: Integrate smart and personalized category listings.
+    children:
+      - title: Pairing
+        link: /plp/pairing.html
+      - title: Product listing API
+        link: /plp/api.html
+        subtitle: Recommended
+        summary: Use HTTP API to build a product listing experience for your end-users. Using the raw API gives you unparalleled possibilities.
+      - title: Search.js
+        link: /plp/search_js.html
+        subtitle: FE integration
+        summary: Use our frontend library which integrates all of the Luigi's Box PLP features in a customizable package.
+  - title: Recommendations
+    link: /recommendations.html
+    icon: circle-square
+    summary: Integrate personalized recommendations.
+    children:
+      - title: Basic concepts
+        link: /recommendations/concepts.html
+      - title: Reference models
+        link: /recommendations/models.html
+      - title: Recommender API
+        link: /recommendations/api.html
+      - title: Recco.js
+        link: /recommendations/recco_js.html
+      - title: Train data import
+        link: /recommendations/train_data.html
+      - title: Recommendation batch publisher
+        link: /recommendations/recommendation_batch_publisher.html
+  - title: Banner campaigns
+    link: /banner_campaigns.html
+    icon: card-image
+    summary: Banner campaigns in autocomplete & search.
+  - title: Analytics & reporting API
+    link: /reporting/api.html
+    icon: radar
+    summary: Access analytics data via API.
+  - title: Tutorials
+    link: /tutorials.html
+    icon: rocket-takeoff
+    summary: Tutorials for API integrations
+    children:
+      - title: Autocomplete
+        subtitle: 
+        link: /tutorials/autocomplete.html
+        summary: A guide to integrate Luigi's Box Autocomplete using API
+      - title: Search
+        subtitle: 
+        link: /tutorials/search.html
+        summary: A guide to integrate Luigi's Box Search using API
+      - title: Recommender
+        subtitle: 
+        link: /tutorials/recommender.html
+        summary: A guide to integrate Luigi's Box Recommender using API
+      - title: Product listing
+        subtitle: 
+        link: /tutorials/plp.html
+        summary: A guide to integrate Luigi's Box Product listing using API
+  - title: Solutions
+    link: /solutions.html
+    icon: book-fill
+    summary: Standard solutions to frequent problems and situations
+    children:
+      - title: Multi-warehouse
+        subtitle: Multi-warehouse search
+        link: /solutions/multi_warehouse.html
+        summary: Guideline for setting up search in a multi-warehouse scenario
+      - title: Query-time boosting
+        subtitle: Control boosting via API
+        link: /solutions/query_time_boosting.html
+        summary: Control which products get boosted at query-time, by providing an API parameter
+      - title: Colors and color codes
+        subtitle: Show colors based on their codes
+        link: /solutions/colors_and_hex_codes.html
+        summary: Learn what is available in Luigi's Box when you need to display colors based on their color codes in product tile or within facets
+  - title: Resiliency
+    link: /resiliency.html
+    icon: heart-pulse-fill
+    summary: When things go wrong.
