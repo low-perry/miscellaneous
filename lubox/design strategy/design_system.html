@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luigi's Box Design System - Component Examples</title>
+    <link rel="stylesheet" href="design_system.css">
+    <style>
+        /* Demo page specific styles */
+        .demo-section {
+            margin: 2rem 0;
+            padding: 2rem;
+            border: 1px solid var(--color-gray-200);
+            border-radius: var(--radius-lg);
+        }
+        
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .component-example {
+            padding: 1.5rem;
+            background: var(--color-gray-50);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--color-gray-200);
+        }
+        
+        .component-title {
+            font-size: var(--font-size-lg);
+            font-weight: var(--font-weight-semibold);
+            color: var(--luigi-purple-600);
+            margin-bottom: 1rem;
+        }
+        
+        .color-palette {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .color-swatch {
+            text-align: center;
+            padding: 1rem;
+            border-radius: var(--radius-md);
+            color: white;
+            font-size: var(--font-size-xs);
+            font-weight: var(--font-weight-medium);
+        }
+        
+        .purple-600 { background: var(--luigi-purple-600); }
+        .purple-500 { background: var(--luigi-purple-500); }
+        .purple-400 { background: var(--luigi-purple-400); }
+        .cyan-400 { background: var(--luigi-cyan-400); }
+        .cyan-500 { background: var(--luigi-cyan-500); }
+        .cyan-600 { background: var(--luigi-cyan-600); }
+        
+        .typography-example {
+            margin: 1rem 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="nav-enhanced">
+        <div style="max-width: 1200px; margin: 0 auto; padding: 0 2rem; display: flex; justify-content: space-between; align-items: center;">
+            <div style="display: flex; align-items: center; gap: 2rem;">
+                <h2 style="margin: 0; color: var(--luigi-purple-600);">Luigi's Box</h2>
+                <nav style="display: flex; gap: 1rem;">
+                    <a href="#" class="nav-link-enhanced active">Documentation</a>
+                    <a href="#" class="nav-link-enhanced">API Reference</a>
+                    <a href="#" class="nav-link-enhanced">Tutorials</a>
+                    <a href="#" class="nav-link-enhanced">Examples</a>
+                </nav>
+            </div>
+        </div>
+    </div>
+
+    <div style="max-width: 1200px; margin: 0 auto; padding: 2rem;">
+        
+        <header style="text-align: center; margin-bottom: 3rem;">
+            <h1>Luigi's Box Design System</h1>
+            <p style="font-size: var(--font-size-lg); color: var(--color-gray-600); max-width: 600px; margin: 0 auto;">
+                A comprehensive design system for creating consistent, beautiful documentation experiences.
+            </p>
+        </header>
+
+        <!-- Color Palette -->
+        <section class="demo-section">
+            <h2>Color Palette</h2>
+            <p>Our brand colors create a cohesive visual identity across all documentation.</p>
+            
+            <div class="color-palette">
+                <div class="color-swatch purple-600">
+                    Purple 600<br>
+                    #682175
+                </div>
+                <div class="color-swatch purple-500">
+                    Purple 500<br>
+                    #9a4ca5
+                </div>
+                <div class="color-swatch purple-400">
+                    Purple 400<br>
+                    #a57dac
+                </div>
+                <div class="color-swatch cyan-400">
+                    Cyan 400<br>
+                    #47bcd6
+                </div>
+                <div class="color-swatch cyan-500">
+                    Cyan 500<br>
+                    #33a4c2
+                </div>
+                <div class="color-swatch cyan-600">
+                    Cyan 600<br>
+                    #2a8ba3
+                </div>
+            </div>
+        </section>
+
+        <!-- Typography -->
+        <section class="demo-section">
+            <h2>Typography</h2>
+            <p>Clear, readable typography that scales across all devices.</p>
+            
+            <div class="typography-example">
+                <h1>Heading 1 - Main Page Titles</h1>
+                <h2>Heading 2 - Section Headers</h2>
+                <h3>Heading 3 - Subsection Headers</h3>
+                <h4>Heading 4 - Minor Headers</h4>
+                <p>Body text - Regular paragraph content with proper line spacing for optimal readability. This is what most of your documentation content will look like.</p>
+                <p><code class="code-inline">inline code</code> and <strong>bold text</strong> and <em>italic text</em>.</p>
+            </div>
+        </section>
+
+        <!-- Buttons -->
+        <section class="demo-section">
+            <h2>Buttons</h2>
+            <p>Consistent button styles for all interactive elements.</p>
+            
+            <div class="demo-grid">
+                <div class="component-example">
+                    <div class="component-title">Primary Buttons</div>
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                        <button class="btn btn-primary">Get Started</button>
+                        <a href="#" class="btn btn-primary">View Documentation</a>
+                    </div>
+                </div>
+                
+                <div class="component-example">
+                    <div class="component-title">Secondary Buttons</div>
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                        <button class="btn btn-secondary">Learn More</button>
+                        <a href="#" class="btn btn-secondary">View Examples</a>
+                    </div>
+                </div>
+                
+                <div class="component-example">
+                    <div class="component-title">Outline Buttons</div>
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                        <button class="btn btn-outline">Cancel</button>
+                        <a href="#" class="btn btn-outline">Back</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cards -->
+        <section class="demo-section">
+            <h2>Cards</h2>
+            <p>Flexible card components for organizing content.</p>
+            
+            <div class="demo-grid">
+                <div class="card">
+                    <div class="card-header">
+                        API Endpoint
+                    </div>
+                    <div class="card-body">
+                        <h4>GET /autocomplete/v2</h4>
+                        <p>Retrieve autocomplete suggestions for search queries with customizable parameters and filtering options.</p>
+                        <a href="#" class="btn btn-primary">View Details</a>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        Tutorial
+                    </div>
+                    <div class="card-body">
+                        <h4>Getting Started with Search</h4>
+                        <p>Learn how to implement Luigi's Box search functionality in your application with this step-by-step guide.</p>
+                        <a href="#" class="btn btn-secondary">Start Tutorial</a>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-body">
+                        <h4>Quick Reference</h4>
+                        <p>Common code snippets and examples for rapid development and implementation.</p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="#" class="btn btn-outline">Browse Examples</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Badges -->
+        <section class="demo-section">
+            <h2>Badges</h2>
+            <p>Status indicators and labels for API methods, versions, and states.</p>
+            
+            <div class="demo-grid">
+                <div class="component-example">
+                    <div class="component-title">HTTP Methods</div>
+                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                        <span class="badge badge-success">GET</span>
+                        <span class="badge badge-info">POST</span>
+                        <span class="badge badge-warning">PUT</span>
+                        <span class="badge badge-error">DELETE</span>
+                    </div>
+                </div>
+                
+                <div class="component-example">
+                    <div class="component-title">Status Indicators</div>
+                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                        <span class="badge badge-success">Available</span>
+                        <span class="badge badge-warning">Deprecated</span>
+                        <span class="badge badge-info">Beta</span>
+                        <span class="badge badge-error">Removed</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Code Blocks -->
+        <section class="demo-section">
+            <h2>Code Examples</h2>
+            <p>Syntax-highlighted code blocks with proper formatting.</p>
+            
+            <div class="code-block">
+                <code>
+// Initialize Luigi's Box Autocomplete
+const autocomplete = new LuigisBox.Autocomplete({
+  trackerId: 'your-tracker-id',
+  apiKey: 'your-api-key',
+  container: '#search-input',
+  
+  // Configuration options
+  types: ['product', 'category', 'query'],
+  size: 10,
+  
+  // Event handlers
+  onSelect: function(item) {
+    console.log('Selected item:', item);
+  }
+});
+                </code>
+            </div>
+            
+            <p style="margin-top: 1rem;">
+                Use <code class="code-inline">inline code</code> for short snippets within paragraphs.
+            </p>
+        </section>
+
+        <!-- Alerts -->
+        <section class="demo-section">
+            <h2>Alerts</h2>
+            <p>Contextual messages and notifications for important information.</p>
+            
+            <div class="alert alert-info">
+                <strong>Info:</strong> This is an informational message with helpful details about the current section.
+            </div>
+            
+            <div class="alert alert-success">
+                <strong>Success:</strong> Your configuration has been saved successfully!
+            </div>
+            
+            <div class="alert alert-warning">
+                <strong>Warning:</strong> This feature is deprecated and will be removed in v3.0.
+            </div>
+            
+            <div class="alert alert-error">
+                <strong>Error:</strong> Invalid API key. Please check your credentials and try again.
+            </div>
+        </section>
+
+        <!-- Implementation Guide -->
+        <section class="demo-section">
+            <h2>Implementation Guide</h2>
+            <p>How to integrate this design system into your documentation:</p>
+            
+            <div class="demo-grid">
+                <div class="card">
+                    <div class="card-header">
+                        Step 1: Include CSS
+                    </div>
+                    <div class="card-body">
+                        <p>Add the design system CSS to your documentation:</p>
+                        <div class="code-block">
+                            <code>&lt;link rel="stylesheet" href="design-system.css"&gt;</code>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        Step 2: Use Components
+                    </div>
+                    <div class="card-body">
+                        <p>Apply CSS classes to your HTML elements:</p>
+                        <div class="code-block">
+                            <code>&lt;button class="btn btn-primary"&gt;Action&lt;/button&gt;</code>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        Step 3: Customize
+                    </div>
+                    <div class="card-body">
+                        <p>Override CSS custom properties for brand customization:</p>
+                        <div class="code-block">
+                            <code>:root {
+  --luigi-purple-primary: #your-color;
+}</code>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        // Demo: Scroll progress indicator
+        function updateProgressBar() {
+            const scrollTop = document.documentElement.scrollTop;
+            const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrollPercent = (scrollTop / scrollHeight) * 100;
+            
+            let progressBar = document.querySelector('.progress-bar');
+            if (!progressBar) {
+                progressBar = document.createElement('div');
+                progressBar.className = 'progress-bar';
+                document.body.appendChild(progressBar);
+            }
+            
+            progressBar.style.width = scrollPercent + '%';
+        }
+        
+        window.addEventListener('scroll', updateProgressBar);
+        updateProgressBar(); // Initialize
+    </script>
+</body>
+</html>
