@@ -1,0 +1,238 @@
+- type: top_level
+  title: Home
+  link: /index.html
+  icon: house
+
+- type: hub
+  title: Platform Foundations
+  icon: gear
+  link: /crossroads.html
+  children:
+    - title: Overview
+      link: /crossroads.html
+    - title: API Principles
+      link: /api_principles.html
+    - title: Identity
+      link: /identity.html
+    - title: LBX script
+      link: /lbx-script.html
+    - title: Resiliency
+      link: /resiliency.html
+
+- type: hub
+  title: Quickstart
+  link: /quickstart.html
+  icon: lightning-charge
+  children:
+    - title: Overview
+      link: /quickstart.html
+    - title: Analytics
+      link: /quickstartguides/analytics.html
+    - title: Indexing
+      link: /quickstartguides/indexing.html
+    - title: Autocomplete
+      link: /quickstartguides/autocomplete.html
+    - title: Search
+      link: /quickstartguides/search.html
+    - title: Product Listing
+      link: /quickstartguides/product%20listing.html
+    - title: Recommendations
+      link: /quickstartguides/recommendations.html
+
+- type: hub
+  title: Indexing
+  link: /indexing.html
+  icon: database-fill-gear
+  children:
+    - title: Overview
+      link: /indexing.html
+    - title: Data Layout
+      link: /indexing/data_layout.html
+    - title: Feeds
+      link: /indexing/feeds.html
+    - title: Migrating Feeds to API
+      link: /indexing/feeds-to-api.html
+    - type: reference_group
+      title: API Reference
+      reference_items:
+        - title: Content Updates API
+          link: /indexing/api.html
+        - title: Exports API
+          link: /indexing/export.html
+
+- type: hub
+  title: Analytics
+  link: /analytics.html
+  icon: tornado
+  children:
+    - title: Overview
+      link: /analytics.html
+    - title: DataLayer Collector
+      link: /analytics/collector.html
+    - title: Debugging
+      link: /analytics/debugging.html
+    - type: reference_group
+      title: API Reference
+      reference_items:
+        - title: Events API
+          link: /analytics/api.html
+        - title: Analytics & Reporting API
+          link: /reporting/api.html
+        - title: Past Transactions Import
+          link: /analytics/past_transactions_import.html
+
+- type: hub
+  title: Autocomplete
+  link: /autocomplete.html
+  icon: speedometer2
+  children:
+    - title: Overview
+      link: /autocomplete.html
+    - title: Autocomplete.js
+      link: /autocomplete/autocomplete_js.html
+    - type: reference_group
+      title: API Reference
+      reference_items:
+        - title: Autocomplete API
+          link: /autocomplete/api.html
+        - title: Top Items API
+          link: /autocomplete/top_items.html
+        - title: Trending Queries API
+          link: /autocomplete/trending_queries.html
+
+- type: hub
+  title: Search
+  link: /search.html
+  icon: search
+  children:
+    - title: Overview
+      link: /search.html
+    - title: Search.js
+      link: /search/search_js.html
+    - title: Ranking
+      link: /search/ranking.html
+    - title: Variant Search
+      link: /search/variants.html
+    - title: Banner Campaigns
+      link: /banner_campaigns.html
+    - type: reference_group
+      title: API Reference
+      reference_items:
+        - title: Search API
+          link: /search/api.html
+        - title: Facet Value Search
+          link: /search/facet_value.html
+        - title: Shopping Assistant
+          link: /search/shopping_assistant.html
+
+- type: hub
+  title: Product Listing
+  link: /plp.html
+  icon: boxes
+  children:
+    - title: Overview
+      link: /plp.html
+    - title: Pairing
+      link: /plp/pairing.html
+    - title: Search.js
+      link: /plp/search_js.html
+    - type: reference_group
+      title: API Reference
+      reference_items:
+        - title: Product Listing API
+          link: /plp/api.html
+
+- type: hub
+  title: Recommendations
+  link: /recommendations.html
+  icon: circle-square
+  children:
+    - title: Overview
+      link: /recommendations.html
+    - title: Recco.js
+      link: /recommendations/recco_js.html
+    - title: Basic Concepts
+      link: /recommendations/concepts.html
+    - title: Reference Models
+      link: /recommendations/models.html
+    - type: reference_group
+      title: API Reference
+      reference_items:
+        - title: Recommender API
+          link: /recommendations/api.html
+        - title: Train Data Import
+          link: /recommendations/train_data.html
+        - title: Batch Publisher
+          link: /recommendations/recommendation_batch_publisher.html
+
+- type: hub
+  title: Tutorials
+  link: /tutorials.html
+  icon: rocket-takeoff
+  children:
+    - title: Autocomplete
+      link: /tutorials/autocomplete.html
+    - title: Search
+      link: /tutorials/search.html
+    - title: Recommendations
+      link: /tutorials/recommender.html
+    - title: Product Listing
+      link: /tutorials/plp.html
+
+- type: hub
+  title: Solutions
+  link: /solutions.html
+  icon: book-fill
+  children:
+    - title: Multi-warehouse
+      link: /solutions/multi_warehouse.html
+    - title: Query-time Boosting
+      link: /solutions/query_time_boosting.html
+    - title: Colors and Color Codes
+      link: /solutions/colors_and_hex_codes.html
+
+- type: top_level
+  title: Changelog
+  link: /changelog.html
+  icon: journal-code
+
+- type: hub
+  title: LBX Integration
+  link: /lbx.html
+  icon: briefcase
+  children:
+    - title: Questionnaire
+      link: /lbx/form.html
+    - title: Design
+      link: /lbx/design.html
+    - type: reference_group
+      title: Requirements
+      reference_items:
+        - title: Product identification
+          link: /lbx/requirements/product_identification.html
+        - title: Platforms
+          link: /lbx/requirements/platforms.html
+        - title: SPA events
+          link: /lbx/requirements/spa_events.html
+        - title: Add to cart
+          link: /lbx/requirements/add_to_cart.html
+        - title: Add to wishlist
+          link: /lbx/requirements/add_to_wishlist.html
+        - title: Recommender wrappers
+          link: /lbx/requirements/recommender_wrappers.html
+        - title: Product listing instructions
+          link: /lbx/requirements/plp_instructions.html
+    - type: reference_group
+      title: Robustness
+      reference_items:
+        - title: Marking search fields
+          link: /lbx/robustness/marking_search_fields.html
+        - title: Wrapper
+          link: /lbx/robustness/wrapper.html
+    - type: reference_group
+      title: Solutions
+      reference_items:
+        - title: Pricing API
+          link: /lbx/solutions/pricing_api.html
+        - title: Pricing levels
+          link: /lbx/solutions/pricing_levels.html
