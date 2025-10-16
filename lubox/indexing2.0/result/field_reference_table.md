@@ -551,20 +551,24 @@ These are generated from your `nested` category structure to enable hierarchical
 ## Performance Tips
 
 ### Optimal field count
+
 - **Sweet spot**: 15-30 fields per object provides good searchability without performance impact
 - **Too many fields** (100+): Can slow down indexing and increase response times
 - **Too few fields** (< 5): May limit search relevance and filtering options
 
 ### When to use nested vs. flat structure
+
 - **Use nested** for: Categories (with ancestors), product variants, related items, brands with multiple attributes
 - **Use flat** for: Simple attributes like color, size, tags, prices
 
 ### Array field considerations
+
 - Arrays are powerful but use them judiciously
 - Large arrays (100+ values) can impact search performance
 - Consider if a field truly needs multiple values or if you should normalize the data
 
 ### Indexing frequency
+
 - **Real-time updates**: Use the API for immediate changes (price updates, stock changes)
 - **Bulk updates**: Use feeds for complete catalog refreshes (daily/weekly)
 - **Avoid**: Sending the same data repeatedly without changes
@@ -572,24 +576,30 @@ These are generated from your `nested` category structure to enable hierarchical
 ## Troubleshooting
 
 ### "My prices aren't sorting correctly"
+
 **Solution:** Ensure `price_amount` is being extracted correctly. If your price format is unusual, send `price_amount` explicitly as a number.
 
 ### "Categories not showing hierarchy"
+
 **Solution:** Verify that your `ancestors` array is ordered correctly (top-level first) and that all category objects have unique identities.
 
 ### "Hidden fields appearing in results"
+
 **Solution:** Make sure the field name starts with an underscore (`_`). Check for typos like `_margin` vs `margin`.
 
 ### "Search results not updating"
+
 **Solution:** Verify that you're using the correct `identity` and that it matches what's being sent in analytics events.
 
 ### "Date fields not filtering correctly"
+
 **Solution:** Ensure you're using ISO 8601 format (e.g., `2024-10-14T10:00:00Z`). Dates without time zones may be interpreted incorrectly.
 
 ### "Boost not working"
+
 **Solution:** Remember that `boost` values must be `1`, `2`, or `3`. Other values are ignored. Also, overusing boost can reduce overall search relevance.
 
-## Additional Resources
+## Additional resources
 
 - [Content Update API Documentation](/indexing/api.html)
 - [Feed Format Documentation](/indexing/feeds.html)
