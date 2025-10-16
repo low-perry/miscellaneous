@@ -121,7 +121,7 @@ This is useful for things like tags, available colors, available sizes and so on
 Certain field names have special, built-in behaviors that power ranking, filtering, and display logic.
 Using them is key to unlocking the full potential of the platform.
 
-#### Core Display Fields
+**Core display fields**
 
 | Field Name | Type | Required | Description |
 |:-----------|:-----|:---------|:------------|
@@ -129,7 +129,7 @@ Using them is key to unlocking the full potential of the platform.
 | `web_url` | String | ✓ | **Required.** The canonical URL of the object on the web. Used to generate clickable links in search results and autocomplete. Must be a valid, absolute URL (e.g., `https://example.com/products/item-123`). |
 | `image_link` | String | | A URL to the primary image for the object. Used by autocomplete.js, search.js, and recco.js libraries to display product images in search results and recommendations. Should be an absolute URL to a web-accessible image. |
 
-#### Pricing Fields
+**Pricing fields**
 
 | Field Name | Type | Required | Description |
 |:-----------|:-----|:---------|:------------|
@@ -139,7 +139,7 @@ Using them is key to unlocking the full potential of the platform.
 | `price_old_amount` | Number | | The numeric value of the old price, auto-extracted from `price_old` if not provided. |
 | `price_*` | String | | Any field starting with `price_` (e.g., `price_eur`, `price_usd`, `price_czk`) is treated as a price field. A corresponding `_amount` field (e.g., `price_eur_amount`) is automatically extracted unless explicitly provided. Useful for multi-currency stores where you need to support multiple price points. |
 
-#### Availability Fields
+**Availability fields**
 
 | Field Name | Type | Required | Description |
 |:-----------|:-----|:---------|:------------|
@@ -147,7 +147,7 @@ Using them is key to unlocking the full potential of the platform.
 | `availability_rank` | Number | | A more advanced and granular version of `availability`. Accepts values from 1 (most available) to 15 (unavailable). Use this for nuanced availability states like "low stock" (e.g., `3`), "backorder" (e.g., `8`), or "out of stock" (e.g., `15`). Takes precedence over `availability` if both are provided. Lower numbers rank higher. |
 | `availability_rank_text` | String | | The exact availability message to display to users (e.g., "Ships within 14 days", "Only 2 left in stock", "Pre-order", "Usually ships in 24 hours"). This field does not affect ranking but is used for frontend display. |
 
-#### Ranking Signal Fields
+**Ranking signal fields**
 
 | Field Name | Type | Required | Description |
 |:-----------|:-----|:---------|:------------|
@@ -155,20 +155,20 @@ Using them is key to unlocking the full potential of the platform.
 | `introduced_at` | Date | | The date when the product was added to your catalog (ISO 8601 format, e.g., `2025-10-14T10:00:00Z`). Used as a ranking signal to prioritize newer items. Particularly useful for fashion, electronics, or time-sensitive content where recency matters. |
 | `_margin` | Number | | A hidden field representing the item's relative profit margin. Must be a float between 0.0 and 1.0 (e.g., `0.42` = 42% margin). Used internally as a ranking signal to prioritize higher-margin products in search results. Not exposed in API responses. Prefix with underscore to keep it hidden. |
 
-#### Pattern-Based Special Fields
+**Pattern-based special fields**
 
 | Field Name | Type | Required | Description |
 |:-----------|:-----|:---------|:------------|
 | `_*` | Any | | Any field starting with an underscore (e.g., `_internal_note`, `_supplier_id`, `_cost`) is treated as hidden. These fields are fully searchable and can be used for filtering, but are never exposed in public API responses. Useful for internal metadata, ranking signals, sensitive information, or business logic that shouldn't be visible to end users. |
 | `geo_*` | Object | | Any field starting with `geo_` (e.g., `geo_location`, `geo_store`, `geo_warehouse`) is treated as a geographical location point. Value must be an object with `lat` and `lon` properties: `{"lat": 49.0448, "lon": 18.5530}`. Use `geo_location` as the standard field name for the primary location. Enables location-based search, filtering, and distance calculations. |
 
-#### Reserved Fields
+**Reserved Fields**
 
 | Field Name | Description |
 |:-----------|:------------|
 | `_category` | **Reserved for internal use.** Do not use this field name in your data. The system uses it for internal category processing and hierarchy management. Using this field may cause unexpected behavior. |
 
-### Special Fields: Complete Example
+### Special fields: Complete example
 
 Here's a comprehensive example showing how to use multiple special fields together:
 
