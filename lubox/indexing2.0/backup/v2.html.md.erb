@@ -1,0 +1,986 @@
+# Content updates
+
+<%= partial "includes/api_switcher", locals: { service: 'content_updates' } %>
+
+Before you start implementing the indexing APIs, establish what data you will index and figure out the structure. Read the [Data layout](/indexing/data_layout.html) docs for guidelines.
+
+<div class="row mt-4 mb-4">
+  <div class="col-md-4">
+    <div class="card h-100">
+      <div class="card-body">
+        <h5 class="card-title"><i class="bi bi-database-gear"></i> Data layout</h5>
+        <h6 class="card-subtitle mb-2 text-body-secondary"></h6>
+        <p class="card-text">Structuring the data</p>
+        <a href="/indexing/data_layout.html" class="card-link">Read the docs →</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+When implementing Luigi's Box [Search](/search.html) or [Autocomplete](/autocomplete.html) service, you need to synchronize your product catalog (your database) with our search index. You should call the Content updates API in any of these cases:
+
+<table class="table">
+  <thead>
+   <tr>
+     <th>Purpose</th>
+     <th>Example trigger</th>
+     <th>Endpoint</th>
+   </tr>
+  </thead>
+  <tbody>
+   <tr>
+    <td>Make product searchable</td>
+     <td>
+       <ul>
+        <li>New product gets in stock</li>
+        <li>Product which was unavailable becomes available again</li>
+       </ul>
+     </td>
+     <td><a href="#content-updates-content-update">Content update</a></td>
+   </tr>
+   <tr>
+     <td>Update product attributes</td>
+     <td>
+       <ul>
+        <li>Product price changes</li>
+        <li>Someone updates product description</li>
+        <li>New product review was posted and product rating changes</li>
+       </ul>
+     </td>
+     <td><a href="#content-updates-content-update">Content update</a> or <a href="#content-updates-partial-content-update">Partial content update</a> or <a href="#content-updates-update-by-query">Update by query</a></td>
+   </tr>
+   <tr>
+     <td>Remove product from search results</td>
+     <td>
+       <ul>
+        <li>Product has sold out and will not be restocked</li>
+        <li>Product should be temporarily removed from all offerings</li>
+       </ul>
+     </td>
+     <td><a href="#content-updates-content-removal">Content removal</a></td>
+   </tr>
+  </tbody>
+</table>
+
+## Object record definition
+
+Refer to this basic definition of a single `index-object` when assembling the indexing payload.
+
+<pre class="alert alert-dark mb-5">
+&lt;index-object&gt; = {
+  "identity": &lt;unique-identity&gt;,
+  "type": &lt;object-type&gt;,
+  "generation": &lt;generation&gt;<abbr title="optional">?</abbr>,
+  "active_from": &lt;iso-8601-date&gt;<abbr title="optional">?</abbr>,
+  "active_to": &lt;iso-8601-date&gt;<abbr title="optional">?</abbr>,
+  "fields": {
+    "title": &lt;title&gt;,
+    "web_url": &lt;web-url&gt;,
+    (&lt;key&gt;: &lt;value&gt;,)<abbr title="repeatable">#</abbr>
+  },
+  "nested": [
+    &lt;nested-object&gt;<abbr title="repeatable">#</abbr><abbr title="optional">?</abbr>,
+    &lt;nested-object&gt;<abbr title="repeatable">#</abbr><abbr title="optional">?</abbr>
+  ]
+}
+
+&lt;nested-object&gt; = {
+  "identity": &lt;unique-identity&gt;,
+  "type": &lt;object-type&gt;,
+  "fields": {
+    "title": &lt;title&gt;,
+    "web_url": &lt;web-url&gt;,
+    (&lt;key&gt;: &lt;value&gt;,)<abbr title="repeatable">#</abbr>
+    "ancestors": [
+      &lt;nested-object&gt;<abbr title="repeatable">#</abbr><abbr title="optional">?</abbr>
+    ]
+  }
+}
+</pre>
+
+The object's JSON has following top-level attributes.
+
+Attribute   | Description
+------------|------------
+`identity`<span class="required">REQUIRED</span>          | An index-level unique identity of an object. Read more in the [Identity](/identity.html) section. Must match the object identity reported by analytics (either [dataLayer](/analytics/collector.html#datalayer-collector-identity) or [API events](/analytics/api.html#event-api-impression-event)).
+`type`<span class="required">REQUIRED</span>              | You can have several searchable types (e.g. products and categories) and search them separately. Note, that we automatically build a special `type` with the name `query` which contains queries recorded on your site. You can use this type to build an autocomplete widget which suggests queries.
+`generation`<span class="optional">optional</span>        | Object generation, see [Generations](#content-updates-generations) documentation below
+`active_from`<span class="optional">optional</span>       | The date/time at which this object should become searchable. This allows you to schedule search activation in advance. The date/time must be formatted in the ISO 8601 format, e.g. `2019-05-17T21:12:35+00:00`
+`active_to`<span class="optional">optional</span>         | The date/time at which this object should stop being searchable. This allows you to schedule search deactivation in advance. The date/time must be formatted in the ISO 8601 format, e.g. `2019-05-17T21:12:35+00:00`. To prevent accumulation of expired items, we will **periodically delete expired items from our data stores**. If you are issuing a partial update for an expired item, the partial update may fail because the item is no longer present.
+`fields`<span class="required">REQUIRED</span>            | Object attributes. Every field that you send will be searchable and can be used for filtering. See the [Data layout](/indexing/data_layout.html) docs for guidelines. You **must** send a field named `title` which we use as the object's display name. We automatically construct filtering facets out of the fields of your products. For instance, if you send a field called `color` with your product objects, we can show a color facet next to your search results and your users can filter the search results to only those products that have a specific color. Some fields are special, see [Special fields](/indexing/data_layout.html#special-fields) below for more details.
+`nested`<span class="optional">optional</span>            | Array of nested items, each having `type`, `identity` and `title`. Ideal for [categories](#content-updates-nested-categories-ancestors), brands, [variants](#content-updates-nested-variants) and other objects, which are linked to the current object, but can also be addressed as a standalone object. For instance, to send products along with categories they belong to - the categories might be included as nested items. These are extracted server-side and stored also separately. You can also opt for including `fields` structure instead of `title` to include several attributes, not just the title. You should aim for capturing whole hierarchy of categories by using array of [ancestors](#content-updates-nested-categories-ancestors) within fields.
+
+## Content update
+
+<span class="badge text-bg-success">POST</span> `https://live.luigisbox.com/v1/content`
+
+<%= partial "includes/hmac_notice" %>
+
+This endpoint requires a JSON input which specifies the objects that should be updated in Luigi's Box search index. This API accepts an array of `objects` - each item in the `objects` array is a single object with its attributes which should be updated or inserted into Luigi's Box index. This allows you to index several objects with a single API call. This is mainly useful for initial import when you can send many objects at once and speed up the indexing process. The optimal number of objects to send in a single batch depends on many factors, mainly your objects size. We recommend that you send around 100 objects in a single batch.
+
+<%
+example = {
+  "objects": [
+    {
+      "identity": "8a4d91b896fae60341ee51fb4c86facd",
+      "type": "item",
+      "fields": {
+        "title": "Blue Socks",
+        "web_url": "/products/1",
+        "description": "Comfortable socks",
+        "price": "2.9 EUR",
+        "color": "blue",
+        "material": "wool"
+      },
+      "nested": [
+        {          
+          "identity": "category-socks",
+          "type": "category",
+          "fields": {
+            "title": "socks",
+            "web_url": "/category/socks"
+          }
+        }
+      ]
+    },
+    {
+      "identity": "1221632fc140b6c4d2154975b68e8a4e",
+      "type": "article",
+      "fields": {
+        "title": "Contact us",
+        "web_url": "/contact"
+      }
+    }
+  ]
+}
+%>
+
+<%= partial "includes/code/examples", locals: {method: 'POST', auth: true, path: '/v1/content', payload: example} %>
+
+Be aware that updates to object attributes are not incremental. The object in Luigi's Box index is always **replaced** with the attributes you send. If you send all object attributes in the first call and then send just a single attribute in another call, your object will retain only the single attribute from the second call - all other attributes will be lost. In practice this means that you must always send all object attributes with each API call. If you would like to update only part of the object, see [Partial content update](#content-updates-partial-content-update).
+
+- When calling the Search API, for each object found, you will get back the same JSON-encoded information that you sent via the Content update API. Consider how your search frontend should look like. If you need certain information to appear in the search results display, you should send the necessary object attributes as fields. For example, if you want to display "Christmas promotion" label with certain products, then you must send a special field, e.g. "promotion": "Christmas" with the relevant products. Then, in the search part, you will get back the object JSON containing the field and you can display a special Christmas label.
+- Think about how you want your users to find your content. If your product is called "Comfortable Shoes" and you track the color attribute separately, would you like your users to find the products via "red shoes" query? If yes, then you should send a "color" field.
+- Would you like to allow your users to drill down to search results and use facets to filter by attributes? If yes, you should send all fields which you want to use for faceted search.
+
+There are few technical recommendations when dealing with `fields`:
+
+- Make sure that numeric fields are formatted as numbers, not as strings. E.g., `"height": "70.5"` is wrong. `"height": 70.5` is correct.
+- Make sure that date fields are formatted using ISO 8601 standard with `T` used to delimit time - `yyyyMMddTHHmmssZ`, e.g. `"active_from": "2018-07-15T13:23:50+00:00"`
+- It is possible to send an array of value for arbitrary field, e.g. `"color": ["red", "black", "blue"]`
+- Make sure that you are not using deeply nested objects, i.e., use only one level of nesting (see example).
+
+Example of a recommended `fields` structure with only one level of nesting:
+
+```json
+"fields": {
+  "special": {
+    "identifier": "X6454",
+    "material": "metal"
+  }
+}
+```
+
+Example of multiple levels of nesting which are not recommended:
+
+```json
+"fields": {
+  "special": {
+    "data": {
+      "identifier": "X6454",
+      "material": "metal"
+    }
+  }
+}
+```
+
+### Files processing
+
+If you POST an item with a type `_file`, we will schedule a process of downloading and processing a real file
+located on a supplied `url`. Its fields will be enriched by a `content` attribute to make the file searchable by its content. Please note, that at the end, the final item will get assigned a type `file` (no underscore).
+
+### Error handling
+
+Example response for a batch with single failure
+
+```json
+{
+  "ok_count": 99,
+  "errors_count": 1,
+  "errors": {
+    "http://example.org/products/1": {
+      "type": "malformed_input",
+      "reason": "incorrect object format",
+      "caused_by": {
+        "title": ["must be filled"]
+      }
+    }
+  }
+}
+```
+
+There are several failure modes:
+
+HTTP Status                     | Description
+--------------------------------|-------------
+**400 Bad Request**             | Your request as a whole has invalid structure (e.g., missing the "objects" field) or the JSON has syntax errors. Look for more details in response body, fix the error and retry the request.
+**400 Bad Request**             | Importing some of the objects failed. The response body will be JSON where you can extract the URLs of failed objects from `"errors"`.
+**413 Payload Too Large**       | You are sending batch larger than 5 megabytes. Try sending a smaller batch size, or try to compress your request body. Note: we are checking the length of request content in bytes. If payload is compressed, you can send batch up to 10 megabytes in size when decompressed. Refer to the <a href="#payload-compression">Payload compression</a> section for details.
+**429 Too Many Requests**       | You are exceeding one of the throttling limits. Check the `Retry-After` header and see our documentation on [Throttling](/api_principles.html#throttling) for more details.
+
+## Indexing types
+
+For a typical ecommerce store, you will want to index several types of content. See below for a guideline on different type and how to index them.
+
+Logical type | Type name | How to index
+-------------|-----------|-------------
+Products     | `product` or `item` (both are supported) | Index as a standalone type
+Categories   | `category` | Index as [nested object along with the product](#nested-categories--ancestors) it belongs to. Do not index separately as standalone objects. Make sure to also index all parent categories as ancestors.
+Brands       | `brand`   | Index as nested object along with the product it belongs to. Do not index separately as standalone objects.
+Articles, Blog posts | `article` | Index as a standalone type
+
+## Nested categories / ancestors
+
+Most often, products belong to a category which is part of a hierarchy (e.g., a "White T-Shirt" product belongs to the "T-Shirts" category, which is under "Men", which is under "Apparel").
+
+To correctly represent a product's full category path (e.g., "Apparel > Men > T-shirts"), you must provide the complete hierarchy. This is essential for powering user-facing features like breadcrumb navigation and hierarchical faceting.
+This is achieved by sending the most specific category that a product belongs to (the "leaf" category) as a `nested` object, and then listing all of its parent categories in a special `ancestors` array.
+
+### Conceptual model
+
+Imagine a product, a "White T-shirt", has a category path of "Apparel > Men > T-shirts".
+
+1. **The leaf category:** The most specific category the product belongs to is "T-shirts". This will be your primary `nested` object.
+2. **The ancestors:** The parent categories that form the path to this leaf are "Apparel" and "Men". These will go into the `ancestors` array.
+3. **The order:** The order is crucial. The `ancestors` array **must** be ordered from top-level down to immediate parent:
+  - First ancestor: "Apparel"
+  - Second ancestor: "Men"
+
+### Implementation
+
+Based on the model above, here is how you would structure the JSON payload.
+
+**Rule 1: The `nested` object is the leaf category**
+
+The `nested` array should contain an object for the most specific category, in this case, "T-shirts".
+
+**Rule 2: The `ancestors` array defines the path**
+
+Inside the `fields` of the "T-shirts" category, you add the `ancestors` array.
+
+**Rule 3: The `ancestors` array must be in order**
+
+The array must list "Apparel" first, followed by "Men".
+
+**Example: Product in a single hierarchy**
+
+```json
+{
+  "objects": [
+    {
+      "identity": "74f5cdd860b5d9585b18edfab7c21670",
+      "type": "item",
+      "fields": {
+        "title": "White T-shirt",
+        "web_url": "/products/1"
+      },
+      "nested": [
+        {
+          "type": "category", // This is the LEAF category (most specific)
+          "identity": "category-t-shirts",
+          "fields": {
+            "title": "T-shirts",
+            "web_url": "/categories/apparel/men/t-shirts",
+            "ancestors": [
+              {
+                "type": "category", // FIRST ancestor (top-level parent)
+                "identity": "category-apparel",
+                "fields": {
+                  "title": "Apparel",
+                  "web_url": "/categories/apparel"
+                }
+              },
+              {
+                "type": "category", // SECOND ancestor (immediate parent of T-shirts)
+                "identity": "category-men",
+                "fields": {
+                  "title": "Men",
+                  "web_url": "/categories/apparel/men"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+
+### Multiple category hierarchies
+
+If a product belongs to more than one category path (e.g., "Cheddar cheese" is in both "Dairy > Cow milk" and "Wine > Snacks"), provide a `nested` object for each leaf category, with each one containing its own respective `ancestors` path.
+
+**Example: Product in multiple hierarchies**
+
+```json
+{
+  "objects": [
+    {
+      "identity": "5e119a13ec6511e323bfdc41cd181fdb",
+      "type": "item",
+      "fields": {
+        "title": "Cheddar cheese",
+        "web_url": "/products/1"
+      },
+      "nested": [
+        {
+          // FIRST CATEGORY PATH: Dairy > Cow milk
+          "type": "category", // LEAF category for first path (Cow Milk)
+          "identity": "1692378648",
+          "fields": {
+            "title": "Cow milk",
+            "image_link": "/images/cow-milk.png",
+            "ancestors": [{ // Path: Dairy → Cow milk
+              "type": "category", // Top-level parent for first path (Dairy)
+              "identity": "category-dairy",
+              "fields": {
+                 "title": "Dairy", 
+                 "web_url": "/categories/dairy",
+                 "image_link": "/images/dairy.png"
+              }
+            }]
+          }
+        },
+        {
+          // SECOND CATEGORY PATH: Wine > Snacks 
+          "type": "category", // LEAF category for second path (Snacks)
+          "identity": "category-snacks",
+          "fields": {
+            "title": "Snacks",
+            "web_url": "/categories/wine/snacks",
+            "image_link": "/images/snacks.png",
+            "ancestors": [{
+              "type": "category",  // Top-level parent for second path (Wine)
+              "identity": "category-wine",
+              "fields": {
+                "title": "Wine",
+                "web_url": "/categories/wine",
+                "image_link": "/images/wine.png"
+              }
+            }]
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+
+If you are integrating [Product listing](/plp.html), see [searching within full category hierarchy](/plp/api.html#best-practices-filtering-within-full-category-hierarchy) to make sure you get the best results.
+
+
+### Frequent problems
+
+<div class="alert alert-primary">
+Each nested and ancestor record will get pulled out as a standalone object in the search index. Make sure that you are indexing the same "fields" level data for all instances of the same object, otherwise you will overwrite the object (based on the identity) and cause data inconsistencies. 
+</div>
+
+```json+bad-practice
+{
+  "objects": [
+    {
+      "identity": "5e119a13ec6511e323bfdc41cd181fdb",
+      "type": "item",
+      "fields": {
+        "title": "Cheddar cheese",
+        "web_url": "/products/1"
+      },
+      "nested": [
+        {
+          "type": "category",
+          "identity": "category-cow-milk",
+          "fields": {
+            "title": "Cow milk",
+            "image_link": "/images/cow-milk.png",
+            "web_url": "/categories/dairy/cow-milk",
+            "ancestors": [{
+              "fields": {
+                 "title": "Dairy",
+                 "image_link": "/images/dairy.png",
+                 "web_url": "/categories/dairy"
+              },
+              "type": "category",
+              "identity": "category-dairy"
+            }]
+          }
+        }
+      ]
+    },
+    {
+      "identity": "332babc2b423452ba",
+      "type": "item",
+      "fields": {
+        "title": "Yoghurt",
+        "web_url": "/products/2"
+      },
+      "nested": [
+        {
+          "type": "category",
+          "identity": "category-dairy",
+          "fields": {
+            "title": "Dairy"
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+
+The problem with the example indexing request above is that when the second "category-dairy" gets indexed, it will overwrite the "fields" data from the first instance and the resulting category will miss the `image_link` and `web_url` attributes.
+
+The correct indexing payload will have the same data for all instances of the "category-dairy" category.
+
+```json+good-practice
+{
+  "objects": [
+    {
+      "identity": "5e119a13ec6511e323bfdc41cd181fdb",
+      "type": "item",
+      "fields": {
+        "title": "Cheddar cheese",
+        "web_url": "/products/1"
+      },
+      "nested": [
+        {
+          "type": "category",
+          "identity": "category-cow-milk",
+          "fields": {
+            "title": "Cow milk",
+            "image_link": "/images/cow-milk.png",
+            "web_url": "/categories/dairy/cow-milk",
+            "ancestors": [{
+              "fields": {
+                 "title": "Dairy",
+                 "image_link": "/images/dairy.png",
+                 "web_url": "/categories/dairy"
+              },
+              "type": "category",
+              "identity": "category-dairy"
+            }]
+          }
+        }
+      ]
+    },
+    {
+      "identity": "332babc2b423452ba",
+      "type": "item",
+      "fields": {
+        "title": "Yoghurt",
+        "web_url": "/products/2"
+      },
+      "nested": [
+        {
+          "type": "category",
+          "identity": "category-dairy",
+          "fields": {
+            "title": "Dairy",
+            "image_link": "/images/dairy.png",
+            "web_url": "/categories/dairy"
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+
+## Nested variants
+
+<div class="row mt-4 mb-4">
+  <div class="col-md-4">
+    <div class="card h-100">
+      <div class="card-body">
+        <h5 class="card-title"><i class="bi bi-database-gear"></i> Variant search</h5>
+        <h6 class="card-subtitle mb-2 text-body-secondary"></h6>
+        <p class="card-text">What are product variants and how Luigi's Box can search them.</p>
+        <a href="/search/variants.html" class="card-link">Read the docs →</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+Some objects come in many different variants based on size or color like a simple shirt for example, so you need to capture that in the data. However at the same time, you might not want want to display the same white medium and large shirt next to each other in the search results or when searching for "red shirt" display the red shirt image even though it is available in different colors. That is where variants come in handy.
+
+See the example to the right for a simple case of a shirt with different variants.
+
+The only requirement is that variant has to have a unique [Identity](/identity.html). Note, that you can save any other key-value pairs in variant's fields that might help your users find specific variant or the object in general.
+
+The indexing payload below demonstrates indexing a simple "T-shirt" object with nested variants in medium and large red and small white.
+
+```json
+{
+  "objects": [
+    {
+      "identity": "1cbd7a11a43f5363eee8c0d5fbf5b10d",
+      "type": "item",
+      "fields": {
+        "title": "T-shirt",
+        "web_url": "/products/1"
+      },
+      "nested": [
+        {
+          "type": "variant",
+          "identity": "1cbd7a11a43f5363eee8c0d5fbf5b10d?variant=red-m",
+          "fields": {
+            "title": "Red T-shirt M",
+            "color": "red",
+            "size": "M",
+            "web_url": "/products/1?variant=red-m"
+          }
+        },
+        {
+          "type": "variant",
+          "identity": "1cbd7a11a43f5363eee8c0d5fbf5b10d?variant=red-l",
+          "fields": {
+            "title": "Red T-shirt L",
+            "color": "red",
+            "size": "L",
+            "web_url": "/products/1?variant=red-l"
+          }
+        },
+        {
+          "type": "variant",
+          "identity": "1cbd7a11a43f5363eee8c0d5fbf5b10d?variant=white-s",
+          "fields": {
+            "title": "White T-shirt S",
+            "color": "white",
+            "size": "S",
+            "web_url": "/1?variant=white-s"
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+
+Depending on your domain it might be sufficient to nest variants based on color and save size as just another field for the purposes of displaying search results.
+
+```json
+{
+  "objects": [
+    {
+      "identity": "e2e3070d435cac225da735d8ceb51ecb",
+      "type": "item",
+      "fields": {
+        "title": "T-shirt",
+        "web_url": "/products/1"
+      },
+      "nested": [
+        {
+          "type": "variant",
+          "identity": "e2e3070d435cac225da735d8ceb51ecb?variant=red",
+          "fields": {
+            "title": "Red T-shirt",
+            "color": "red",
+            "size": ["M", "L"],
+            "web_url": "/products/1?variant=red"
+          }
+        },
+        {
+          "type": "variant",
+          "identity": "e2e3070d435cac225da735d8ceb51ecb?variant=white",
+          "fields": {
+            "title": "White T-shirt",
+            "color": "white",
+            "size": ["S"],
+            "web_url": "/products/1?variant=white"
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+
+If you would like to leverage variants in your search or autocomplete, contact us at <a href="mailto:support@luigisbox.com">support@luigisbox.com</a> so we can optimize your services for variants.
+
+## Partial content update
+
+<span class="badge text-bg-success">PATCH</span> `https://live.luigisbox.com/v1/content`
+
+This endpoint requires a JSON input which specifies the objects that should be updated in Luigi's Box search index. This API accepts an array of up to 300 `objects` in a single request  - each item in the `objects` array is an object with its attributes which should be updated in Luigi's Box index.
+
+Every object requires `identity` – it is the `identity` of the object passed to the [Content update API](#content-updates-content-update). Apart from that you only send what you would like to update. This is mainly useful for small real time updates of single objects or small batches of objects. Note when updating `nested` attribute that it replaces all previous content.
+
+<%= partial "includes/hmac_notice" %>
+
+### HTTP Request
+
+<%
+example = {
+  "objects": [
+    {
+      "identity": "523335A26599CFA30AE1C009FE7B660A",
+      "fields": {
+        "description": "The most comfortable socks",
+        "web_url": "https://myshop.example/products/1"
+      }
+    },
+    {
+      "identity": "0BB54D32FF696D71C6503C1E243FCA37",
+      "fields": {
+        "price": "14.99 €",
+        "web_url": "https://myshop.example/products/2"
+      }
+    },
+    {
+      "identity": "1CC0B93AD791B8129415DA87E2E6CBC0",
+      "fields": {
+        "title": "Contacts",
+        "web_url": "https://myshop.example/contact"
+      }
+    }
+  ]
+}
+%>
+
+<%= partial "includes/code/examples", locals: {method: 'PATCH', auth: true, path: '/v1/content', payload: example} %>
+
+### Limitations
+- This endpoint cannot be used to create new objects and you cannot send multiple objects identified by the same `identity` twice within one request.
+- `type` of object is considered immutable by this endpoint. Requests attempting to change it will thus result in error.
+- All other notes, recommendations and considerations from [Content update API](#content-updates-content-update) apply here as well.
+
+### Error handling
+
+> Example response for a batch with 48 successful updates, one object without Identity and another with Identity specified, but not found in the catalog.
+
+```json
+{
+  "ok_count": 48,
+  "errors_count": 2,
+  "errors": {
+    "object #31": {
+      "type": "malformed_input",
+      "reason": "incorrect object format",
+      "caused_by": {
+        "identity": ["is missing"]
+      }
+    },
+    "http://example.org/products/99": {
+      "type": "not_found",
+      "reason": "Identity not in catalog"
+    }
+  }
+}
+```
+There are several failure modes:
+
+HTTP Status                     | Description
+--------------------------------|-------------
+**400 Bad Request**             | Your request as a whole has invalid structure (e.g., missing the "objects" field) or the JSON has syntax errors. Look for more details in response body, fix the error and retry the request.
+**400 Bad Request**             | Importing some of the objects failed. The response body will be JSON where you can extract the URLs of failed objects from `"errors"`.
+**413 Payload Too Large**       | You are sending more than 300 items in a single request. Try sending a smaller batch size.
+**429 Too Many Requests**       | You are exceeding one of the throttling limits. Check the `Retry-After` header and see our documentation on [Throttling](/api_principles.html#throttling) for more details.
+
+## Update by query
+
+<span class="badge text-bg-success">PATCH</span> `https://live.luigisbox.com/v1/update_by_query`
+
+This endpoint requires a JSON input consisting of two parts. `search` part consists of requirements, that item needs to fulfill to be updated. `update` part specifies how the product should be updated.
+
+Search requirements for now work on principle of partial match, meaning that if product has attribute `color: ['olive', 'red']` and you provide search requirement `color: 'olive'`, the mentioned product will be a match and will be updated. Even though the field requirements are in `partial` object, it does not mean they will find fuzzy matches. Only partial matches on arrays of multiple values. On top of that, these requirements are also case sensitive. Meaning, that if product has `category: Jeans` and search requirement is `category: jeans`, the product won't be found.
+
+Be aware, that updates to object attributes are not incremental. The attributes for found products in Luigi's Box index are always **replaced** with the attributes you send.
+
+<%= partial "includes/hmac_notice" %>
+
+Additional way of keeping the product catalog up to date. Enables updates of item, that match search criteria. This endpoint works asynchronously, meaning that after you call it, it will start a job that will complete in time. After the first initializing call, you can check the state of the job.
+
+### HTTP Request
+
+<%
+example = {
+  "search": {
+    "types": ["product"],
+    "partial": {
+      "fields": {
+        "color": "olive"
+      }
+    },
+  },
+  "update": {
+    "fields": {
+      "color": "green"
+    }
+  }
+}
+%>
+
+<%= partial "includes/code/examples", locals: {method: 'PATCH', auth: true, path: '/v1/update_by_query', payload: example} %>
+
+Required structure of the request.
+
+```json
+{
+  "search": {
+    "types": [], -> Array of strings, specifying the types of products we will include in search
+    "partial": {
+      "fields": {}, -> Hash of attributes and their values, specifying the search criteria
+    }
+  },
+  "update": {
+    "fields": {} -> Hash of attributes and their values, specifying the the attributes to be updated
+  }
+}
+```
+
+There are few technical recommendations when dealing with `partial` in search and `fields` in update part:
+
+- Make sure that numeric fields are formatted as numbers, not as strings. E.g., `"height": "70.5"` is wrong. `"height": 70.5` is correct.
+- Make sure that date fields are formatted using ISO 8601 standard with `T` used to delimit time - `yyyyMMddTHHmmssZ`, e.g. `"active_from": "2018-07-15T13:23:50+00:00"`
+- It is possible to send an array of value for arbitrary field, e.g. `"color": ["red", "black", "blue"]`
+
+### Special fields
+
+There are several fields which have special behavior, specifically `availability` and `availability_rank`. Their behavior is described [here](/indexing/data_layout.html#special-fields)
+
+### Checking state of job
+
+If the asynchronous job was enqueued, API response will consist of url. Call GET method on this url to get the state of update job
+
+> Example response for request that enqueued async job (PATCH)
+
+```json
+{
+  "status_url": "/v1/update_by_query?job_id=1"
+}
+```
+
+<%= partial "includes/code/examples", locals: {method: 'GET', auth: true, path: '/v1/update_by_query?job_id=1', payload: {}} %>
+
+<span class="badge text-bg-success">GET</span> `/v1/update_by_query?job_id=1`
+
+Response to this GET request is the state of the job. Job can be in one of theses states:
+
+- in progress
+- complete
+
+If job is not complete yet, only status and tracker id will be present in the response.
+
+Example response for request to get the state of async job (GET)
+
+```json
+  {
+    "tracker_id": 1111-2222,
+    "status": "complete",
+    "updates_count": 5,
+    "failures_count": 0,
+    "failures": {}
+  }
+```
+
+If some updates failed during the job execution, these failures are also reported.
+
+```json
+  {
+    "tracker_id": 1111-2222,
+    "status": "complete",
+    "updates_count": 0,
+    "failures_count": 2,
+    "failures": {
+      "/products/1" => {
+        "type" => "data_schema_mismatch",
+        "reason" => "failed to parse [attributes.price]",
+        "caused_by" => {"type" => "number_format_exception", "reason" => "For input string: \"wrong sale price\""}
+      }
+    }
+  }
+```
+### Error handling
+
+There are several failure modes:
+
+HTTP Status                     | Description
+--------------------------------|-------------
+**400 Bad Request**             | Your request as a whole has invalid structure (e.g., missing the "fields" field) or the JSON has syntax errors. Look for more details in response body, fix the error and retry the request.
+**403 API not allowed**         | You don't have API request allowed for your site in Luigi's Box.
+**405 Method not allowed**      | Unsupported HTTP method.
+**413 Payload Too Large**       | You are sending request larger than 0.5 megabytes. Try sending a smaller request. Note: we are checking the length of request content in bytes.
+
+## Content removal
+
+<span class="badge text-bg-success">DELETE</span> `https://live.luigisbox.com/v1/content`
+
+This endpoint requires the `identity` of the object along with its `type`. Those must be the same which were used to store the object through [Content update API](#content-updates-content-update).
+Calling this API will remove the object from Luigi's Box search index and the object with specified `identity` will no longer appear in search results or in autocomplete results.
+
+<% delete_example = {
+  "objects": [
+    {
+      "type": "item",
+      "identity": "B6B7CD9466295DCFDB62676CAE374289"
+    },
+    {
+      "type": "item",
+      "identity": "611526210E4585C7C8D5367F2CC42A57"
+    }
+  ]
+} %>
+<%= partial "includes/code/examples", locals: {method: "DELETE", auth: true, path: '/v1/content', payload: delete_example} %>
+
+<%= partial "includes/hmac_notice" %>
+
+## Generations
+
+In some cases, you cannot effectively determine which objects were changed on
+your part, often because they are managed in some external system and only
+loaded to your own system through a periodic batch job. While you could
+reimport all objects through the Content Update API, you may end up with objects
+that are indexed in our system but are no longer present in your system. You
+can solve a scenario like this with Content Generations.
+
+Content Generations allow you to import objects associated with a generation
+marker and then commit that generation and remove the past generation. An
+example:
+
+1. You have objects indexed in Luigi's Box which mirror your application
+database at some point in the past.
+
+    Identity      | Generation    | Fields
+    --------------|---------------|--------
+    example.org/1 | X             | color: red
+    example.org/2 | X             | color: black
+
+2. A periodic job imported data to your own system, which you now need to sync
+with Luigi's Box. Your application database now contains product 2 which has a
+new color (changed from black to yellow) and product 3, which is a new product
+which was not present in your database before. Product 1 was deleted by the
+job.
+3. You iterate through all objects in your application database and build a
+Content Update batch. You assign a special `generation` attribute to each
+object in batch, e.g. `'generation': 'Y'`.
+4. We import your objects and since we are using Identities as unique identifiers, we
+will find existing object for the given Identity and update the object, or create a
+new object with that Identity if it does not exist
+
+    Identity      | Generation    | Fields
+    --------------|---------------|--------
+    example.org/1 | X             | color: red
+    example.org/2 | Y             | color: yellow
+    example.org/3 | Y             | color: blue
+
+5. At this point, your Luigi's Box index can contain objects which are no
+longer present in your application database (product 1 in this example).
+6. You commit the generation Y via an API call to Luigi's Box and we will
+delete all objects that are from a different generation than what you
+specified. Your Luigi's Box index is now synced with your application database.
+
+    Identity      | Generation    | Fields
+    --------------|---------------|--------
+    example.org/2 | Y             | color: yellow
+    example.org/3 | Y             | color: blue
+
+
+### Marking objects with generation marker
+
+<%
+    generations_example = {
+      "objects": [
+        {
+          "identity": "70E5B3BD8512BDFFACD75E92B918106D",
+          "type": "item",
+          "generation": "1534199032554",
+          "fields": {
+            "color": "blue",
+          }
+        },
+        {
+          "identity": "30834172CFBAA2A938483A5CEEBB04FF",
+          "type": "item",
+          "generation": "1534199032554",
+          "fields": {
+            "color": "black",
+          }
+        },
+      ]
+  }
+%>
+<%= partial "includes/code/examples", locals: {method: "POST", auth: true, path: '/v1/content', payload: generations_example} %>
+
+You use the Content Update API, but put a `generation` attribute inside each
+object top-level attributes. See the example on the right.
+
+Note that the value of the generation marker is up to you to generate and can
+be any arbitrary string value. It is your responsibility to generate it and to
+make sure that the value is used consistently for all objects in the same
+generation.
+
+We recommend that you use unix timestamp (cast to string) as the generation marker that you generate before initiating the content update process and use it for all subsequent objects.
+
+## Committing a generation
+
+<span class="badge text-bg-success">POST</span> `https://live.luigisbox.com/v1/content/commit?type=item&generation=1534199032554`
+
+Committing a generation ensures that only objects from the specified generation
+remain in the index. Committing is always type specific and will commit only the
+generation from the specified type.
+
+To prevent unintentional deletes, the commit API makes sure that at least one
+object from the committed generation is present in the index. This is done to
+prevent simple mistakes/typos in generation marker and to prevent you from
+accidentally deleting all objects of a single type.
+
+Note, that when you use nested items, you need to commit their respective types
+separately. E.g., when you index item with type 'product', which has nested
+items with type 'category' and 'brand', then you need to issue 3 separate
+commit calls: commit for 'product', commit for 'category' and commit for 'brand'.
+The nested types are using the same generation marker as their parent.
+
+<%= partial "includes/code/examples", locals: {method: "POST", auth: true, path: '/v1/content/commit?type=item&generation=1534199032554', payload: nil} %>
+
+
+# Payload compression
+
+The content updates api is compatible with optional `Content-Encoding` HTTP header, accepting `gzip` or `deflate` compression methods on request body. When in use, you can send batch up to 10 megabytes in size.
+
+# Performance guidelines
+
+There are few recommendations affecting performance of content updates api. It can negatively affect indexing performance, if you are using following patterns: 
+
+- High number of nested - if you are indexing high number of nested records (lets say >10) with your items, you should consider if you really need such a rich hierarchy.
+- High number of fields - if you are indexing high number of fields (lets say >10) with your items, you should consider if you really need all the fields to be searchable and retrievable.
+- Large item sizes - if you are indexing items with sizes > 30KB, you should consider if you really need all the data to be indexed.
+- Large batch size - if you are using batch size > 100, you should consider lowering it.
+
+# Checking your Data
+
+We recommend that you check the data you have indexed. The easiest way to check the data is to use the "Catalog > Catalog browser" screen in the application.
+
+<img src="/assets/images/catalog_browser.png" class="img-fluid mb-2"/>
+
+You may also request the data back via API using the regular search endpoint. See the examples below.
+
+If you want to know which types you have pushed into your catalog, just open the following URL in a browser and check the `facets` key in JSON response.
+
+`https://live.luigisbox.com/search?tracker_id=<YOUR-TRACKER-ID>&facets=type&size=0`
+
+If you want to examine fields of your items of a specific type, it is also very easy, just use a filter:
+
+`https://live.luigisbox.com/search?tracker_id=<YOUR-TRACKER-ID>&f[]=type:<YOUR-TYPE>`
+
+Finally, you can search for virtually anything right from the location bar of your browser:
+
+`https://live.luigisbox.com/search?tracker_id=<YOUR-TRACKER-ID>&q=<YOUR-SEARCH-QUERY>`
+
+<div class="alert alert-warning">
+Be aware that there is an HTTP cache in front of the API
+and you may receive cached responses. If you want to be sure that you are
+seeing fresh data, append a cache-busting parameter to the API URL, e.g.
+<code>&v=1</code>. You may need to increment the number for subsequent requests to avoid
+the cache repeatedly.
+</div>
+
