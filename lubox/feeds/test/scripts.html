@@ -1,0 +1,343 @@
+<script>
+  function LBInitGlobalAutocomplete() {
+    AutoComplete(
+      {
+        Layout: 'line',
+        TrackerId: '459915-554117',
+        Locale: 'en',
+        TypingSuggestions: true,
+        ShowBranding: false,
+        Placeholder: '#lb-search',
+        AfterRender: function (query, results, emitAnalyticsEventFn) {
+          document.querySelector('#lb-search').classList.add('subtle-shadow-popup');
+          document.querySelectorAll('.luigi-ac-header td').forEach((header) => {
+            header.insertAdjacentHTML('afterbegin', `<i class="bi bi-box "></i>`);
+          });
+          document.querySelectorAll('.luigi-ac-_item-wrapper, .luigi-ac-sections-wrapper, .luigi-ac-examples-wrapper').forEach((section) => {
+            section.insertAdjacentHTML('afterbegin', `<div class="luigi-side-line"></div>`);
+          });
+        },
+        AfterClose: function () {},
+        FormatForDisplay: function (result) {
+          function capitalize(word) {
+            let capitalized = word.charAt(0).toUpperCase() + word.slice(1);
+            const exceptionsMapping = {
+              Lbx: 'LBX',
+              Api: 'API',
+            };
+            for (const key in exceptionsMapping) {
+              capitalized = capitalized.replace(key, exceptionsMapping[key]);
+            }
+            return capitalized;
+          }
+          const chevron = `  &#x203A;  `;
+          const atts = result.attributes;
+
+          if (result.type === 'sections' || result.type === 'examples') {
+            const masterUrl = atts.original_url
+            const topLevelCat = masterUrl?.split('/')?.[1].split("#")?.[0]?.replace('.html', '').replaceAll('_', ' ').replace(/[ ]js/, '.js');
+            const capitalizedTopLevelCat = capitalize(topLevelCat);
+            if (capitalizedTopLevelCat !== atts['title.untouched']) {
+              result.attributes.title = `${capitalizedTopLevelCat}${chevron}${result.attributes.title}`;
+            }
+          }
+
+          return result;
+        },
+        Translations: {
+          en: {
+            showAllTitle: 'Show all results',
+            types: {
+              _item: {
+                name: 'Articles',
+                recommendHeroName: 'Top Articles',
+                heroName: 'Top Articles',
+                recommendName: 'Top Categories',
+              },
+              sections: {
+                name: 'Sections',
+                recommendHeroName: 'Top Sections',
+                heroName: 'Top Sections',
+                recommendName: 'Top Sections',
+              },
+              examples: {
+                name: 'Examples',
+                recommendHeroName: 'Top Examples',
+                heroName: 'Top Examples',
+                recommendName: 'Top Examples',
+              },
+            },
+          },
+        },
+        Types: [
+          {
+            type: '_item',
+            name: 'Items',
+            size: 6,
+            recommend: {
+              size: 4,
+            },
+          },
+          {
+            type: 'sections',
+            name: 'Sections',
+            size: 3,
+            recommend: {
+              size: 2,
+            },
+          },
+          {
+            type: 'examples',
+            name: 'Example',
+            size: 3,
+            recommend: {
+              size: 2,
+            },
+          },
+        ],
+      },
+      '#search-input'
+    );
+  }
+
+  document.addEventListener('keydown', function (event) {
+    // Check if the "Cmd" (or "Ctrl") key and "k" key are pressed
+    if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
+      event.preventDefault();
+      document.querySelector('#search-input').click();
+      document.querySelector('#search-input').focus();
+    }
+  });
+</script>
+<script src="https://cdn.luigisbox.com/autocomplete.js" async onload="LBInitGlobalAutocomplete()"></script>
+
+<script>
+  function handleSearchInitialization() {
+    const path = window.location.pathname;
+    if (!path.startsWith("/search/searchPage.html")) {
+      return
+    }
+    LBInitDocumentationSearch()
+  }
+
+  function LBInitDocumentationSearch() {
+    Luigis.Search({
+      TrackerId: '459915-554117',
+      Locale: 'en',
+      Theme: 'boo',
+      Size: 21,
+      Facets: ['brand', 'category', 'price_amount'],
+      DefaultFilters: {
+          type: 'sections'
+      },
+      QuicksearchTypes: ['category', 'brand'],
+      UrlParamName: {
+        QUERY: 'q',
+      },
+      OnDone(query, results, emitAnalyticsEventFn) {
+        // Aggressively remove any unwanted div elements containing structured data
+        setTimeout(() => {
+          // Remove the script element itself
+          const scriptEl = document.getElementById('lb-search-results');
+          if (scriptEl) {
+            scriptEl.remove();
+          }
+          
+          // Find and remove any divs that contain only structured data scripts
+          document.querySelectorAll('div').forEach(div => {
+            const hasOnlyScripts = Array.from(div.childNodes).every(node => {
+              if (node.nodeType === Node.TEXT_NODE) {
+                return node.textContent.trim() === '';
+              }
+              if (node.nodeType === Node.ELEMENT_NODE) {
+                return node.tagName === 'SCRIPT' && 
+                       (node.type === 'application/ld+json' || 
+                        node.id === 'lb-search-results' ||
+                        node.textContent.includes('"@type"'));
+              }
+              return false;
+            });
+            
+            if (hasOnlyScripts && div.childNodes.length > 0) {
+              div.remove();
+            }
+          });
+        }, 100);
+      },
+    }, '#search-input', '#search-ui')
+  }
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const upButton = document.getElementById("feedback-up");
+  const downButton = document.getElementById("feedback-down");
+  const feedbackContainer = document.getElementById("feedback-container");
+
+  const FeedbackType = {
+    UP: "up",
+    DOWN: "down",
+  };
+
+  const FeedbackForms = {
+    ONSUCCESS_FORM: "https://docs.google.com/forms/d/e/1FAIpQLScsv_-1lx09vDCYdIfP4Q6Gpt3K6WUyqvGXQe3yQN03Z7nm2A/viewform?usp=pp_url&entry.2144526813=SOURCE_URL_PLACEHOLDER",
+    ONISSUE_FORM: "https://docs.google.com/forms/d/e/1FAIpQLSfdlN8_MBbvQH8OvJHpv7LRIuM7IVdM9Qn6gqS-bqI5ApP0VA/viewform?usp=pp_url&entry.233291793=SOURCE_URL_PLACEHOLDER",
+  };
+
+  const URL_PLACEHOLDER = "SOURCE_URL_PLACEHOLDER";
+
+  function populateUrlWithCurrentPage(baseUrlWithPlaceholder, placeholder) {
+    const currentPageUrl = window.location.href;
+    return baseUrlWithPlaceholder.replace(placeholder, encodeURIComponent(currentPageUrl));
+  }
+
+  function createFeedbackButton(feedbackType) {
+    const button = document.createElement("button");
+    button.classList.add("button-styles"); // Make sure .button-styles is defined in your CSS
+
+    let baseFormUrl;
+    if (feedbackType === FeedbackType.UP) {
+      button.textContent = "Help us improve our docs";
+      baseFormUrl = FeedbackForms.ONSUCCESS_FORM;
+    } else { // FeedbackType.DOWN
+      button.textContent = "Report an issue";
+      baseFormUrl = FeedbackForms.ONISSUE_FORM;
+    }
+
+    // Populate the URL using the helper function
+    const targetFormUrl = populateUrlWithCurrentPage(baseFormUrl, URL_PLACEHOLDER);
+
+    button.onclick = () => {
+      window.open(targetFormUrl, "_blank");
+    };
+
+    return button;
+  }
+
+  function handleFeedbackClick(event) {
+    const clickedButton = event.currentTarget;
+    const otherButton = clickedButton === upButton ? downButton : upButton;
+
+    otherButton.classList.remove("selected");
+    clickedButton.classList.add("selected");
+
+    // Animate the clicked button
+    const svg = clickedButton.querySelector("svg");
+    svg.classList.add("animate");
+    svg.addEventListener(
+      "animationend",
+      () => {
+        svg.classList.remove("animate");
+      },
+      { once: true }
+    );
+
+    const feedbackType = clickedButton === upButton ? FeedbackType.UP : FeedbackType.DOWN;
+
+    // Send feedback to Google Analytics
+
+    dataLayer.push({
+      'event': "feedback",
+      'event_category': "User Feedback",
+      'event_label': feedbackType
+    });
+    
+      
+
+    feedbackContainer.classList.add("fade-out");
+
+    setTimeout(() => {
+      feedbackContainer.innerHTML = `<p>Your opinion matters to us! 🩵</p>`;
+
+      const button = createFeedbackButton(feedbackType);
+      feedbackContainer.appendChild(button);
+      feedbackContainer.classList.add("fade-in");
+    }, 500); 
+  }
+
+  upButton.addEventListener("click", handleFeedbackClick);
+  downButton.addEventListener("click", handleFeedbackClick);
+});
+</script>
+
+<script src="https://cdn.luigisbox.com/search.js" async onload="handleSearchInitialization()"></script>
+<script src="https://cdn.luigisbox.com/docs-luigisbox-com.js" async></script>
+
+<!-- Copy to Clipboard Functionality -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Add copy buttons to all code blocks
+  const codeBlocks = document.querySelectorAll('.highlight pre');
+  
+  codeBlocks.forEach(function(pre) {
+    // Create copy button
+    const copyButton = document.createElement('div');
+    copyButton.className = 'copy-clipboard';
+    copyButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>Copy to Clipboard</title><path d="M18 6v-6h-18v18h6v6h18v-18h-6zm-12 10h-4v-14h14v4h-10v10zm16 6h-14v-14h14v14z"></path></svg>';
+    
+    // Add click handler
+    copyButton.addEventListener('click', function() {
+      const code = pre.querySelector('code');
+      const text = code ? code.textContent.replace(/\n$/, '') : pre.textContent.replace(/\n$/, '');
+      
+      // Use modern Clipboard API with fallback
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(text).then(function() {
+          showSuccess(copyButton);
+        }).catch(function() {
+          fallbackCopy(text);
+          showSuccess(copyButton);
+        });
+      } else {
+        fallbackCopy(text);
+        showSuccess(copyButton);
+      }
+    });
+    
+    // Append the button to the outer .highlight wrapper (not the <pre> itself)
+    let wrapper = pre.closest('.highlight');
+    if (wrapper === pre) {
+      wrapper = pre.parentElement ? pre.parentElement.closest('.highlight') : null;
+    }
+    if (!wrapper) wrapper = pre.parentElement || document.body;
+
+    // Ensure the wrapper can be a positioned container; prefer CSS but
+    // fall back to inline style if needed.
+    try {
+      const comp = window.getComputedStyle(wrapper);
+      if (comp && comp.position === 'static') {
+        wrapper.style.position = 'relative';
+      }
+    } catch (e) {
+      /* ignore */
+    }
+
+    wrapper.appendChild(copyButton);
+  });
+  
+  function fallbackCopy(text) {
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+  }
+  
+  function showSuccess(button) {
+    const originalHTML = button.innerHTML;
+    button.classList.add('copied');
+    // make button non-interactive while showing feedback
+    button.setAttribute('aria-disabled', 'true');
+    button.style.pointerEvents = 'none';
+    button.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>Copied!</title><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"></path></svg>';
+    
+    setTimeout(function() {
+      button.classList.remove('copied');
+      // re-enable button after feedback
+      button.removeAttribute('aria-disabled');
+      button.style.pointerEvents = '';
+      button.innerHTML = originalHTML;
+    }, 1000);
+  }
+});
+</script>
