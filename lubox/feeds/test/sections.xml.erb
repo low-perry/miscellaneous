@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <% app.sitemap.resources.each do |page| %>
+    <%
+      page_path = page.normalized_path
+
+      # exclude api versions from being included except the hubs that follow the api/v*/ pattern
+      is_excluded_api = page_path.include?('/api/') && !page_path.include?('/api/v1/')
+
+      should_include = page.ext == ".html" && 
+         !page_path.include?('/examples/') && 
+         !is_excluded_api &&
+         !page_path.include?('/top_items/') && 
+         !page_path.include?('/trending_queries/') && 
+         !page_path.start_with?('pages/') &&
+         !page_path.include?('analytics/data-layer.html')
+    %>
+    <% if should_include && page.source_file.present? %>
+      <% html = page.render %>
+      <% doc = Nokogiri::HTML::DocumentFragment.parse(html) %>
+      <% doc.search('h1').each do |h1| %>
+        <section>
+          <page><%= page.url %></page>
+          <full_path><%= page.url.split(".html")[0].sub(/^\//, '') %></full_path>
+          <title><![CDATA[<%= h1.text %>]]></title>
+          <url><%= "#{page.url}##{h1[:id]}" %></url>
+          <content><![CDATA[<%= section_content(h1).gsub(']]>', '') %>]]></content>
+        </section>
+      <% end %>
+    <% end %>
+  <% end %>
+</root>
+
