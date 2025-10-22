@@ -1,0 +1,282 @@
+---
+stretch: false
+---
+
+<style>
+  .h-100 {
+    min-height: 200px;
+  }
+
+  @media (max-width: 768px) {
+    .h-100 {
+      min-height: 150px
+    }
+  }
+
+  .lb-results-wrapper {
+    margin: var(--bs-gutter-x) 0 0 0;
+  }
+  .lb-result-default {
+    padding-right: calc(var(--bs-gutter-x) * .5);
+    padding-left: calc(var(--bs-gutter-x) * .5);
+    margin-top: var(--bs-gutter-y);
+    margin-bottom: var(--bs-gutter-x);
+    max-height: 100%;
+    div.mb-2, a, .card-body {
+      height: 100%;
+    }
+    @media (max-width: 769px) {
+      width: 100%;
+    }
+  }
+
+  .card-body {
+    transition: box-shadow .3s ease;
+
+    @media (min-width: 769px) {
+      min-height: 120px;
+    }
+    @media (max-width: 768px) {
+      min-height: 165px;
+    }
+
+    &:hover {
+      -webkit-box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* For WebKit browsers */
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Standard */
+      border-radius: 8px; /* Optional: softens the popup corners */
+      cursor: pointer;
+    }
+
+    & a {
+      text-decoration: none;
+      color: #212529;
+      display: flex;
+      flex-flow: column;
+      justify-content: flex-start;
+
+      @media (min-width: 769px) {
+        min-height: 180px;
+      }
+      @media (max-width: 768px) {
+        min-height: 135px;
+      }
+
+      &  .card-link {
+        color: rgba(var(--bs-link-color-rgb),var(--bs-link-opacity,1));
+        margin: 0;
+        margin-top: auto;
+      }
+    }
+
+    @media (max-width: 768px) {
+      & a { 
+        min-height: 120px;
+      }
+    }
+  }
+
+  .mb-2 {
+    margin-bottom: var(--bs-gutter-x) !important;
+  }
+  .lb-sorts,
+  .lb-pagination {
+    padding-left: calc(.5 * var(--bs-gutter-x));
+  }
+  .lb-pagination__pager {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 20px;
+
+    &  span.lb-pagination_page {
+      margin: 0 10px;
+    }
+  }
+
+  .lb-pagination__info {
+    justify-content: center;
+    display: flex;
+  }
+
+  .lb-pagination__btn {
+    display: none;
+  }
+
+  .lb-pagination_page {
+    font-size: 1.2rem;
+
+    &:hover {
+      color: #a57dac;
+      cursor: pointer;
+    }
+  }
+
+  .is-no-results + .lb-pagination {
+    display: none;
+  }
+
+  #lb-search-element {
+    @media (min-width: 992px) and (max-width: 1600px) {
+      width: 75vw;
+  }
+
+  }
+  #lb-search-element h1,
+  .lb-no-results {
+    margin: 0;
+    margin-left: calc(.5 * var(--bs-gutter-x));
+  }
+
+  .search-headline {
+    display: flex;
+    align-items: flex-start;
+    margin: 40px 0px 30px;
+    .count-badge {
+      margin-top: 5px;
+      margin-left: 10px;
+      padding: 2px 16px;
+      background-color: #682175;
+      border-radius: 10px;
+      p {
+        margin: auto;
+        font-size: 0.8rem;
+        color: white;
+      }
+    }
+    @media (max-width: 769px) {
+      h1 {
+        font-size: calc(1.275rem + .3vw);
+      }
+      .count-badge p {
+        font-size: 0.75rem;
+      } 
+    }
+    @media (max-width: 469px) {
+      h1 {
+        font-size: calc(1.1rem + .3vw);
+      }
+      .count-badge p {
+        font-size: 0.7rem;
+      } 
+    }
+  }
+
+  .lb-top-items__results .lb-results {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    text-align: left;
+    margin-left: calc(-.5 * var(--bs-gutter-x));
+  }
+
+  .search-loading { 
+    opacity: 0.7; 
+  }
+
+  /* Hide structured data script that Luigi's Box Search.js auto-injects */
+  script[id="lb-search-results"] {
+    display: none !important;
+    visibility: hidden !important;
+    height: 0 !important;
+    width: 0 !important;
+  }
+
+  /* Hide any div containing only the structured data script */
+  div:has(> script[id="lb-search-results"]:only-child) {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  /* Fallback for browsers that don't support :has() */
+  div > script[id="lb-search-results"]:only-child {
+    display: none !important;
+  }
+
+  div > script[id="lb-search-results"]:only-child + * {
+    display: none !important;
+  }
+
+  /* Additional protection against all structured data injections */
+  script[type="application/ld+json"] {
+    display: none !important;
+    visibility: hidden !important;
+  }
+  
+  div:has(> script[type="application/ld+json"]:only-child) {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  </style>
+<div id="search-ui"></div>
+<script type="text/x-template" id="template-search">
+  <div class="row" :class="isLoading ? 'search-loading' : ''">
+    <%# <div class="col-4">
+        <facets></facets>
+        <banner position="panel"></banner>
+    </div> %>
+    <div class="col-12">
+    <div class="search-headline"> 
+      <h1>Search results for query "<strong>{{ query }}</strong>"</h1>
+      <div class="count-badge"><p>{{ hitsCount }} </p></div>
+    </div>
+      <div v-if="correctedQuery">
+        We have modified the search phrase for you: {{ correctedQuery }}
+      </div>
+      <loading></loading>
+      <banner position="header"></banner>
+      <quick-search type="brand"></quick-search>
+      <quick-search type="category"></quick-search>
+      <results></results>
+      <pagination></pagination>
+      <banner position="footer"></banner>
+    </div>
+  </div>
+</script>
+<script type="text/x-template" id="template-results">
+  <div style="display: flex; flex-wrap: wrap;">
+    <result :result="result" v-for="(result, i) in results" :key="i"></result>
+  </div>
+</script>
+<script type="text/x-template" id="template-result-default">
+  <div class="lb-result-default col-md-4">
+    <div class="mb-2">
+      <div class="card h-100">
+        <div class="card-body">
+          <a :href="url">
+            <h5 class="card-title">
+              <i v-if="attributes.icon && attributes.icon[0]" :class="`bi bi-${attributes.icon[0]} me-1`"></i> {{ attributes.title }}
+            </h5>
+            <p class="card-text" v-if="attributes.description.toLowerCase().includes(query.toLowerCase())" >
+              <span v-html="
+                '...' +
+                attributes.description.toLowerCase().substring(
+                  attributes.description.toLowerCase().indexOf(query.toLowerCase()) - 35,
+                  attributes.description.toLowerCase().indexOf(query.toLowerCase())
+                ) +
+                attributes.description.toLowerCase().substring(
+                  attributes.description.toLowerCase().indexOf(query.toLowerCase()),
+                  attributes.description.toLowerCase().indexOf(query.toLowerCase()) + 75
+                ).replace(query, `<span style=\'background-color: #fbe7ff\'>${query.toLowerCase()}</span>`) +
+                '...'"
+              >
+              </span>
+            </p>
+            <p v-else>
+              {{ attributes.description.substring(0, 125) + '...' }}
+            </p>
+            <p class="card-link">Read the docs →</p>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</script>
+
+<script type="text/x-template" id="template-facets">
+    <div>
+        <facet :facet="facet" v-for="(facet, i) in facets" :key="i"></facet>
+    </div>
+</script>
+<script type="text/x-template" id="template-loading">
+</script>
