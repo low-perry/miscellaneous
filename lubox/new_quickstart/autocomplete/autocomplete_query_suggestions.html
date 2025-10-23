@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luigi's Box Autocomplete Demo</title>
+    <link rel="dns-prefetch" href="//live.luigisbox.com">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #35c2d6 0%, #0c161a 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            position: relative;
+        }
+
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .search-wrapper {
+            position: relative;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .search-input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        #search-input {
+            width: 100%;
+            padding: 20px 50px 20px 20px;
+            font-size: 16px;
+            border: none;
+            outline: none;
+            background: transparent;
+        }
+
+        #search-input::placeholder {
+            color: #999;
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #35c2d6;
+            pointer-events: none;
+            width: 20px;
+            height: 20px;
+        }
+
+        #autocomplete-results {
+            max-height: 500px;
+            overflow-y: auto;
+            background: white;
+        }
+
+        #autocomplete-results:empty {
+            display: none;
+        }
+
+        .results-group {
+            border-top: 1px solid #eee;
+        }
+
+        .group-title {
+            padding: 12px 20px;
+            background: #f8f9fa;
+            color: #666;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .result-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: background 0.2s;
+            gap: 15px;
+        }
+
+        .result-item:hover {
+            background: #f8f9fa;
+        }
+
+        .result-item img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 8px;
+            background: #eee;
+        }
+
+        .result-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .result-item .title {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .result-item .title em {
+            font-style: normal;
+            font-weight: 600;
+            color: #35c2d6;
+        }
+
+        .result-item .price {
+            font-size: 14px;
+            color: #35c2d6;
+            font-weight: 600;
+        }
+
+        .add-to-cart-btn {
+            padding: 8px 16px;
+            background: #35c2d6;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+
+        .add-to-cart-btn:hover {
+            background: #2ba9bb;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(53, 194, 214, 0.3);
+        }
+
+        .add-to-cart-btn:active {
+            transform: translateY(0);
+        }
+
+        .add-to-cart-btn svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .result-item.category .result-content,
+        .result-item.query .result-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .result-item.category .icon,
+        .result-item.query .icon {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+
+        .no-results {
+            padding: 40px 20px;
+            text-align: center;
+            color: #999;
+        }
+
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 80px; /* Prevents layout jump */
+            color: #999;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #35c2d6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .footer {
+            text-align: center;
+            color: white;
+            margin-top: 30px;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .footer a {
+            color: white;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 10px;">
+                <circle cx="11" cy="11" r="8"></circle>
+                <path d="m21 21-4.35-4.35"></path>
+            </svg>
+            Luigi's Box Autocomplete
+        </h1>
+        
+        <div class="search-wrapper">
+            <div class="search-input-wrapper">
+                <input 
+                    type="text" 
+                    id="search-input" 
+                    placeholder="Search for products, categories..."
+                    autocomplete="off"
+                >
+                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="m21 21-4.35-4.35"></path>
+                </svg>
+            </div>
+            <div id="autocomplete-results"></div>
+        </div>
+
+        <div class="footer">
+            Powered by <a href="https://www.luigisbox.com" target="_blank">Luigi's Box</a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        // CONFIGURATION
+        const TRACKER_ID = "179075-204259";
+        const AUTOCOMPLETE_API_URL = "https://live.luigisbox.com/autocomplete/v2";
+        const ANALYTICS_API_URL = "https://api.luigisbox.com/";
+        
+        // Generate a simple client ID (in production, store this in a cookie)
+        const CLIENT_ID = Math.floor(Math.random() * 1e18).toString();
+        
+        const searchInput = document.getElementById('search-input');
+        const resultsContainer = document.getElementById('autocomplete-results');
+
+        // Utility: Debounce function
+        const debounce = (func, delay) => {
+            let timeout;
+            return function(...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), delay);
+            }
+        };
+
+        // Utility: Generate UUID v4
+        function generateUUID() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                const r = Math.random() * 16 | 0;
+                const v = c == 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        }
+
+        // Send analytics event
+        async function sendAnalyticsEvent(payload) {
+            try {
+                await axios.post(ANALYTICS_API_URL, payload);
+                console.log('Analytics event sent:', payload.type, payload.action?.type);
+            } catch (error) {
+                console.error('Failed to send analytics event:', error);
+            }
+        }
+
+        // Get suggestions from API
+        const getSuggestions = async (query) => {
+            if (!query || query.trim() === '') {
+                resultsContainer.innerHTML = '';
+                return;
+            }
+
+            // Show loading state
+            resultsContainer.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+
+            try {
+                const response = await axios.get(AUTOCOMPLETE_API_URL, {
+                    params: {
+                        tracker_id: TRACKER_ID,
+                        q: query,
+                        type: 'product:6,category:3,query:5',
+                        hit_fields: 'title,url,price,image_link'
+                    }
+                });
+
+                const hits = response.data.hits;
+                
+                if (!hits || hits.length === 0) {
+                    resultsContainer.innerHTML = '<div class="no-results">No results found</div>';
+                    return;
+                }
+
+                renderResults(hits);
+                sendViewEvent(query, hits);
+
+            } catch (error) {
+                console.error("Failed to fetch autocomplete suggestions:", error);
+                resultsContainer.innerHTML = '<div class="no-results">Error loading results</div>';
+            }
+        };
+
+        // Render results in the UI
+        function renderResults(hits) {
+            resultsContainer.innerHTML = '';
+
+            // Group results by type
+            const groupedResults = hits.reduce((acc, hit) => {
+                (acc[hit.type] = acc[hit.type] || []).push(hit);
+                return acc;
+            }, {});
+
+            const groupTitleMap = {
+                product: 'Products', // Changed from 'item' to 'product' to match API request
+                category: 'Categories',
+                query: 'Popular Searches'
+            };
+
+            for (const type in groupedResults) {
+                const groupDiv = document.createElement('div');
+                groupDiv.className = 'results-group';
+
+                const titleDiv = document.createElement('div');
+                titleDiv.className = 'group-title';
+                titleDiv.textContent = groupTitleMap[type] || type;
+                groupDiv.appendChild(titleDiv);
+
+                groupedResults[type].forEach((item, index) => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'result-item';
+                    itemDiv.classList.add(item.type);
+
+                    // Store data for analytics
+                    itemDiv.dataset.itemId = item.url || item.attributes.title;
+                    itemDiv.dataset.itemType = item.type;
+                    itemDiv.dataset.position = index + 1;
+                    itemDiv.dataset.itemName = item.attributes.title;
+                    itemDiv.dataset.itemPrice = item.attributes.price; // Store price
+
+                    let innerHTML = '';
+                    
+                    if (item.attributes.image_link) {
+                        innerHTML += `<img src="${item.attributes.image_link}" alt="${item.attributes.title}">`;
+                    }
+                    
+                    innerHTML += '<div class="result-content">';
+                    
+                    // Add icon for categories and queries
+                    if (item.type === 'category') {
+                        innerHTML += `
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                            </svg>
+                        `;
+                    } else if (item.type === 'query') {
+                        innerHTML += `
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+                            </svg>
+                        `;
+                    }
+                    
+                    innerHTML += `<div><div class="title">${item.attributes.title}</div>`;
+                    
+                    if (item.attributes.price && item.type === 'product') {
+                        innerHTML += `<div class="price">${item.attributes.price}</div>`;
+                    }
+                    innerHTML += '</div></div>';
+
+                    itemDiv.innerHTML = innerHTML;
+
+                    // Add "Add to Cart" button only for products (after setting innerHTML)
+                    if (item.type === 'product') {
+                        const addToCartBtn = document.createElement('button');
+                        addToCartBtn.className = 'add-to-cart-btn';
+                        addToCartBtn.dataset.action = 'add-to-cart';
+                        addToCartBtn.innerHTML = `
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="9" cy="21" r="1"></circle>
+                                <circle cx="20" cy="21" r="1"></circle>
+                                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                            </svg>
+                            Add to Cart
+                        `;
+                        itemDiv.appendChild(addToCartBtn);
+                    }
+
+                    groupDiv.appendChild(itemDiv);
+                });
+
+                resultsContainer.appendChild(groupDiv);
+            }
+        }
+
+        // Send VIEW event (Autocomplete list)
+        function sendViewEvent(query, hits) {
+            const analyticsPayload = {
+                id: generateUUID(),
+                type: "event",
+                tracker_id: TRACKER_ID,
+                client_id: CLIENT_ID,
+                lists: {
+                    "Autocomplete": {
+                        query: { string: query },
+                        items: hits.map((hit, index) => ({
+                            title: hit.attributes.title,
+                            url: hit.url || hit.attributes.title,
+                            position: index + 1
+                        }))
+                    }
+                }
+            };
+            sendAnalyticsEvent(analyticsPayload);
+        }
+
+        // Send CLICK event
+        function sendClickEvent(itemId) {
+            const clickPayload = {
+                id: generateUUID(),
+                type: "click",
+                tracker_id: TRACKER_ID,
+                client_id: CLIENT_ID,
+                action: {
+                    type: "click",
+                    resource_identifier: itemId
+                }
+            };
+            sendAnalyticsEvent(clickPayload);
+        }
+
+        // Send ADD TO CART event
+        function sendAddToCartAnalytics(itemData) {
+            const cartClickPayload = {
+                id: generateUUID(),
+                type: "click",
+                tracker_id: TRACKER_ID,
+                client_id: CLIENT_ID,
+                action: {
+                    type: "add-to-cart", // Custom action type
+                    resource_identifier: itemData.itemId,
+                }
+            };
+            sendAnalyticsEvent(cartClickPayload);
+        }
+
+        // Event listeners
+        searchInput.addEventListener('input', debounce((e) => {
+            getSuggestions(e.target.value);
+        }, 300));
+
+        resultsContainer.addEventListener('click', (e) => {
+            // Handle "Add to Cart" button clicks
+            if (e.target.closest('.add-to-cart-btn')) {
+                e.stopPropagation();
+                const btn = e.target.closest('.add-to-cart-btn');
+                const resultItem = btn.closest('.result-item');
+                
+                // Visual feedback
+                btn.textContent = '✓ Added';
+                btn.style.background = '#22c55e';
+                setTimeout(() => {
+                    btn.innerHTML = `
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="9" cy="21" r="1"></circle>
+                            <circle cx="20" cy="21" r="1"></circle>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                        </svg>
+                        Add to Cart
+                    `;
+                    btn.style.background = '';
+                }, 1500);
+                
+                console.log('Added to cart:', resultItem.dataset.itemId);
+                
+                // --- THIS IS THE UPDATE ---
+                // Send the Add to Cart analytics event
+                sendAddToCartAnalytics(resultItem.dataset);
+                // --- END OF UPDATE ---
+                
+                // Here you would typically add the item to your cart
+                return;
+            }
+
+            // Handle regular item clicks
+            const resultItem = e.target.closest('.result-item');
+            if (resultItem) {
+                const itemId = resultItem.dataset.itemId;
+                sendClickEvent(itemId);
+                
+                // Clear results after click
+                resultsContainer.innerHTML = '';
+                searchInput.value = '';
+                
+                console.log('Item clicked:', itemId);
+                // In a real app, you would navigate to the item URL here
+            }
+        });
+
+        // Close results when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.search-wrapper')) {
+                resultsContainer.innerHTML = '';
+            }
+        });
+
+        // Clear results on ESC key
+        searchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                resultsContainer.innerHTML = '';
+            }
+        });
+    </script>
+</body>
+</html>
