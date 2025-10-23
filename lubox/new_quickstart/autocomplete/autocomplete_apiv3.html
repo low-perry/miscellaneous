@@ -197,8 +197,11 @@
         }
 
         .loading {
-            padding: 20px;
-            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 80px;
+
             color: #999;
         }
 
@@ -397,7 +400,7 @@
                     
                     innerHTML += `<div><div class="title">${item.attributes.title}</div>`;
                     
-                    if (item.attributes.price && item.type === 'item') {
+                    if (item.attributes.price && item.type === 'product') {
                         innerHTML += `<div class="price">${item.attributes.price}</div>`;
                     }
                     innerHTML += '</div></div>';
@@ -405,7 +408,7 @@
                     itemDiv.innerHTML = innerHTML;
 
                     // Add "Add to Cart" button only for products (after setting innerHTML)
-                    if (item.type === 'item') {
+                    if (item.type === 'product') {
                         const addToCartBtn = document.createElement('button');
                         addToCartBtn.className = 'add-to-cart-btn';
                         addToCartBtn.dataset.action = 'add-to-cart';
