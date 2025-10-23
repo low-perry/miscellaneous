@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luigi's Box Autocomplete Demo</title>
+    <link rel="dns-prefetch" href="//live.luigisbox.com">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            position: relative;
+        }
+
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .search-wrapper {
+            position: relative;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        #search-input {
+            width: 100%;
+            padding: 20px 50px 20px 20px;
+            font-size: 16px;
+            border: none;
+            outline: none;
+            background: transparent;
+        }
+
+        #search-input::placeholder {
+            color: #999;
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #667eea;
+            font-size: 20px;
+            pointer-events: none;
+        }
+
+        #autocomplete-results {
+            max-height: 500px;
+            overflow-y: auto;
+            background: white;
+        }
+
+        #autocomplete-results:empty {
+            display: none;
+        }
+
+        .results-group {
+            border-top: 1px solid #eee;
+        }
+
+        .group-title {
+            padding: 12px 20px;
+            background: #f8f9fa;
+            color: #666;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .result-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: background 0.2s;
+            gap: 15px;
+        }
+
+        .result-item:hover {
+            background: #f8f9fa;
+        }
+
+        .result-item img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 8px;
+            background: #eee;
+        }
+
+        .result-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .result-item .title {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .result-item .title em {
+            font-style: normal;
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .result-item .price {
+            font-size: 14px;
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .no-results {
+            padding: 40px 20px;
+            text-align: center;
+            color: #999;
+        }
+
+        .loading {
+            padding: 20px;
+            text-align: center;
+            color: #999;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .footer {
+            text-align: center;
+            color: white;
+            margin-top: 30px;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .footer a {
+            color: white;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Luigi's Box Search</h1>
+        
+        <div class="search-wrapper">
+            <input 
+                type="text" 
+                id="search-input" 
+                placeholder="Search for products, categories..."
+                autocomplete="off"
+            >
+            <span class="search-icon">🔍</span>
+            <div id="autocomplete-results"></div>
+        </div>
+
+        <div class="footer">
+            Powered by <a href="https://www.luigisbox.com" target="_blank">Luigi's Box</a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        // CONFIGURATION
+        const TRACKER_ID = "179075-204259";
+        const AUTOCOMPLETE_API_URL = "https://live.luigisbox.com/autocomplete/v2";
+        const ANALYTICS_API_URL = "https://api.luigisbox.com/";
+        
+        // Generate a simple client ID (in production, store this in a cookie)
+        const CLIENT_ID = Math.floor(Math.random() * 1e18).toString();
+        
+        const searchInput = document.getElementById('search-input');
+        const resultsContainer = document.getElementById('autocomplete-results');
+
+        // Utility: Debounce function
+        const debounce = (func, delay) => {
+            let timeout;
+            return function(...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), delay);
+            }
+        };
+
+        // Utility: Generate UUID v4
+        function generateUUID() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                const r = Math.random() * 16 | 0;
+                const v = c == 'x' ? r : (r & 0x3 | 0x8);
+                return v.toString(16);
+            });
+        }
+
+        // Send analytics event
+        async function sendAnalyticsEvent(payload) {
+            try {
+                await axios.post(ANALYTICS_API_URL, payload);
+                console.log('Analytics event sent:', payload.type);
+            } catch (error) {
+                console.error('Failed to send analytics event:', error);
+            }
+        }
+
+        // Get suggestions from API
+        const getSuggestions = async (query) => {
+            if (!query || query.trim() === '') {
+                resultsContainer.innerHTML = '';
+                return;
+            }
+
+            // Show loading state
+            resultsContainer.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+
+            try {
+                const response = await axios.get(AUTOCOMPLETE_API_URL, {
+                    params: {
+                        tracker_id: TRACKER_ID,
+                        q: query,
+                        type: 'product:6,category:3,query:5',
+                        hit_fields: 'title,url,price,image_link'
+                    }
+                });
+
+                const hits = response.data.hits;
+                
+                if (!hits || hits.length === 0) {
+                    resultsContainer.innerHTML = '<div class="no-results">No results found</div>';
+                    return;
+                }
+
+                renderResults(hits);
+                sendViewEvent(query, hits);
+
+            } catch (error) {
+                console.error("Failed to fetch autocomplete suggestions:", error);
+                resultsContainer.innerHTML = '<div class="no-results">Error loading results</div>';
+            }
+        };
+
+        // Render results in the UI
+        function renderResults(hits) {
+            resultsContainer.innerHTML = '';
+
+            // Group results by type
+            const groupedResults = hits.reduce((acc, hit) => {
+                (acc[hit.type] = acc[hit.type] || []).push(hit);
+                return acc;
+            }, {});
+
+            const groupTitleMap = {
+                item: '🛍️ Products',
+                category: '📁 Categories',
+                query: '🔥 Popular Searches'
+            };
+
+            for (const type in groupedResults) {
+                const groupDiv = document.createElement('div');
+                groupDiv.className = 'results-group';
+
+                const titleDiv = document.createElement('div');
+                titleDiv.className = 'group-title';
+                titleDiv.textContent = groupTitleMap[type] || type;
+                groupDiv.appendChild(titleDiv);
+
+                groupedResults[type].forEach((item, index) => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'result-item';
+                    itemDiv.dataset.itemId = item.url || item.attributes.title;
+                    itemDiv.dataset.itemType = item.type;
+                    itemDiv.dataset.position = index + 1;
+
+                    let innerHTML = '';
+                    
+                    if (item.attributes.image_link) {
+                        innerHTML += `<img src="${item.attributes.image_link}" alt="${item.attributes.title}">`;
+                    }
+                    
+                    innerHTML += '<div class="result-content">';
+                    innerHTML += `<div class="title">${item.attributes.title}</div>`;
+                    
+                    if (item.attributes.price) {
+                        innerHTML += `<div class="price">${item.attributes.price}</div>`;
+                    }
+                    innerHTML += '</div>';
+
+                    itemDiv.innerHTML = innerHTML;
+                    groupDiv.appendChild(itemDiv);
+                });
+
+                resultsContainer.appendChild(groupDiv);
+            }
+        }
+
+        // Send VIEW event (Autocomplete list)
+        function sendViewEvent(query, hits) {
+            const analyticsPayload = {
+                id: generateUUID(),
+                type: "event",
+                tracker_id: TRACKER_ID,
+                client_id: CLIENT_ID,
+                lists: {
+                    "Autocomplete": {
+                        query: { string: query },
+                        items: hits.map((hit, index) => ({
+                            title: hit.attributes.title,
+                            url: hit.url || hit.attributes.title,
+                            position: index + 1
+                        }))
+                    }
+                }
+            };
+            sendAnalyticsEvent(analyticsPayload);
+        }
+
+        // Send CLICK event
+        function sendClickEvent(itemId) {
+            const clickPayload = {
+                id: generateUUID(),
+                type: "click",
+                tracker_id: TRACKER_ID,
+                client_id: CLIENT_ID,
+                action: {
+                    type: "click",
+                    resource_identifier: itemId
+                }
+            };
+            sendAnalyticsEvent(clickPayload);
+        }
+
+        // Event listeners
+        searchInput.addEventListener('input', debounce((e) => {
+            getSuggestions(e.target.value);
+        }, 300));
+
+        resultsContainer.addEventListener('click', (e) => {
+            const resultItem = e.target.closest('.result-item');
+            if (resultItem) {
+                const itemId = resultItem.dataset.itemId;
+                sendClickEvent(itemId);
+                
+                // Clear results after click
+                resultsContainer.innerHTML = '';
+                searchInput.value = '';
+                
+                console.log('Item clicked:', itemId);
+                // In a real app, you would navigate to the item URL here
+            }
+        });
+
+        // Close results when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.search-wrapper')) {
+                resultsContainer.innerHTML = '';
+            }
+        });
+
+        // Clear results on ESC key
+        searchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                resultsContainer.innerHTML = '';
+            }
+        });
+    </script>
+</body>
+</html>
