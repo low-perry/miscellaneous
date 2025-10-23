@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luigi's Box Autocomplete Demo</title>
+    <title>Luigi's Box Top Items Demo</title>
     <link rel="dns-prefetch" href="//live.luigisbox.com">
     <style>
         * {
@@ -41,7 +41,8 @@
             background: white;
             border-radius: 12px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-            overflow: hidden;
+            /* Set overflow on the wrapper so results don't leak out */
+            overflow: hidden; 
         }
 
         .search-input-wrapper {
@@ -75,11 +76,15 @@
         }
 
         #autocomplete-results {
-            height: 400px; /* Fixed height */
+            /* Changed from max-height to fixed height */
+            height: 400px; 
             overflow-y: auto;
             background: white;
-            display: none; /* Hide by default */
+            /* Added: Hide by default, control with JS */
+            display: none; 
         }
+
+        /* Removed :empty rule */
 
         .results-group {
             border-top: 1px solid #eee;
@@ -188,10 +193,11 @@
         }
 
         .no-results {
+            /* Changed from padding to flex centering */
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100%; /* Fill container */
+            height: 100%; /* Fill the 400px container */
             text-align: center;
             color: #999;
         }
@@ -200,7 +206,8 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100%; /* Fill container */
+            /* Changed from min-height to height */
+            height: 100%; /* Fill the 400px container */
             color: #999;
         }
 
@@ -269,6 +276,7 @@
         // CONFIGURATION
         const TRACKER_ID = "179075-204259";
         const AUTOCOMPLETE_API_URL = "https://live.luigisbox.com/autocomplete/v2";
+        const TOP_ITEMS_API_URL = "https://live.luigisbox.com/v1/top_items"; // <-- ADDED
         const ANALYTICS_API_URL = "https://api.luigisbox.com/";
         
         // Generate a simple client ID (in production, store this in a cookie)
@@ -299,13 +307,13 @@
         async function sendAnalyticsEvent(payload) {
             try {
                 await axios.post(ANALYTICS_API_URL, payload);
-                console.log('Analytics event sent:', payload.type, payload.action?.type);
+                console.log('Analytics event sent:', payload.type, payload.action?.type, payload.lists?.Autocomplete?.query?.filters);
             } catch (error) {
                 console.error('Failed to send analytics event:', error);
             }
         }
 
-        // Get suggestions from API
+        // Get suggestions from API (for query)
         const getSuggestions = async (query) => {
             if (!query || query.trim() === '') {
                 resultsContainer.innerHTML = '';
@@ -336,17 +344,56 @@
                 }
 
                 renderResults(hits);
-                sendViewEvent(query, hits);
+                // UPDATED ANALYTICS CALL
+                sendAutocompleteViewAnalytics(query, hits);
 
             } catch (error) {
                 console.error("Failed to fetch autocomplete suggestions:", error);
                 resultsContainer.innerHTML = '<div class="no-results">Error loading results</div>';
-                resultsContainer.style.display = 'block'; // <-- Ensure visible
             }
         };
 
+        // --- NEW FUNCTION ---
+        // Get suggestions from API (for on-focus top items)
+        const getTopItemsSuggestions = async () => {
+            // Show loading state
+            resultsContainer.style.display = 'block'; // <-- SHOW
+            resultsContainer.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+
+            try {
+                const response = await axios.get(TOP_ITEMS_API_URL, {
+                    params: {
+                        tracker_id: TRACKER_ID,
+                        type: 'product:5,category:3',
+                        hit_fields: 'title,url,price,image_link'
+                    }
+                });
+                const hits = response.data.hits;
+
+                if (!hits || hits.length === 0) {
+                    resultsContainer.innerHTML = '<div class="no-results">No suggestions found</div>';
+                    resultsContainer.style.display = 'block'; // <-- Ensure visible
+                    return;
+                }
+                
+                // Override the default group titles for this specific view
+                const customTitles = { product: 'Popular Products', category: 'Top Categories' };
+                renderResults(hits, customTitles); 
+                
+                // Send analytics with a filter to identify this as an "on-focus" event
+                sendAutocompleteViewAnalytics(null, hits, { source: 'top_items_on_focus' });
+                
+            } catch (error)
+ {
+                console.error("Failed to fetch top items:", error);
+                resultsContainer.innerHTML = '<div class="no-results">Error loading suggestions</div>';
+            }
+        };
+        // --- END NEW FUNCTION ---
+
         // Render results in the UI
-        function renderResults(hits) {
+        // --- UPDATED to accept customTitles ---
+        function renderResults(hits, customTitles = {}) {
             resultsContainer.innerHTML = '';
             resultsContainer.style.display = 'block'; // <-- Ensure visible
 
@@ -356,11 +403,14 @@
                 return acc;
             }, {});
 
-            const groupTitleMap = {
-                product: 'Products', // Changed from item
+            const defaultGroupTitleMap = {
+                product: 'Products',
                 category: 'Categories',
                 query: 'Popular Searches'
             };
+
+            // Use custom titles if provided, otherwise fall back to default
+            const groupTitleMap = { ...defaultGroupTitleMap, ...customTitles };
 
             for (const type in groupedResults) {
                 const groupDiv = document.createElement('div');
@@ -368,19 +418,20 @@
 
                 const titleDiv = document.createElement('div');
                 titleDiv.className = 'group-title';
-                titleDiv.textContent = groupTitleMap[type] || type;
+                titleDiv.textContent = groupTitleMap[type] || type; // Use the merged map
                 groupDiv.appendChild(titleDiv);
 
                 groupedResults[type].forEach((item, index) => {
                     const itemDiv = document.createElement('div');
                     itemDiv.className = 'result-item';
                     itemDiv.classList.add(item.type);
+
+                    // Store data for analytics
                     itemDiv.dataset.itemId = item.url || item.attributes.title;
                     itemDiv.dataset.itemType = item.type;
                     itemDiv.dataset.position = index + 1;
-                    // Store data for analytics
                     itemDiv.dataset.itemName = item.attributes.title;
-                    itemDiv.dataset.itemPrice = item.attributes.price;
+                    itemDiv.dataset.itemPrice = item.attributes.price; // Store price
 
                     let innerHTML = '';
                     
@@ -407,7 +458,7 @@
                     
                     innerHTML += `<div><div class="title">${item.attributes.title}</div>`;
                     
-                    if (item.attributes.price && item.type === 'product') { // Changed from item
+                    if (item.attributes.price && item.type === 'product') {
                         innerHTML += `<div class="price">${item.attributes.price}</div>`;
                     }
                     innerHTML += '</div></div>';
@@ -415,7 +466,7 @@
                     itemDiv.innerHTML = innerHTML;
 
                     // Add "Add to Cart" button only for products (after setting innerHTML)
-                    if (item.type === 'product') { // Changed from item
+                    if (item.type === 'product') {
                         const addToCartBtn = document.createElement('button');
                         addToCartBtn.className = 'add-to-cart-btn';
                         addToCartBtn.dataset.action = 'add-to-cart';
@@ -436,9 +487,11 @@
                 resultsContainer.appendChild(groupDiv);
             }
         }
+        // --- END UPDATED FUNCTION ---
 
+        // --- UPDATED ANALYTICS FUNCTION ---
         // Send VIEW event (Autocomplete list)
-        function sendViewEvent(query, hits) {
+        function sendAutocompleteViewAnalytics(query, hits, customFilters = {}) {
             const analyticsPayload = {
                 id: generateUUID(),
                 type: "event",
@@ -446,7 +499,10 @@
                 client_id: CLIENT_ID,
                 lists: {
                     "Autocomplete": {
-                        query: { string: query },
+                        query: { 
+                            string: query || "",
+                            filters: customFilters // Add custom filters
+                        },
                         items: hits.map((hit, index) => ({
                             title: hit.attributes.title,
                             url: hit.url || hit.attributes.title,
@@ -457,6 +513,7 @@
             };
             sendAnalyticsEvent(analyticsPayload);
         }
+        // --- END UPDATED FUNCTION ---
 
         // Send CLICK event
         function sendClickEvent(itemId) {
@@ -472,7 +529,7 @@
             };
             sendAnalyticsEvent(clickPayload);
         }
-        
+
         // Send ADD TO CART event
         function sendAddToCartAnalytics(itemData) {
             const cartClickPayload = {
@@ -497,6 +554,15 @@
         searchInput.addEventListener('input', debounce((e) => {
             getSuggestions(e.target.value);
         }, 300));
+
+        // --- NEW EVENT LISTENER ---
+        searchInput.addEventListener('focus', () => {
+            // Only fetch top items if the search box is empty
+            if (searchInput.value === '') {
+                getTopItemsSuggestions();
+            }
+        });
+        // --- END NEW LISTENER ---
 
         resultsContainer.addEventListener('click', (e) => {
             // Handle "Add to Cart" button clicks
@@ -525,6 +591,7 @@
                 // Send the Add to Cart analytics event
                 sendAddToCartAnalytics(resultItem.dataset);
                 
+                // Here you would typically add the item to your cart
                 return;
             }
 
@@ -562,3 +629,4 @@
     </script>
 </body>
 </html>
+

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luigi's Box Autocomplete Demo</title>
+    <title>Luigi's Box Trending Demo</title>
     <link rel="dns-prefetch" href="//live.luigisbox.com">
     <style>
         * {
@@ -41,7 +41,8 @@
             background: white;
             border-radius: 12px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-            overflow: hidden;
+            /* Set overflow on the wrapper so results don't leak out */
+            overflow: hidden; 
         }
 
         .search-input-wrapper {
@@ -75,11 +76,15 @@
         }
 
         #autocomplete-results {
-            height: 400px; /* Fixed height */
+            /* Changed from max-height to fixed height */
+            height: 400px; 
             overflow-y: auto;
             background: white;
-            display: none; /* Hide by default */
+            /* Added: Hide by default, control with JS */
+            display: none; 
         }
+
+        /* Removed :empty rule */
 
         .results-group {
             border-top: 1px solid #eee;
@@ -188,10 +193,11 @@
         }
 
         .no-results {
+            /* Changed from padding to flex centering */
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100%; /* Fill container */
+            height: 100%; /* Fill the 400px container */
             text-align: center;
             color: #999;
         }
@@ -200,7 +206,8 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100%; /* Fill container */
+            /* Changed from min-height to height */
+            height: 100%; /* Fill the 400px container */
             color: #999;
         }
 
@@ -260,7 +267,7 @@
         </div>
 
         <div class="footer">
-            Powered by <a href="https://www.luigisbox.com" target="_blank">Luigi's Box</a>
+            Powered by <a href="https.luigisbox.com" target="_blank">Luigi's Box</a>
         </div>
     </div>
 
@@ -269,6 +276,8 @@
         // CONFIGURATION
         const TRACKER_ID = "179075-204259";
         const AUTOCOMPLETE_API_URL = "https://live.luigisbox.com/autocomplete/v2";
+        const TOP_ITEMS_API_URL = "https://live.luigisbox.com/v1/top_items"; 
+        const TRENDING_QUERIES_API_URL = "https://live.luigisbox.com/v2/trending_queries"; // <-- ADDED
         const ANALYTICS_API_URL = "https://api.luigisbox.com/";
         
         // Generate a simple client ID (in production, store this in a cookie)
@@ -276,6 +285,22 @@
         
         const searchInput = document.getElementById('search-input');
         const resultsContainer = document.getElementById('autocomplete-results');
+
+        // --- NEW: State for placeholder animation ---
+        let placeholderAnimator = {
+            animationFrameId: null,
+            queries: [],
+            queryIndex: 0,
+            charIndex: 0,
+            isDeleting: false,
+            lastTime: 0,
+            typingSpeed: 100,
+            pauseBeforeDelete: 2000,
+            deletingSpeed: 50,
+            pauseAfterDelete: 500,
+            currentPause: 0,
+            basePlaceholder: "Search..." // Base text
+        };
 
         // Utility: Debounce function
         const debounce = (func, delay) => {
@@ -299,13 +324,13 @@
         async function sendAnalyticsEvent(payload) {
             try {
                 await axios.post(ANALYTICS_API_URL, payload);
-                console.log('Analytics event sent:', payload.type, payload.action?.type);
+                console.log('Analytics event sent:', payload.type, payload.action?.type, payload.lists?.Autocomplete?.query?.filters);
             } catch (error) {
                 console.error('Failed to send analytics event:', error);
             }
         }
 
-        // Get suggestions from API
+        // Get suggestions from API (for query)
         const getSuggestions = async (query) => {
             if (!query || query.trim() === '') {
                 resultsContainer.innerHTML = '';
@@ -336,17 +361,138 @@
                 }
 
                 renderResults(hits);
-                sendViewEvent(query, hits);
+                sendAutocompleteViewAnalytics(query, hits);
 
             } catch (error) {
                 console.error("Failed to fetch autocomplete suggestions:", error);
                 resultsContainer.innerHTML = '<div class="no-results">Error loading results</div>';
-                resultsContainer.style.display = 'block'; // <-- Ensure visible
             }
         };
 
+        // Get suggestions from API (for on-focus top items)
+        const getTopItemsSuggestions = async () => {
+            // Show loading state
+            resultsContainer.style.display = 'block'; // <-- SHOW
+            resultsContainer.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+
+            try {
+                const response = await axios.get(TOP_ITEMS_API_URL, {
+                    params: {
+                        tracker_id: TRACKER_ID,
+                        type: 'product:5,category:3',
+                        hit_fields: 'title,url,price,image_link'
+                    }
+                });
+                const hits = response.data.hits;
+
+                if (!hits || hits.length === 0) {
+                    resultsContainer.innerHTML = '<div class="no-results">No suggestions found</div>';
+                    resultsContainer.style.display = 'block'; // <-- Ensure visible
+                    return;
+                }
+                
+                // Override the default group titles for this specific view
+                const customTitles = { product: 'Popular Products', category: 'Top Categories' };
+                renderResults(hits, customTitles); 
+                
+                sendAutocompleteViewAnalytics(null, hits, { source: 'top_items_on_focus' });
+                
+            } catch (error)
+ {
+                console.error("Failed to fetch top items:", error);
+                resultsContainer.innerHTML = '<div class="no-results">Error loading suggestions</div>';
+            }
+        };
+        
+        // --- NEW FUNCTION: Get Trending Queries ---
+        async function getTrendingQueries() {
+          try {
+            const response = await axios.get(TRENDING_QUERIES_API_URL, {
+              params: { tracker_id: TRACKER_ID }
+            });
+            // Return just the titles
+            return response.data.map(item => item.title);
+          } catch (error) {
+            console.error("Failed to fetch trending queries:", error);
+            return [];
+          }
+        }
+        
+        // --- NEW FUNCTION: Animate Placeholder ---
+        function animatePlaceholder(timestamp) {
+            const { basePlaceholder, queries, typingSpeed, pauseBeforeDelete, deletingSpeed, pauseAfterDelete } = placeholderAnimator;
+            
+            // Calculate time delta
+            if (!placeholderAnimator.lastTime) placeholderAnimator.lastTime = timestamp;
+            const delta = timestamp - placeholderAnimator.lastTime;
+            
+            // If we are paused, count down
+            if (placeholderAnimator.currentPause > 0) {
+                placeholderAnimator.currentPause -= delta;
+                placeholderAnimator.lastTime = timestamp;
+                placeholderAnimator.animationFrameId = requestAnimationFrame(animatePlaceholder);
+                return;
+            }
+
+            // Determine speed
+            const speed = placeholderAnimator.isDeleting ? deletingSpeed : typingSpeed;
+
+            if (delta > speed) {
+                const currentQuery = queries[placeholderAnimator.queryIndex];
+
+                if (placeholderAnimator.isDeleting) {
+                    // --- Deleting ---
+                    placeholderAnimator.charIndex--;
+                    const partialQuery = currentQuery.substring(0, placeholderAnimator.charIndex);
+                    searchInput.placeholder = `${basePlaceholder} ${partialQuery}`;
+                    
+                    if (placeholderAnimator.charIndex === 0) {
+                        placeholderAnimator.isDeleting = false;
+                        placeholderAnimator.queryIndex = (placeholderAnimator.queryIndex + 1) % queries.length;
+                        placeholderAnimator.currentPause = pauseAfterDelete;
+                    }
+
+                } else {
+                    // --- Typing ---
+                    placeholderAnimator.charIndex++;
+                    const partialQuery = currentQuery.substring(0, placeholderAnimator.charIndex);
+                    searchInput.placeholder = `${basePlaceholder} ${partialQuery}`;
+                    
+                    if (placeholderAnimator.charIndex === currentQuery.length) {
+                        placeholderAnimator.isDeleting = true;
+                        placeholderAnimator.currentPause = pauseBeforeDelete;
+                    }
+                }
+                placeholderAnimator.lastTime = timestamp;
+            }
+            
+            placeholderAnimator.animationFrameId = requestAnimationFrame(animatePlaceholder);
+        }
+
+        function startPlaceholderAnimation() {
+            if (placeholderAnimator.animationFrameId) return; // Already running
+            if (placeholderAnimator.queries.length === 0) return; // No queries
+            if (document.activeElement === searchInput) return; // Don't run if focused
+            
+            placeholderAnimator.lastTime = 0;
+            placeholderAnimator.animationFrameId = requestAnimationFrame(animatePlaceholder);
+        }
+
+        function stopPlaceholderAnimation(clear = false) {
+            if (placeholderAnimator.animationFrameId) {
+                cancelAnimationFrame(placeholderAnimator.animationFrameId);
+                placeholderAnimator.animationFrameId = null;
+            }
+            if(clear) {
+                // Set to the *default* placeholder, not the animated one
+                searchInput.placeholder = "Search for products, categories...";
+            }
+        }
+        // --- END NEW FUNCTIONS ---
+
+
         // Render results in the UI
-        function renderResults(hits) {
+        function renderResults(hits, customTitles = {}) {
             resultsContainer.innerHTML = '';
             resultsContainer.style.display = 'block'; // <-- Ensure visible
 
@@ -356,11 +502,14 @@
                 return acc;
             }, {});
 
-            const groupTitleMap = {
-                product: 'Products', // Changed from item
+            const defaultGroupTitleMap = {
+                product: 'Products',
                 category: 'Categories',
                 query: 'Popular Searches'
             };
+
+            // Use custom titles if provided, otherwise fall back to default
+            const groupTitleMap = { ...defaultGroupTitleMap, ...customTitles };
 
             for (const type in groupedResults) {
                 const groupDiv = document.createElement('div');
@@ -368,19 +517,20 @@
 
                 const titleDiv = document.createElement('div');
                 titleDiv.className = 'group-title';
-                titleDiv.textContent = groupTitleMap[type] || type;
+                titleDiv.textContent = groupTitleMap[type] || type; // Use the merged map
                 groupDiv.appendChild(titleDiv);
 
                 groupedResults[type].forEach((item, index) => {
                     const itemDiv = document.createElement('div');
                     itemDiv.className = 'result-item';
                     itemDiv.classList.add(item.type);
+
+                    // Store data for analytics
                     itemDiv.dataset.itemId = item.url || item.attributes.title;
                     itemDiv.dataset.itemType = item.type;
                     itemDiv.dataset.position = index + 1;
-                    // Store data for analytics
                     itemDiv.dataset.itemName = item.attributes.title;
-                    itemDiv.dataset.itemPrice = item.attributes.price;
+                    itemDiv.dataset.itemPrice = item.attributes.price; // Store price
 
                     let innerHTML = '';
                     
@@ -407,7 +557,7 @@
                     
                     innerHTML += `<div><div class="title">${item.attributes.title}</div>`;
                     
-                    if (item.attributes.price && item.type === 'product') { // Changed from item
+                    if (item.attributes.price && item.type === 'product') {
                         innerHTML += `<div class="price">${item.attributes.price}</div>`;
                     }
                     innerHTML += '</div></div>';
@@ -415,7 +565,7 @@
                     itemDiv.innerHTML = innerHTML;
 
                     // Add "Add to Cart" button only for products (after setting innerHTML)
-                    if (item.type === 'product') { // Changed from item
+                    if (item.type === 'product') {
                         const addToCartBtn = document.createElement('button');
                         addToCartBtn.className = 'add-to-cart-btn';
                         addToCartBtn.dataset.action = 'add-to-cart';
@@ -438,7 +588,7 @@
         }
 
         // Send VIEW event (Autocomplete list)
-        function sendViewEvent(query, hits) {
+        function sendAutocompleteViewAnalytics(query, hits, customFilters = {}) {
             const analyticsPayload = {
                 id: generateUUID(),
                 type: "event",
@@ -446,7 +596,10 @@
                 client_id: CLIENT_ID,
                 lists: {
                     "Autocomplete": {
-                        query: { string: query },
+                        query: { 
+                            string: query || "",
+                            filters: customFilters // Add custom filters
+                        },
                         items: hits.map((hit, index) => ({
                             title: hit.attributes.title,
                             url: hit.url || hit.attributes.title,
@@ -472,7 +625,7 @@
             };
             sendAnalyticsEvent(clickPayload);
         }
-        
+
         // Send ADD TO CART event
         function sendAddToCartAnalytics(itemData) {
             const cartClickPayload = {
@@ -493,10 +646,28 @@
             sendAnalyticsEvent(cartClickPayload);
         }
 
-        // Event listeners
+        // --- UPDATED EVENT LISTENERS ---
         searchInput.addEventListener('input', debounce((e) => {
             getSuggestions(e.target.value);
         }, 300));
+
+        searchInput.addEventListener('focus', () => {
+            stopPlaceholderAnimation(true); // Stop animation and clear placeholder
+            // Only fetch top items if the search box is empty
+            if (searchInput.value === '') {
+                getTopItemsSuggestions();
+            }
+        });
+
+        // --- NEW: Restart animation on blur if empty ---
+        searchInput.addEventListener('blur', () => {
+            if (searchInput.value === '') {
+                // Restore base placeholder text immediately
+                searchInput.placeholder = placeholderAnimator.basePlaceholder;
+                startPlaceholderAnimation();
+            }
+        });
+
 
         resultsContainer.addEventListener('click', (e) => {
             // Handle "Add to Cart" button clicks
@@ -521,10 +692,7 @@
                 }, 1500);
                 
                 console.log('Added to cart:', resultItem.dataset.itemId);
-                
-                // Send the Add to Cart analytics event
                 sendAddToCartAnalytics(resultItem.dataset);
-                
                 return;
             }
 
@@ -534,17 +702,14 @@
                 const itemId = resultItem.dataset.itemId;
                 sendClickEvent(itemId);
                 
-                // Clear results after click
                 resultsContainer.innerHTML = '';
                 resultsContainer.style.display = 'none'; // <-- HIDE
                 searchInput.value = '';
                 
                 console.log('Item clicked:', itemId);
-                // In a real app, you would navigate to the item URL here
             }
         });
 
-        // Close results when clicking outside
         document.addEventListener('click', (e) => {
             if (!e.target.closest('.search-wrapper')) {
                 resultsContainer.innerHTML = '';
@@ -552,13 +717,20 @@
             }
         });
 
-        // Clear results on ESC key
         searchInput.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 resultsContainer.innerHTML = '';
                 resultsContainer.style.display = 'none'; // <-- HIDE
             }
         });
+        
+        // --- NEW: Initialize placeholder animation on page load ---
+        document.addEventListener('DOMContentLoaded', async () => {
+            placeholderAnimator.basePlaceholder = searchInput.placeholder;
+            placeholderAnimator.queries = await getTrendingQueries();
+            startPlaceholderAnimation();
+        });
+        
     </script>
 </body>
 </html>
