@@ -1,0 +1,191 @@
+# Magento Cloudflare Setup Documentation
+
+This document provides instructions for managing the Magento application with Cloudflare Tunnel setup.
+
+## Prerequisites
+
+- Ubuntu 22.04
+- PHP 8.2
+- Nginx
+- MySQL/MariaDB
+- Cloudflared (Cloudflare Tunnel)
+- Magento 2.x
+
+## Services Management
+
+### Nginx Web Server
+
+#### Start Nginx
+```bash
+sudo systemctl start nginx
+```
+
+#### Stop Nginx
+```bash
+sudo systemctl stop nginx
+```
+
+#### Restart Nginx
+```bash
+sudo systemctl restart nginx
+```
+
+#### Check if Nginx is Running
+```bash
+sudo systemctl status nginx
+```
+Or check if it's listening on port 80:
+```bash
+curl -I http://localhost/
+```
+
+### PHP 8.2 FPM
+
+#### Start PHP-FPM
+```bash
+sudo systemctl start php8.2-fpm
+```
+
+#### Stop PHP-FPM
+```bash
+sudo systemctl stop php8.2-fpm
+```
+
+#### Restart PHP-FPM
+```bash
+sudo systemctl restart php8.2-fpm
+```
+
+#### Check if PHP-FPM is Running
+```bash
+sudo systemctl status php8.2-fpm
+```
+Or check if the socket exists:
+```bash
+ls -la /var/run/php/php8.2-fpm.sock
+```
+
+### Elasticsearch
+
+#### Start Elasticsearch
+```bash
+
+```
+
+#### Stop Elasticsearch
+```bash
+sudo systemctl stop elasticsearch
+```
+
+#### Restart Elasticsearch
+```bash
+sudo systemctl restart elasticsearch
+```
+
+#### Check if Elasticsearch is Running
+```bash
+sudo systemctl status elasticsearch
+```
+Or check if it's responding on port 9200:
+```bash
+curl -X GET "localhost:9200/"
+```
+
+### Cloudflare Tunnel
+
+#### Start the Tunnel
+```bash
+nohup cloudflared tunnel run 5bedc139-a7dd-437c-8307-2d88df09728e > /tmp/cloudflared.log 2>&1 &
+```
+
+#### Stop the Tunnel
+```bash
+pkill -f "cloudflared tunnel run"
+```
+
+#### Check if Tunnel is Running
+```bash
+ps aux | grep cloudflared
+```
+Or check the log:
+```bash
+tail -10 /tmp/cloudflared.log
+```
+
+## Common curl Commands
+
+### Test Site Accessibility
+```bash
+curl -I https://www.dariohaxhiraj.online/
+```
+- **Purpose**: Check if the site is responding (should return HTTP 200)
+- **Current Status**: ✅ Working - returns HTTP/2 200 with Luigi's Box scripts loaded
+
+### Test Luigi's Box Integration
+```bash
+curl -I https://www.dariohaxhiraj.online/admin
+```
+- **Purpose**: Verify admin panel and extension functionality
+- **Current Status**: ✅ Working - Luigi's Box extension active and scripts inserted
+
+### Test Admin Access
+```bash
+curl -I https://www.dariohaxhiraj.online/admin
+```
+- **Purpose**: Check admin panel accessibility
+
+### Test Local Server
+```bash
+curl -I http://localhost:80/
+```
+- **Purpose**: Verify local nginx is serving content (should return HTTP 302 or 200)
+
+## Magento Management
+
+### Clear Cache
+```bash
+php bin/magento cache:flush
+```
+
+### Check Magento Status
+```bash
+php bin/magento --version
+```
+
+### Reindex (if needed)
+```bash
+php bin/magento indexer:reindex
+```
+
+## DNS Configuration
+
+The domain `www.dariohaxhiraj.online` is configured with Cloudflare DNS pointing to the Cloudflare Tunnel URL. Ensure the CNAME record is set to `5bedc139-a7dd-437c-8307-2d88df09728e.cfargotunnel.com` with proxy enabled.
+
+## Troubleshooting
+
+### Site Returns 503
+- Check if nginx and php-fpm are running
+- Check Cloudflare Tunnel status
+- Verify DNS propagation
+
+### WAF Not Blocking
+- Confirm WAF rule is enabled in Cloudflare dashboard
+- Check rule expression: `http.user_agent eq "LuigisBox"`
+
+### Tunnel Not Connecting
+- Check internet connection
+- Verify cloudflared credentials
+- Review tunnel logs: `cat /tmp/cloudflared.log`
+
+## Security Notes
+
+- Never commit `app/etc/env.php` to version control (it's in .gitignore)
+- Use strong passwords for admin accounts
+- Keep Magento and dependencies updated
+- Monitor Cloudflare WAF logs for suspicious activity
+
+## Additional Resources
+
+- [Magento Documentation](https://devdocs.magento.com/)
+- [Cloudflare Tunnel Docs](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/)
+- [Nginx Configuration](https://nginx.org/en/docs/)
