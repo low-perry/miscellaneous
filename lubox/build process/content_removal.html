@@ -1,0 +1,4121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Google Tag Manager -->
+  <script>
+  (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-TD5R4XS');
+  </script>
+  <!-- End Google Tag Manager -->
+
+  <link rel="manifest" href="/assets/images/fav/manifest.json">
+  <link rel="icon" href="../../../assets/images/fav-f7a98396.svg">
+  <link rel="mask-icon" href="../../../assets/images/fav-f7a98396.svg" color="#682175">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="../../../styles/quickstart-12cca35f.css">
+
+<script src="https://cdn.jsdelivr.net/npm/ua-parser-js/dist/ua-parser.min.js"></script>
+<script>
+  let os;
+  if (localStorage.getItem("user_os")){
+    os = localStorage.getItem("user_os")
+  } else {
+    const parser = new UAParser();
+    os = parser.getResult()?.os.name?.toLowerCase()
+    window.localStorage.setItem("user_os", os)
+  }
+  document.addEventListener("DOMContentLoaded", () => {
+    const shortcutEl = document.querySelector("#ac-shortcut p")
+    if (os && os.includes("mac")) {
+      shortcutEl.querySelector("i").style.display = "inline";
+      shortcutEl.querySelector("span").style.display = "none";
+    } else {
+      shortcutEl.querySelector("span").style.display = "inline";
+      shortcutEl.querySelector("i").style.display = "none";
+    }
+  });
+</script>
+
+  <link rel="dns-prefetch" href="//live.luigisbox.com" />
+  <link rel="stylesheet" href="https://cdn.luigisbox.com/autocomplete.css" />
+
+  <title>Content Removal (DELETE)</title>
+
+  <link href="https://fonts.googleapis.com/css?family=Fira+Mono" rel="stylesheet">
+
+  <style>
+    .highlight table td { padding: 5px; }
+.highlight table pre { margin: 0; }
+.highlight .gh {
+  color: #999999;
+}
+.highlight .sr {
+  color: #f6aa11;
+}
+.highlight .go {
+  color: #888888;
+}
+.highlight .gp {
+  color: #555555;
+}
+.highlight .gs {
+}
+.highlight .gu {
+  color: #aaaaaa;
+}
+.highlight .nb {
+  color: #f6aa11;
+}
+.highlight .cm {
+  color: #75715e;
+}
+.highlight .cp {
+  color: #75715e;
+}
+.highlight .c1 {
+  color: #75715e;
+}
+.highlight .cs {
+  color: #75715e;
+}
+.highlight .c, .highlight .ch, .highlight .cd, .highlight .cpf {
+  color: #75715e;
+}
+.highlight .err {
+  color: #960050;
+}
+.highlight .gr {
+  color: #960050;
+}
+.highlight .gt {
+  color: #960050;
+}
+.highlight .gd {
+  color: #49483e;
+}
+.highlight .gi {
+  color: #49483e;
+}
+.highlight .ge {
+  color: #49483e;
+}
+.highlight .kc {
+  color: #66d9ef;
+}
+.highlight .kd {
+  color: #66d9ef;
+}
+.highlight .kr {
+  color: #66d9ef;
+}
+.highlight .no {
+  color: #66d9ef;
+}
+.highlight .kt {
+  color: #66d9ef;
+}
+.highlight .mf {
+  color: #ae81ff;
+}
+.highlight .mh {
+  color: #ae81ff;
+}
+.highlight .il {
+  color: #ae81ff;
+}
+.highlight .mi {
+  color: #ae81ff;
+}
+.highlight .mo {
+  color: #ae81ff;
+}
+.highlight .m, .highlight .mb, .highlight .mx {
+  color: #ae81ff;
+}
+.highlight .sc {
+  color: #ae81ff;
+}
+.highlight .se {
+  color: #ae81ff;
+}
+.highlight .ss {
+  color: #ae81ff;
+}
+.highlight .sd {
+  color: #e6db74;
+}
+.highlight .s2 {
+  color: #e6db74;
+}
+.highlight .sb {
+  color: #e6db74;
+}
+.highlight .sh {
+  color: #e6db74;
+}
+.highlight .si {
+  color: #e6db74;
+}
+.highlight .sx {
+  color: #e6db74;
+}
+.highlight .s1 {
+  color: #e6db74;
+}
+.highlight .s, .highlight .sa, .highlight .dl {
+  color: #e6db74;
+}
+.highlight .na {
+  color: #a6e22e;
+}
+.highlight .nc {
+  color: #a6e22e;
+}
+.highlight .nd {
+  color: #a6e22e;
+}
+.highlight .ne {
+  color: #a6e22e;
+}
+.highlight .nf, .highlight .fm {
+  color: #a6e22e;
+}
+.highlight .vc {
+  color: #ffffff;
+  background-color: #272822;
+}
+.highlight .nn {
+  color: #ffffff;
+  background-color: #272822;
+}
+.highlight .nl {
+  color: #ffffff;
+  background-color: #272822;
+}
+.highlight .ni {
+  color: #ffffff;
+  background-color: #272822;
+}
+.highlight .bp {
+  color: #ffffff;
+  background-color: #272822;
+}
+.highlight .vg {
+  color: #ffffff;
+  background-color: #272822;
+}
+.highlight .vi {
+  color: #ffffff;
+  background-color: #272822;
+}
+.highlight .nv, .highlight .vm {
+  color: #ffffff;
+  background-color: #272822;
+}
+.highlight .w {
+  color: #ffffff;
+  background-color: #272822;
+}
+.highlight {
+  color: #ffffff;
+  background-color: #272822;
+}
+.highlight .n, .highlight .py, .highlight .nx {
+  color: #ffffff;
+  background-color: #272822;
+}
+.highlight .ow {
+  color: #f92672;
+}
+.highlight .nt {
+  color: #f92672;
+}
+.highlight .k, .highlight .kv {
+  color: #f92672;
+}
+.highlight .kn {
+  color: #f92672;
+}
+.highlight .kp {
+  color: #f92672;
+}
+.highlight .o {
+  color: #f92672;
+}
+
+    :root {
+      --bs-info-bg-subtle: #682175a8;
+      --bs-info-border-subtle: #bbadbd;
+      --bs-info-text-emphasis: #fff;
+    }
+
+    [data-bs-theme="lbx"] {
+        --bs-tertiary-bg: #a57dac;
+        --bs-secondary-bg: #bbadbd;
+        --bs-light-bg-subtle: #eee7f0;
+        --bs-light-rgb: 243, 239, 244;
+    }
+
+    html {
+      font-size: 15px;
+    }
+
+    :target {
+      scroll-margin-top: 6rem;
+    }
+
+    #navbar-toc .active {
+      font-weight: 700;
+    }
+
+    .required, .optional {
+      display: block;
+      font-size: 10px;
+      margin: 2px;
+    }
+
+    .required {
+      color: #09A921;
+    }
+
+    .optional {
+      color: #ABABAB;
+    }
+
+    #navbar-toc .nav-link {
+      text-decoration: none;
+      color: var(--bs-secondary-color);
+      display: block;
+      border-left: .125rem solid transparent;
+    }
+
+    header {
+      border-bottom: 1px solid #682175;
+      background-color: #682175;
+    }
+
+    #navbar-toc .nav-link.active, #navbar-toc .nav-link:hover {
+      border-left-color: var(--bs-code-color);
+    }
+
+    .navbar-nav .nav-link.active {
+      background-color: var(--bs-secondary-bg);
+      border-radius: 10px;
+    }
+
+    .navbar-nav .nav-link {
+      border-radius: 10px;
+    }
+    .navbar-dark .navbar-nav .nav-link:hover {
+      background-color: var(--bs-tertiary-bg);
+      border-radius: 10px;
+    }
+    .navbar-light .navbar-nav .nav-link:hover {
+      background-color: var(--bs-light-bg-subtle);
+      border-radius: 10px;
+    }
+    
+    .navbar-nav .d-flex .nav-link.active {
+  background-color: transparent;
+}
+
+.navbar-nav .d-flex .nav-link:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+@-webkit-keyframes colorPulse {
+  0%   { color: #682175;-webkit-transform: scale(1);transform: scale(1); }   /* your main purple */
+  50%  { color: #9a4ca5;-webkit-transform: scale(1.5);transform: scale(1.5); }   /* lighter purple */
+  100% { color: #682175;-webkit-transform: scale(1);transform: scale(1); }
+}
+@keyframes colorPulse {
+  0%   { color: #682175;-webkit-transform: scale(1);transform: scale(1); }   /* your main purple */
+  50%  { color: #9a4ca5;-webkit-transform: scale(1.5);transform: scale(1.5); }   /* lighter purple */
+  100% { color: #682175;-webkit-transform: scale(1);transform: scale(1); }
+}
+
+.navbar-nav .d-flex .nav-link i[class*="bi-"] {
+  -webkit-transition: color 0.3s ease;
+  transition: color 0.3s ease;
+}
+
+.navbar-nav .d-flex .nav-link.active i[class*="bi-"],
+.navbar-nav .d-flex .nav-link.hub-active i[class*="bi-"] {
+  -webkit-animation: colorPulse 1s ease-in-out infinite;
+          animation: colorPulse 1s ease-in-out infinite;
+}
+
+  
+
+    .lb-sticky-offset {
+      top: 85px !important;
+    }
+
+    .modal-backdrop {
+      z-index: 1040;
+    }
+
+    .card, .alert {
+      position: inherit;
+    }
+
+    .lb-code .nav-link {
+      color: var(--bs-secondary-color);
+    }
+    .lb-code .nav-link.active {
+      color: var(--bs-secondary-color);
+    }
+
+    h1 {
+      font-size: calc(1.375rem + .3vw);
+      margin-top: 4rem;
+      margin-bottom: 2rem;
+    }
+    
+    h2 {
+      font-size: calc(1.325rem + .1vw);
+      margin-top: 4rem;
+      margin-bottom: 1.5rem;
+    }
+    h3 {
+      font-size: calc(1.3rem + .0vw);
+      margin-top: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    article > h1:nth-child(1) {
+      font-size: calc(1.475rem + 1.0vw);
+      margin-top: inherit;
+      font-weight: 300;
+      line-height: 1.2;
+    }
+
+    .lb-nav-bl {
+      border-left: 1px solid #682175;
+    }
+
+    .vh-full {
+      height: calc(100vh - 7rem) !important;
+    }
+
+    footer.text-bg-dark, footer .text-bg-dark {
+      color: #bbb !important;
+    }
+
+    .table-airy td {
+      padding: 1rem;
+    }
+
+    .proscons {
+      list-style-type: none;
+    }
+
+    .proscons .pro::before {
+      content: "✓";
+      margin-left: -1.3em;
+      width: 1.3em;
+      display: inline-block;
+      color: green;
+    }
+
+    .proscons .cons::before {
+      content: "⤫";
+      margin-left: -1.3em;
+      width: 1.3em;
+      display: inline-block;
+      color: red;
+    }
+
+    .alert-info code, .alert-info a {
+      color: #3e172a !important;
+    }
+
+    .r-hidden {
+      display: none;
+    }
+
+    .bg-q-result, .bg-q-result td, .bg-q-result th {
+      background: #eee7f0;
+    }
+
+    .hr-dashed {
+      border-top-style: dashed;
+    }
+
+    article li {
+      margin-bottom: 1em;
+    }
+
+    @media (max-width: 544px) {
+      .navbar-brand img {
+        height: 30px;
+      }
+      .navbar-brand {
+        margin-right: 0.5rem !important;
+      }
+      .navbar-nav {
+        font-size: 90%;
+      }
+      .nav-link {
+          padding: 0.5rem !important;
+      }
+      header nav .row {
+        padding-left: 0.5rem !important;
+        padding-right: 0.5rem !important;
+      }
+    }
+
+    @media (max-width: 991px) {
+      .nav-main {
+        padding: 0 !important;
+        z-index: 1;
+      }
+      .nav-main nav {
+        padding: 0 !important;
+      }
+    }
+
+    .g-section {
+      display: flex;
+      flex-direction: row;
+      margin-top: 2rem;
+      --bs-link-color-rgb: 104, 33, 117;
+    }
+
+    .g-section .g-aside {
+      -webkit-writing-mode: vertical-rl;
+          -ms-writing-mode: tb-rl;
+              writing-mode: vertical-rl;
+      text-orientation: mixed;
+      margin-top: 0;
+      margin-bottom: 0;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      font-weight: 300;
+      padding-right: 1rem;
+      border-right: 1px dashed #682175;
+      color: #555455;
+    }
+
+    .g-section ol {
+      list-style: none;
+    }
+
+    .g-section ol li {
+      counter-increment: steps;
+    }
+
+    .g-section ol li::before {
+      content: counter(steps);
+      margin-right: 0.5rem;
+      background: #bbadbd;
+      color: white;
+      width: 1.4em;
+      height: 1.4em;
+      line-height: 1.4em;
+      border-radius: 50%;
+      display: -ms-inline-grid;
+      display: inline-grid;
+      place-items: center;
+      font-weight: 300;
+    }
+
+    article {
+      counter-reset: steps;
+    }
+
+    em.g-alternative {
+      margin-left: .2rem;
+    }
+
+    a.g-alternative {
+      margin-left: 1rem;
+      color: #939393;
+    }
+
+    .carousel-caption-bg {
+      border-radius: 10px;
+      background: #f3eff4;
+      -webkit-box-shadow: #ddd 10px 10px 10px;
+              box-shadow: #ddd 10px 10px 10px
+    }
+
+    .live-aside, .bad-practice-aside {
+      margin-left: auto;
+      line-height: 2.8em;
+      font-size: 90%;
+      font-weight: 300;
+      position: relative;
+    }
+
+    .live-icon {
+      position: absolute;
+      left: -1rem;
+      top: 19px;
+      -webkit-transform: translateX(-50%) translateY(-50%);
+              transform: translateX(-50%) translateY(-50%);
+      width: 15px;
+      height: 15px;
+
+      &:before {
+        content: "";
+        position: relative;
+        display: block;
+        width: 250%;
+        height: 250%;
+        -webkit-box-sizing: border-box;
+                box-sizing: border-box;
+        margin-left: -75%;
+        margin-top: -75%;
+        border-radius: 45px;
+        background-color: #75daad;
+        -webkit-animation: pulse 1.25s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+                animation: pulse 1.25s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+      }
+
+      &:after {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        display: block;
+        width: 100%;
+        height: 100%;
+        background-color: #75daad;
+        border-radius: 50px;
+        -webkit-animation: circle 1.25s cubic-bezier(0.455, 0.03, 0.515, 0.955) -0.4s infinite;
+                animation: circle 1.25s cubic-bezier(0.455, 0.03, 0.515, 0.955) -0.4s infinite;
+      }
+    }
+    
+    .warning-text {
+      color: #C32F27;
+      font-weight: 500;
+    }
+
+    .success-text {
+      color: #256d1b;
+      font-weight: 500;
+    }
+
+    .good-practice, .bad-practice {
+      @media (max-width: 530px) {
+        margin-left: 0 !important;
+        margin-bottom: 10px !important;
+        margin-top: -15px !important;
+      }
+    }
+
+    .border-good-practice {
+      border: 1px solid #256d1bd1;
+    }
+
+    .border-bad-practice {
+      border: 1px solid #C32F27;
+    }
+
+    @-webkit-keyframes pulse {
+      0% {
+        -webkit-transform: scale(0.33);
+                transform: scale(0.33);
+      }
+      80%,
+      100% {
+        opacity: 0;
+      }
+    }
+
+    @keyframes pulse {
+      0% {
+        -webkit-transform: scale(0.33);
+                transform: scale(0.33);
+      }
+      80%,
+      100% {
+        opacity: 0;
+      }
+    }
+
+    @-webkit-keyframes circle {
+      0% {
+        -webkit-transform: scale(0.8);
+                transform: scale(0.8);
+      }
+      50% {
+        -webkit-transform: scale(1);
+                transform: scale(1);
+      }
+      100% {
+        -webkit-transform: scale(0.8);
+                transform: scale(0.8);
+      }
+    }
+
+    @keyframes circle {
+      0% {
+        -webkit-transform: scale(0.8);
+                transform: scale(0.8);
+      }
+      50% {
+        -webkit-transform: scale(1);
+                transform: scale(1);
+      }
+      100% {
+        -webkit-transform: scale(0.8);
+                transform: scale(0.8);
+      }
+    }
+
+    header nav .row {
+      padding-left: 1rem !important;
+      padding-right: 1rem !important;
+    }
+    </style>
+
+  <style>
+    header .row > * {
+      padding: 0;
+    }
+    nav.container-fluid {
+      position: relative;
+    }
+    #ac-wrapper {
+      position: relative;
+      height: 48px;
+      ::-webkit-scrollbar {
+        width: 4px; /* Width of the scrollbar */
+        height: 4px; /* Width of the scrollbar */
+      }
+
+      /* The draggable part of the scrollbar */
+      ::-webkit-scrollbar-thumb {
+          background: lightgray; /* Color of the scrollbar */
+          border-radius: 0px; /* Rounded corners */
+      }
+
+      /* The scrollbar on hover */
+      ::-webkit-scrollbar-thumb:hover {
+          background: #555; /* Darker color on hover */
+      }
+
+      /* The track (background) of the scrollbar */
+      ::-webkit-scrollbar-track {
+          background: #fffff; /* Color of the track */
+          border-radius: 10px 0px 10px 0px; /* Rounded corners */
+      }
+    }
+    #lb-search {
+      width: 412px;
+      background-color: white;
+      border-radius: 10px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      @media (max-width: 992px) {
+        width: 100%;
+      }
+      &.subtle-shadow-popup {
+        -webkit-box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* For WebKit browsers */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Standard */
+        border-radius: 8px; /* Optional: softens the popup corners */
+      }
+      input[type="search"]::-webkit-search-cancel-button {
+        display: none;
+      }
+      form {
+        display: flex;
+        align-items: center;
+        padding: 0px 16px;
+        gap: 8px;
+        #search-input {
+          all: unset; /* Resets all properties to their initial value */
+          height: 48px;
+          flex-grow: 1;
+          font-size: 16px;
+        }
+        &:focus-within {
+          #ac-shortcut {
+            display: none;
+          }
+          #search-input::-webkit-search-cancel-button {
+            display: block;
+          }
+        }
+        #search-icon {
+          width: 24px;
+          height: 24px;
+        }
+        #ac-shortcut {
+          font-size: 12px;
+          height: 24px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          border: 0.6px solid #682175;
+          color: #682175;
+          border-radius: 4px;
+          display: flex;
+          align-items: center;
+          padding: 0px 8px;
+          p {
+            margin-bottom: 0;
+            i, span {
+              display: none;
+            }
+          }
+          @media (max-width: 992px) {
+            display: none;
+          }
+        }
+      }
+      /* AC */
+      .luigi-ac {
+        position: relative;
+        color: #682175;
+        -webkit-box-shadow: none;
+        border-radius: 0 0 8px 8px;
+        box-shadow: none;
+        max-height: 75vh;
+        * {
+          border: none;
+        }
+        .luigi-ac-main,
+        .luigi-ac-others {
+          padding: 0 6px;
+        }
+        .luigi-ac-enter {
+          background: #fbe7ff;
+          padding: 12px 16px;
+          font-size: 14px;
+        }
+        .luigi-ac-header {
+          background: none;
+          padding-top: 8px;
+          padding-bottom: 4px;
+          .luigi-ac-header-inner {
+            text-transform: capitalize;
+          }
+        }
+        .luigi-ac-item {
+          &:hover {
+            background-color: #fdf3ff;
+            border-radius: 6px;
+          }
+        }
+        td > i {
+          margin-right: 12px;
+        }
+        .luigi-ac-title {
+          font-weight: 400;
+          color: #864d91;
+          padding-bottom: 2px;
+        }
+        .luigi-ac-footer {
+          display: none;
+        }
+        .luigi-ac-button-block {
+          margin-top: 16px;
+          margin-right: -6px;
+          margin-left: -6px;
+          width: calc(100% + 12px);
+          .luigi-ac-button {
+            background-color: #682175;
+            text-transform: capitalize;
+          }
+        }
+        .luigi-ac-indent {
+          display: none;
+        }
+        .luigi-ac-text {
+          padding-left: 38px;
+        }
+        .luigi-side-line {
+          position: absolute;
+          width: 0.8px;
+          background: #bea0c4;
+          left: 17px;
+          top: -2px;
+          height: 100%;
+          height: calc(100% + 4px);
+        }
+        .luigi-ac-highlight {
+          background-color: #fbe7ff;
+        }
+        /* Wrappers */
+        .luigi-ac-_item-wrapper,
+        .luigi-ac-sections-wrapper,
+        .luigi-ac-examples-wrapper {
+          position: relative;
+        }
+      }
+      /* AC POPUP */
+      .luigi-ac-query-empty {
+        .luigi-ac-enter {
+          display: none;
+        }
+        .luigi-ac-footer {
+          display: block;
+          background-color: white;
+        }
+      }
+    }
+    .w-vw-100 {
+      width: 100vw;
+    }
+
+    @media (max-width: 576px) {
+      #offcanvasNavbar {
+        top: 118px !important;
+      }
+    }
+
+    @media (min-width: 576px) and (max-width: 992px) {
+      #offcanvasNavbar {
+        top: 131px !important;
+      }
+    }
+
+    .twocolumns > div > * {
+      width: 60%;
+      padding-right: 2em;
+    }
+
+    .twocolumns blockquote, .twocolumns .lb-code {
+      width: 40%;
+      float: right;
+      clear: both;
+      padding-right: 0;
+    }
+
+    .col-lg-7.positon-relative {
+      position: relative;
+
+      .dropdown-api {
+        position: absolute;
+        top: 1rem;
+        right: 1.5rem;
+        width: 93px;
+
+        .btn {
+          width: 100%;
+          font-size: 14px;
+          font-weight: 400;
+          background-color: #9B6CA4;
+          border: 0;
+          border-radius: 6px;
+          -webkit-transition: none;
+          transition: none;
+
+          &::after {
+            margin-left: 10px;
+          }
+
+          &.show {
+            background-color: #692175;
+            border-radius: 6px 6px 0 0;
+
+            &::after {
+              border-bottom: .3em solid;
+              border-top: 0;
+            }
+          }
+        }
+        .dropdown-menu  {
+          inset: -3px 0px auto auto !important;
+          width: 100%;
+          min-width: auto;
+          background-color: #692175;
+          border: none;
+          border-radius: 0 0 6px 6px;
+
+          .dropdown-item {
+            color: #fff;
+            font-size: 14px;
+            font-weight: 200;
+
+            &:first-child {
+              &::before {
+                content: "";
+                display: inline-block;
+                position: absolute;
+                top: 0;
+                border-top: 1px solid #ffffff60;
+                width: calc(100% - 36.5px);
+              }
+            }
+
+            &:hover {
+              background-color: #692175;
+              font-weight: 400;
+            }
+
+            &.active {
+              background-color: #692175;
+              font-weight: 400;
+
+              &::after {
+                content: "\f26a";
+                display: inline-block;
+                font-family: bootstrap-icons !important;
+                font-size: 10px;
+                font-style: normal;
+                font-weight: normal !important;
+                font-variant: normal;
+                text-transform: none;
+                line-height: 1;
+                vertical-align: -.125em;
+                margin-left: 10px;
+                -webkit-font-smoothing: antialiased;
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .search_examples_basic {
+        .lb-search .lb-quick-searches {
+          margin-top: 0px;
+          @media (min-width: 1900px) {
+            margin-top: -58px;
+          }
+        }
+    }
+       <style>
+    html, body {
+      max-width: 100vw;
+      overflow-x: hidden;
+    }
+
+    @media (max-width: 767px) {
+      table {
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+        -webkit-box-sizing: border-box;
+                box-sizing: border-box;
+      }
+}
+  </style>
+
+  <style>
+    .tutorial blockquote {
+      font-style: italic;
+      font-weight: 300;
+    }
+  /* Tutorials menu */
+    .tutorial-steps-overview {
+     .close-steps-overview {
+          display: none;
+        }
+      @media (max-width: 992px) {
+        &.open {
+          display: block !important;
+          width: 400px !important;
+          position: fixed !important;
+          top: 130px !important;
+          right: 0 !important;
+          background: white;
+          padding-bottom: 30px;
+          -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .close-steps-overview {
+          display: block;
+        }
+      }
+      @media (max-width: 576px) {
+        &.open {
+          width: 100% !important;
+          top: 118px !important;
+        }
+      }
+      .text-theme-color {
+        color: #682175;
+      }
+
+      .steps-container {
+          margin-left: 12px;
+          position: relative;
+      }
+
+      .progress-empty {
+          position: absolute;
+          width: 1px;
+          background: #cccccc;
+          height: 100%;
+      }
+
+      .progress-fill {
+          position: absolute;
+          width: 1px;
+          background: #682175;
+      }
+
+      .steps-list {
+          margin-left: 24px;
+      }
+
+      .check-icon {
+          color: #682175;
+      }
+      .heading i {
+         margin-top: 4px
+      }
+    }
+    .steps-overview-btn {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      width: 160px;
+      border-radius: 8px;
+      height: 48px;
+      background: #682175;
+      display: none;
+      @media (max-width: 992px) {
+        display: flex;
+      }
+    }
+  </style>
+  <style>
+  /* Feedback Widget Styles */
+  .feedback-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .feedback-menu {
+    text-align: center;
+  }
+  
+  #feedback {
+    text-align: center;
+  }
+  
+  #feedback button {
+    background: transparent;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    outline: none;
+    margin: 0 10px;
+  }
+  
+  #feedback button svg {
+    display: block;
+  }
+  
+  #feedback button svg path {
+    fill: #000;
+    -webkit-transition: fill 0.3s ease;
+    transition: fill 0.3s ease;
+  }
+  
+  #feedback-up.selected svg path {
+    fill: green;
+  }
+  
+  #feedback-up:hover svg path {
+    fill: green;
+  }
+  
+  #feedback-down.selected svg path {
+    fill: red;
+  }
+  
+  #feedback-down:hover svg path {
+    fill: red;
+  }
+  
+  @-webkit-keyframes bounce {
+    0%, 100% {
+      -webkit-transform: translateY(0);
+              transform: translateY(0);
+    }
+    50% {
+      -webkit-transform: translateY(-10px);
+              transform: translateY(-10px);
+    }
+  }
+  
+  @keyframes bounce {
+    0%, 100% {
+      -webkit-transform: translateY(0);
+              transform: translateY(0);
+    }
+    50% {
+      -webkit-transform: translateY(-10px);
+              transform: translateY(-10px);
+    }
+  }
+  
+  svg.animate {
+    -webkit-animation: bounce 0.5s ease-out;
+            animation: bounce 0.5s ease-out;
+  }
+  
+  #feedback-container {
+    -webkit-transition: opacity 0.5s ease;
+    transition: opacity 0.5s ease;
+  }
+  
+  #feedback-container.fade-out {
+    opacity: 0;
+  }
+  
+  #feedback-container.fade-in {
+    opacity: 1;
+  }
+  
+  #feedback-container .button-styles {
+    display: inline-block;
+    visibility: visible;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #ffffff;
+    background-color: #632276;
+    border: 1px solid #0056b3;
+    border-radius: 10px;
+    cursor: pointer;
+    -webkit-transition: background-color 0.3s ease, border-color 0.3s ease;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+  }
+  
+  #feedback-container .button-styles:hover {
+    background-color: #a338c2;
+  }
+  </style>
+</head>
+
+<body data-bs-spy="scroll" data-bs-target="#navbar-toc" class="indexing indexing_api indexing_api_v1 indexing_api_v1_content_removal"  data-url="/indexing/api/v1/content_removal.html">
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TD5R4XS"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe>
+  </noscript>
+  <!-- End Google Tag Manager (noscript) -->
+  <header class="navbar navbar-expand-lg navbar-dark shadow sticky-top" data-bs-theme="lbx">
+    <nav class="container-fluid justify-content-start">
+      <div class="row align-items-center w-vw-100">
+        <!-- Logo -->
+        <div class="col-auto pe-0">
+          <a class="navbar-brand d-block me-2" href="/index.html">
+            <img src="../../../assets/images/logo-d76f5422.svg" class="d-none d-md-block" />
+            <img src="../../../assets/images/logo-sm-10c53644.svg" class="d-block d-md-none" />
+          </a>
+        </div>
+
+        <!-- Nav items -->
+        <div class="col-auto p-0 p-sm-2">
+          <ul class="navbar-nav flex-row">
+            <li class="nav-item">
+              <a class="nav-link fw-semibold text-white p-2" href="/"><i class="bi-book me-2 d-none d-sm-inline-block"></i>Docs</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link fw-semibold text-white p-2" href="/examples.html"><i class="bi-box-seam-fill me-2 d-none d-sm-inline-block"></i>Examples</a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Search bar (Element X) -->
+        <div class="col-12 col-lg-auto order-last mt-3 mt-lg-0 pe-0 ps-lg-2">
+          <div id="ac-wrapper">
+            <div id="lb-search" class="subtle-shadow-popup">
+              <form action="/search/searchPage.html">
+                <div id="search-icon" class="d-flex align-items-center justify-content-center">
+                  <i class="bi bi-search fs-5"></i>
+                </div>
+                <input type="search" name="q" id="search-input" class="" placeholder="Search in documentation" />
+                <div id="ac-shortcut">
+                  <p><i class="bi bi-command"></i> <span>ctrl +</span> k</p>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- Toggler button -->
+        <div class="col-auto ms-auto d-lg-none pe-0">
+          <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+<div class="container-fluid border-bottom">
+  <div class="row">
+  <aside class="col-lg-2 pb-5 bg-light nav-main" data-bs-theme="lbx">
+  <nav class="navbar navbar-light navbar-expand-lg overflow-y-scroll position-sticky lb-sticky-offset">
+        <ul id="sidebar-nav" class="navbar-nav flex-column vh-full" data-bs-theme="lbx">
+              <li class="nav-item">
+                <a class="nav-link fw-semibold py-1 "
+                   href="/index.html">
+                  <i class="me-1 bi-house"></i>Home
+                </a>
+              </li>
+
+              <li class="nav-item hub-parent">
+                <div class="d-flex align-items-center">
+                  <a class="nav-link fw-semibold py-1 flex-grow-1 "
+                     href="/crossroads.html">
+                    <i class="me-1 bi-gear"></i>Platform Foundations
+                  </a>
+                    <button class="btn btn-sm btn-toggle" type="button" aria-expanded="false">
+                      <i class="bi-chevron-right"></i>
+                    </button>
+                </div>
+              </li>
+
+                <ul class="navbar-nav ms-3 flex-column collapse-panel">
+
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-2 "
+                           href="/crossroads.html">Overview</a>
+                      </li>
+
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-2 "
+                           href="/api_principles.html">API Principles</a>
+                      </li>
+
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-2 "
+                           href="/identity.html">Identity</a>
+                      </li>
+
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-2 "
+                           href="/lbx-script.html">LBX script</a>
+                      </li>
+
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-2 "
+                           href="/resiliency.html">Resiliency</a>
+                      </li>
+                </ul>
+              <li class="nav-item hub-parent">
+                <div class="d-flex align-items-center">
+                  <a class="nav-link fw-semibold py-1 flex-grow-1 "
+                     href="/quickstart.html">
+                    <i class="me-1 bi-lightning-charge"></i>Quickstart
+                  </a>
+                    <button class="btn btn-sm btn-toggle" type="button" aria-expanded="false">
+                      <i class="bi-chevron-right"></i>
+                    </button>
+                </div>
+              </li>
+
+                <ul class="navbar-nav ms-3 flex-column collapse-panel">
+
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-2 "
+                           href="/quickstart.html">Overview</a>
+                      </li>
+
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-2 "
+                           href="/quickstartguides/analytics.html">Analytics</a>
+                      </li>
+
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-2 "
+                           href="/quickstartguides/indexing.html">Indexing</a>
+                      </li>
+
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-2 "
+                           href="/quickstartguides/autocomplete.html">Autocomplete</a>
+                      </li>
+
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-2 "
+                           href="/quickstartguides/search.html">Search</a>
+                      </li>
+
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-2 "
+                           href="/quickstartguides/product%20listing.html">Product Listing</a>
+                      </li>
+
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-2 "
+                           href="/quickstartguides/recommendations.html">Recommendations</a>
+                      </li>
+                </ul>
+              <li class="nav-item hub-parent">
+                <div class="d-flex align-items-center">
+                  <a class="nav-link fw-semibold py-1 flex-grow-1 "
+                     href="/indexing.html">
+                    <i class="me-1 bi-database-fill-gear"></i>Indexing
+                  </a>
+                    <button class="btn btn-sm btn-toggle" type="button" aria-expanded="false">
+                      <i class="bi-chevron-right"></i>
+                    </button>
+                </div>
+              </li>
+
+                <ul class="navbar-nav ms-3 flex-column collapse-panel">
+
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-2 "
+                           href="/indexing.html">Overview</a>
+                      </li>
+
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-2 "
+                           href="/indexing/data_layout.html">Data Layout</a>
+                      </li>
+
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-2 "
+                           href="/indexing/feeds.html">Feeds</a>
+                      </li>
+
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-2 "
+                           href="/indexing/feeds-to-api.html">Migrating Feeds to API</a>
+                      </li>
+                      <li class="nav-item fw-bold mt-2 ms-3 d-flex align-items-center reference-group-item">
+                        <span class="reference-group-toggle flex-grow-1 cursor-pointer">API Reference</span>
+                        <button class="btn btn-sm btn-toggle ms-auto" type="button" aria-expanded="false">
+                          <i class="bi-chevron-right"></i>
+                        </button>
+                      </li>
+                  <ul class="navbar-nav flex-column collapse-panel">
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-4 "
+                           href="/indexing/api/v1/content_update.html">Content Updates API</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-4 "
+                           href="/indexing/api/v1/partial_update.html">Partial Content Update API</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-4 active"
+                           href="/indexing/api/v1/content_removal.html">Content Removal API</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-4 "
+                           href="/indexing/api/v1/query_update.html">Update by Query API</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-4 "
+                           href="/indexing/api/v1/export.html">Exports API</a>
+                      </li>
+                  </ul>                                    </ul>
+              <li class="nav-item hub-parent">
+                <div class="d-flex align-items-center">
+                  <a class="nav-link fw-semibold py-1 flex-grow-1 "
+                     href="/analytics.html">
+                    <i class="me-1 bi-tornado"></i>Analytics
+                  </a>
+                    <button class="btn btn-sm btn-toggle" type="button" aria-expanded="false">
+                      <i class="bi-chevron-right"></i>
+                    </button>
+                </div>
+              </li>
+
+                <ul class="navbar-nav ms-3 flex-column collapse-panel">
+
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-2 "
+                           href="/analytics.html">Overview</a>
+                      </li>
+
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-2 "
+                           href="/analytics/collector.html">DataLayer Collector</a>
+                      </li>
+
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-2 "
+                           href="/analytics/debugging.html">Debugging</a>
+                      </li>
+                      <li class="nav-item fw-bold mt-2 ms-3 d-flex align-items-center reference-group-item">
+                        <span class="reference-group-toggle flex-grow-1 cursor-pointer">API Reference</span>
+                        <button class="btn btn-sm btn-toggle ms-auto" type="button" aria-expanded="false">
+                          <i class="bi-chevron-right"></i>
+                        </button>
+                      </li>
+                  <ul class="navbar-nav flex-column collapse-panel">
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-4 "
+                           href="/analytics/api.html">Events API</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-4 "
+                           href="/reporting/api.html">Analytics & Reporting API</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-4 "
+                           href="/analytics/past_transactions_import.html">Past Transactions Import</a>
+                      </li>
+                  </ul>                                    </ul>
+              <li class="nav-item hub-parent">
+                <div class="d-flex align-items-center">
+                  <a class="nav-link fw-semibold py-1 flex-grow-1 "
+                     href="/autocomplete.html">
+                    <i class="me-1 bi-speedometer2"></i>Autocomplete
+                  </a>
+                    <button class="btn btn-sm btn-toggle" type="button" aria-expanded="false">
+                      <i class="bi-chevron-right"></i>
+                    </button>
+                </div>
+              </li>
+
+                <ul class="navbar-nav ms-3 flex-column collapse-panel">
+
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-2 "
+                           href="/autocomplete.html">Overview</a>
+                      </li>
+
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-2 "
+                           href="/autocomplete/autocomplete_js.html">Autocomplete.js</a>
+                      </li>
+                      <li class="nav-item fw-bold mt-2 ms-3 d-flex align-items-center reference-group-item">
+                        <span class="reference-group-toggle flex-grow-1 cursor-pointer">API Reference</span>
+                        <button class="btn btn-sm btn-toggle ms-auto" type="button" aria-expanded="false">
+                          <i class="bi-chevron-right"></i>
+                        </button>
+                      </li>
+                  <ul class="navbar-nav flex-column collapse-panel">
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-4 "
+                           href="/autocomplete/api.html">Autocomplete API</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-4 "
+                           href="/autocomplete/top_items.html">Top Items API</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-4 "
+                           href="/autocomplete/trending_queries.html">Trending Queries API</a>
+                      </li>
+                  </ul>                                    </ul>
+              <li class="nav-item hub-parent">
+                <div class="d-flex align-items-center">
+                  <a class="nav-link fw-semibold py-1 flex-grow-1 "
+                     href="/search.html">
+                    <i class="me-1 bi-search"></i>Search
+                  </a>
+                    <button class="btn btn-sm btn-toggle" type="button" aria-expanded="false">
+                      <i class="bi-chevron-right"></i>
+                    </button>
+                </div>
+              </li>
+
+                <ul class="navbar-nav ms-3 flex-column collapse-panel">
+
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-2 "
+                           href="/search.html">Overview</a>
+                      </li>
+
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-2 "
+                           href="/search/search_js.html">Search.js</a>
+                      </li>
+
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-2 "
+                           href="/search/ranking.html">Ranking</a>
+                      </li>
+
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-2 "
+                           href="/search/variants.html">Variant Search</a>
+                      </li>
+
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-2 "
+                           href="/banner_campaigns.html">Banner Campaigns</a>
+                      </li>
+                      <li class="nav-item fw-bold mt-2 ms-3 d-flex align-items-center reference-group-item">
+                        <span class="reference-group-toggle flex-grow-1 cursor-pointer">API Reference</span>
+                        <button class="btn btn-sm btn-toggle ms-auto" type="button" aria-expanded="false">
+                          <i class="bi-chevron-right"></i>
+                        </button>
+                      </li>
+                  <ul class="navbar-nav flex-column collapse-panel">
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-4 "
+                           href="/search/api.html">Search API</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-4 "
+                           href="/search/facet_value.html">Facet Value Search</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-4 "
+                           href="/search/shopping_assistant.html">Shopping Assistant</a>
+                      </li>
+                  </ul>                                    </ul>
+              <li class="nav-item hub-parent">
+                <div class="d-flex align-items-center">
+                  <a class="nav-link fw-semibold py-1 flex-grow-1 "
+                     href="/plp.html">
+                    <i class="me-1 bi-boxes"></i>Product Listing
+                  </a>
+                    <button class="btn btn-sm btn-toggle" type="button" aria-expanded="false">
+                      <i class="bi-chevron-right"></i>
+                    </button>
+                </div>
+              </li>
+
+                <ul class="navbar-nav ms-3 flex-column collapse-panel">
+
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-2 "
+                           href="/plp.html">Overview</a>
+                      </li>
+
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-2 "
+                           href="/plp/pairing.html">Pairing</a>
+                      </li>
+
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-2 "
+                           href="/plp/search_js.html">Search.js</a>
+                      </li>
+                      <li class="nav-item fw-bold mt-2 ms-3 d-flex align-items-center reference-group-item">
+                        <span class="reference-group-toggle flex-grow-1 cursor-pointer">API Reference</span>
+                        <button class="btn btn-sm btn-toggle ms-auto" type="button" aria-expanded="false">
+                          <i class="bi-chevron-right"></i>
+                        </button>
+                      </li>
+                  <ul class="navbar-nav flex-column collapse-panel">
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-4 "
+                           href="/plp/api.html">Product Listing API</a>
+                      </li>
+                  </ul>                                    </ul>
+              <li class="nav-item hub-parent">
+                <div class="d-flex align-items-center">
+                  <a class="nav-link fw-semibold py-1 flex-grow-1 "
+                     href="/recommendations.html">
+                    <i class="me-1 bi-circle-square"></i>Recommendations
+                  </a>
+                    <button class="btn btn-sm btn-toggle" type="button" aria-expanded="false">
+                      <i class="bi-chevron-right"></i>
+                    </button>
+                </div>
+              </li>
+
+                <ul class="navbar-nav ms-3 flex-column collapse-panel">
+
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-2 "
+                           href="/recommendations.html">Overview</a>
+                      </li>
+
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-2 "
+                           href="/recommendations/recco_js.html">Recco.js</a>
+                      </li>
+
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-2 "
+                           href="/recommendations/concepts.html">Basic Concepts</a>
+                      </li>
+
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-2 "
+                           href="/recommendations/models.html">Reference Models</a>
+                      </li>
+                      <li class="nav-item fw-bold mt-2 ms-3 d-flex align-items-center reference-group-item">
+                        <span class="reference-group-toggle flex-grow-1 cursor-pointer">API Reference</span>
+                        <button class="btn btn-sm btn-toggle ms-auto" type="button" aria-expanded="false">
+                          <i class="bi-chevron-right"></i>
+                        </button>
+                      </li>
+                  <ul class="navbar-nav flex-column collapse-panel">
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-4 "
+                           href="/recommendations/api.html">Recommender API</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-4 "
+                           href="/recommendations/train_data.html">Train Data Import</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-4 "
+                           href="/recommendations/recommendation_batch_publisher.html">Batch Publisher</a>
+                      </li>
+                  </ul>                                    </ul>
+              <li class="nav-item hub-parent">
+                <div class="d-flex align-items-center">
+                  <a class="nav-link fw-semibold py-1 flex-grow-1 "
+                     href="/tutorials.html">
+                    <i class="me-1 bi-rocket-takeoff"></i>Tutorials
+                  </a>
+                    <button class="btn btn-sm btn-toggle" type="button" aria-expanded="false">
+                      <i class="bi-chevron-right"></i>
+                    </button>
+                </div>
+              </li>
+
+                <ul class="navbar-nav ms-3 flex-column collapse-panel">
+
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-2 "
+                           href="/tutorials.html">Overview</a>
+                      </li>
+
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-2 "
+                           href="/tutorials/autocomplete.html">Autocomplete</a>
+                      </li>
+
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-2 "
+                           href="/tutorials/search.html">Search</a>
+                      </li>
+
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-2 "
+                           href="/tutorials/recommender.html">Recommendations</a>
+                      </li>
+
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-2 "
+                           href="/tutorials/plp.html">Product Listing</a>
+                      </li>
+                </ul>
+              <li class="nav-item hub-parent">
+                <div class="d-flex align-items-center">
+                  <a class="nav-link fw-semibold py-1 flex-grow-1 "
+                     href="/solutions.html">
+                    <i class="me-1 bi-book-fill"></i>Solutions
+                  </a>
+                    <button class="btn btn-sm btn-toggle" type="button" aria-expanded="false">
+                      <i class="bi-chevron-right"></i>
+                    </button>
+                </div>
+              </li>
+
+                <ul class="navbar-nav ms-3 flex-column collapse-panel">
+
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-2 "
+                           href="/solutions.html">Overview</a>
+                      </li>
+
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-2 "
+                           href="/solutions/multi_warehouse.html">Multi-warehouse</a>
+                      </li>
+
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-2 "
+                           href="/solutions/query_time_boosting.html">Query-time Boosting</a>
+                      </li>
+
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-2 "
+                           href="/solutions/colors_and_hex_codes.html">Colors and Color Codes</a>
+                      </li>
+                </ul>
+              <li class="nav-item">
+                <a class="nav-link fw-semibold py-1 "
+                   href="/changelog.html">
+                  <i class="me-1 bi-journal-code"></i>Changelog
+                </a>
+              </li>
+
+              <li class="nav-item hub-parent">
+                <div class="d-flex align-items-center">
+                  <a class="nav-link fw-semibold py-1 flex-grow-1 "
+                     href="/lbx.html">
+                    <i class="me-1 bi-briefcase"></i>LBX Integration
+                  </a>
+                    <button class="btn btn-sm btn-toggle" type="button" aria-expanded="false">
+                      <i class="bi-chevron-right"></i>
+                    </button>
+                </div>
+              </li>
+
+                <ul class="navbar-nav ms-3 flex-column collapse-panel">
+
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-2 "
+                           href="/lbx.html">Overview</a>
+                      </li>
+
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-2 "
+                           href="/lbx/form.html">Questionnaire</a>
+                      </li>
+
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-2 "
+                           href="/lbx/design.html">Design</a>
+                      </li>
+                      <li class="nav-item fw-bold mt-2 ms-3 d-flex align-items-center reference-group-item">
+                        <span class="reference-group-toggle flex-grow-1 cursor-pointer">Requirements</span>
+                        <button class="btn btn-sm btn-toggle ms-auto" type="button" aria-expanded="false">
+                          <i class="bi-chevron-right"></i>
+                        </button>
+                      </li>
+                  <ul class="navbar-nav flex-column collapse-panel">
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-4 "
+                           href="/lbx/requirements/product_identification.html">Product identification</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-4 "
+                           href="/lbx/requirements/platforms.html">Platforms</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-4 "
+                           href="/lbx/requirements/spa_events.html">SPA events</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-4 "
+                           href="/lbx/requirements/add_to_cart.html">Add to cart</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-4 "
+                           href="/lbx/requirements/add_to_wishlist.html">Add to wishlist</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-4 "
+                           href="/lbx/requirements/recommender_wrappers.html">Recommender wrappers</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-4 "
+                           href="/lbx/requirements/plp_instructions.html">Product listing instructions</a>
+                      </li>
+                  </ul>                                          <li class="nav-item fw-bold mt-2 ms-3 d-flex align-items-center reference-group-item">
+                        <span class="reference-group-toggle flex-grow-1 cursor-pointer">Robustness</span>
+                        <button class="btn btn-sm btn-toggle ms-auto" type="button" aria-expanded="false">
+                          <i class="bi-chevron-right"></i>
+                        </button>
+                      </li>
+                  <ul class="navbar-nav flex-column collapse-panel">
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-4 "
+                           href="/lbx/robustness/marking_search_fields.html">Marking search fields</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-4 "
+                           href="/lbx/robustness/wrapper.html">Wrapper</a>
+                      </li>
+                  </ul>                                          <li class="nav-item fw-bold mt-2 ms-3 d-flex align-items-center reference-group-item">
+                        <span class="reference-group-toggle flex-grow-1 cursor-pointer">Solutions</span>
+                        <button class="btn btn-sm btn-toggle ms-auto" type="button" aria-expanded="false">
+                          <i class="bi-chevron-right"></i>
+                        </button>
+                      </li>
+                  <ul class="navbar-nav flex-column collapse-panel">
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-4 "
+                           href="/lbx/solutions/pricing_api.html">Pricing API</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-4 "
+                           href="/lbx/solutions/pricing_levels.html">Pricing levels</a>
+                      </li>
+                  </ul>                                    </ul>
+              <li class="nav-item hub-parent">
+                <div class="d-flex align-items-center">
+                  <a class="nav-link fw-semibold py-1 flex-grow-1 "
+                     href="/platform-integrations.html">
+                    <i class="me-1 bi-plug"></i>Platform Integrations
+                  </a>
+                    <button class="btn btn-sm btn-toggle" type="button" aria-expanded="false">
+                      <i class="bi-chevron-right"></i>
+                    </button>
+                </div>
+              </li>
+
+                <ul class="navbar-nav ms-3 flex-column collapse-panel">
+
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-2 "
+                           href="/platform-integrations.html">Overview</a>
+                      </li>
+                      <li class="nav-item fw-bold mt-2 ms-3 d-flex align-items-center reference-group-item">
+                        <span class="reference-group-toggle flex-grow-1 cursor-pointer">Magento 2</span>
+                        <button class="btn btn-sm btn-toggle ms-auto" type="button" aria-expanded="false">
+                          <i class="bi-chevron-right"></i>
+                        </button>
+                      </li>
+                  <ul class="navbar-nav flex-column collapse-panel">
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-4 "
+                           href="/platform-integrations/magento2/magento2_integration.html">Integration</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-4 "
+                           href="/platform-integrations/magento2/magento2_data_sync.html">Data Sync</a>
+                      </li>
+                  </ul>                                          <li class="nav-item fw-bold mt-2 ms-3 d-flex align-items-center reference-group-item">
+                        <span class="reference-group-toggle flex-grow-1 cursor-pointer">IdoSell</span>
+                        <button class="btn btn-sm btn-toggle ms-auto" type="button" aria-expanded="false">
+                          <i class="bi-chevron-right"></i>
+                        </button>
+                      </li>
+                  <ul class="navbar-nav flex-column collapse-panel">
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-4 "
+                           href="/platform-integrations/idosell/idosell_integration.html">Integration</a>
+                      </li>
+                  </ul>                                    </ul>
+        </ul>
+  </nav>
+</aside>
+
+<div class="offcanvas offcanvas-start" id="offcanvasNavbar" data-bs-theme="lbx">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Navigation</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <ul id="sidebar-nav-mobile" class="navbar-nav flex-column vh-full" data-bs-theme="lbx">
+          <li class="nav-item">
+            <a class="nav-link fw-semibold py-1 "
+               href="/index.html">
+              <i class="me-1 bi-house"></i>Home
+            </a>
+          </li>
+
+          <li class="nav-item hub-parent">
+            <div class="d-flex align-items-center">
+              <a class="nav-link fw-semibold py-1 flex-grow-1 "
+                 href="/crossroads.html">
+                <i class="me-1 bi-gear"></i>Platform Foundations
+              </a>
+                <button class="btn btn-sm btn-toggle" type="button" aria-expanded="false">
+                  <i class="bi-chevron-right"></i>
+                </button>
+            </div>
+          </li>
+
+            <ul class="navbar-nav ms-3 flex-column collapse-panel">
+                  <li class="nav-item">
+                    <a class="nav-link py-1 ms-2 "
+                       href="/crossroads.html">Overview</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link py-1 ms-2 "
+                       href="/api_principles.html">API Principles</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link py-1 ms-2 "
+                       href="/identity.html">Identity</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link py-1 ms-2 "
+                       href="/lbx-script.html">LBX script</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link py-1 ms-2 "
+                       href="/resiliency.html">Resiliency</a>
+                  </li>
+            </ul>
+          <li class="nav-item hub-parent">
+            <div class="d-flex align-items-center">
+              <a class="nav-link fw-semibold py-1 flex-grow-1 "
+                 href="/quickstart.html">
+                <i class="me-1 bi-lightning-charge"></i>Quickstart
+              </a>
+                <button class="btn btn-sm btn-toggle" type="button" aria-expanded="false">
+                  <i class="bi-chevron-right"></i>
+                </button>
+            </div>
+          </li>
+
+            <ul class="navbar-nav ms-3 flex-column collapse-panel">
+                  <li class="nav-item">
+                    <a class="nav-link py-1 ms-2 "
+                       href="/quickstart.html">Overview</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link py-1 ms-2 "
+                       href="/quickstartguides/analytics.html">Analytics</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link py-1 ms-2 "
+                       href="/quickstartguides/indexing.html">Indexing</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link py-1 ms-2 "
+                       href="/quickstartguides/autocomplete.html">Autocomplete</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link py-1 ms-2 "
+                       href="/quickstartguides/search.html">Search</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link py-1 ms-2 "
+                       href="/quickstartguides/product%20listing.html">Product Listing</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link py-1 ms-2 "
+                       href="/quickstartguides/recommendations.html">Recommendations</a>
+                  </li>
+            </ul>
+          <li class="nav-item hub-parent">
+            <div class="d-flex align-items-center">
+              <a class="nav-link fw-semibold py-1 flex-grow-1 "
+                 href="/indexing.html">
+                <i class="me-1 bi-database-fill-gear"></i>Indexing
+              </a>
+                <button class="btn btn-sm btn-toggle" type="button" aria-expanded="false">
+                  <i class="bi-chevron-right"></i>
+                </button>
+            </div>
+          </li>
+
+            <ul class="navbar-nav ms-3 flex-column collapse-panel">
+                  <li class="nav-item">
+                    <a class="nav-link py-1 ms-2 "
+                       href="/indexing.html">Overview</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link py-1 ms-2 "
+                       href="/indexing/data_layout.html">Data Layout</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link py-1 ms-2 "
+                       href="/indexing/feeds.html">Feeds</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link py-1 ms-2 "
+                       href="/indexing/feeds-to-api.html">Migrating Feeds to API</a>
+                  </li>
+                  <li class="nav-item fw-bold mt-2 ms-3 d-flex align-items-center reference-group-item">
+                    <span class="reference-group-toggle flex-grow-1 cursor-pointer">API Reference</span>
+                    <button class="btn btn-sm btn-toggle ms-auto" type="button" aria-expanded="false">
+                      <i class="bi-chevron-right"></i>
+                    </button>
+                  </li>
+                  <ul class="navbar-nav flex-column collapse-panel">
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-4 "
+                           href="/indexing/api/v1/content_update.html">Content Updates API</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-4 "
+                           href="/indexing/api/v1/partial_update.html">Partial Content Update API</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-4 active"
+                           href="/indexing/api/v1/content_removal.html">Content Removal API</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-4 "
+                           href="/indexing/api/v1/query_update.html">Update by Query API</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-4 "
+                           href="/indexing/api/v1/export.html">Exports API</a>
+                      </li>
+                  </ul>
+
+            </ul>
+          <li class="nav-item hub-parent">
+            <div class="d-flex align-items-center">
+              <a class="nav-link fw-semibold py-1 flex-grow-1 "
+                 href="/analytics.html">
+                <i class="me-1 bi-tornado"></i>Analytics
+              </a>
+                <button class="btn btn-sm btn-toggle" type="button" aria-expanded="false">
+                  <i class="bi-chevron-right"></i>
+                </button>
+            </div>
+          </li>
+
+            <ul class="navbar-nav ms-3 flex-column collapse-panel">
+                  <li class="nav-item">
+                    <a class="nav-link py-1 ms-2 "
+                       href="/analytics.html">Overview</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link py-1 ms-2 "
+                       href="/analytics/collector.html">DataLayer Collector</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link py-1 ms-2 "
+                       href="/analytics/debugging.html">Debugging</a>
+                  </li>
+                  <li class="nav-item fw-bold mt-2 ms-3 d-flex align-items-center reference-group-item">
+                    <span class="reference-group-toggle flex-grow-1 cursor-pointer">API Reference</span>
+                    <button class="btn btn-sm btn-toggle ms-auto" type="button" aria-expanded="false">
+                      <i class="bi-chevron-right"></i>
+                    </button>
+                  </li>
+                  <ul class="navbar-nav flex-column collapse-panel">
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-4 "
+                           href="/analytics/api.html">Events API</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-4 "
+                           href="/reporting/api.html">Analytics & Reporting API</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-4 "
+                           href="/analytics/past_transactions_import.html">Past Transactions Import</a>
+                      </li>
+                  </ul>
+
+            </ul>
+          <li class="nav-item hub-parent">
+            <div class="d-flex align-items-center">
+              <a class="nav-link fw-semibold py-1 flex-grow-1 "
+                 href="/autocomplete.html">
+                <i class="me-1 bi-speedometer2"></i>Autocomplete
+              </a>
+                <button class="btn btn-sm btn-toggle" type="button" aria-expanded="false">
+                  <i class="bi-chevron-right"></i>
+                </button>
+            </div>
+          </li>
+
+            <ul class="navbar-nav ms-3 flex-column collapse-panel">
+                  <li class="nav-item">
+                    <a class="nav-link py-1 ms-2 "
+                       href="/autocomplete.html">Overview</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link py-1 ms-2 "
+                       href="/autocomplete/autocomplete_js.html">Autocomplete.js</a>
+                  </li>
+                  <li class="nav-item fw-bold mt-2 ms-3 d-flex align-items-center reference-group-item">
+                    <span class="reference-group-toggle flex-grow-1 cursor-pointer">API Reference</span>
+                    <button class="btn btn-sm btn-toggle ms-auto" type="button" aria-expanded="false">
+                      <i class="bi-chevron-right"></i>
+                    </button>
+                  </li>
+                  <ul class="navbar-nav flex-column collapse-panel">
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-4 "
+                           href="/autocomplete/api.html">Autocomplete API</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-4 "
+                           href="/autocomplete/top_items.html">Top Items API</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-4 "
+                           href="/autocomplete/trending_queries.html">Trending Queries API</a>
+                      </li>
+                  </ul>
+
+            </ul>
+          <li class="nav-item hub-parent">
+            <div class="d-flex align-items-center">
+              <a class="nav-link fw-semibold py-1 flex-grow-1 "
+                 href="/search.html">
+                <i class="me-1 bi-search"></i>Search
+              </a>
+                <button class="btn btn-sm btn-toggle" type="button" aria-expanded="false">
+                  <i class="bi-chevron-right"></i>
+                </button>
+            </div>
+          </li>
+
+            <ul class="navbar-nav ms-3 flex-column collapse-panel">
+                  <li class="nav-item">
+                    <a class="nav-link py-1 ms-2 "
+                       href="/search.html">Overview</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link py-1 ms-2 "
+                       href="/search/search_js.html">Search.js</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link py-1 ms-2 "
+                       href="/search/ranking.html">Ranking</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link py-1 ms-2 "
+                       href="/search/variants.html">Variant Search</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link py-1 ms-2 "
+                       href="/banner_campaigns.html">Banner Campaigns</a>
+                  </li>
+                  <li class="nav-item fw-bold mt-2 ms-3 d-flex align-items-center reference-group-item">
+                    <span class="reference-group-toggle flex-grow-1 cursor-pointer">API Reference</span>
+                    <button class="btn btn-sm btn-toggle ms-auto" type="button" aria-expanded="false">
+                      <i class="bi-chevron-right"></i>
+                    </button>
+                  </li>
+                  <ul class="navbar-nav flex-column collapse-panel">
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-4 "
+                           href="/search/api.html">Search API</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-4 "
+                           href="/search/facet_value.html">Facet Value Search</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-4 "
+                           href="/search/shopping_assistant.html">Shopping Assistant</a>
+                      </li>
+                  </ul>
+
+            </ul>
+          <li class="nav-item hub-parent">
+            <div class="d-flex align-items-center">
+              <a class="nav-link fw-semibold py-1 flex-grow-1 "
+                 href="/plp.html">
+                <i class="me-1 bi-boxes"></i>Product Listing
+              </a>
+                <button class="btn btn-sm btn-toggle" type="button" aria-expanded="false">
+                  <i class="bi-chevron-right"></i>
+                </button>
+            </div>
+          </li>
+
+            <ul class="navbar-nav ms-3 flex-column collapse-panel">
+                  <li class="nav-item">
+                    <a class="nav-link py-1 ms-2 "
+                       href="/plp.html">Overview</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link py-1 ms-2 "
+                       href="/plp/pairing.html">Pairing</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link py-1 ms-2 "
+                       href="/plp/search_js.html">Search.js</a>
+                  </li>
+                  <li class="nav-item fw-bold mt-2 ms-3 d-flex align-items-center reference-group-item">
+                    <span class="reference-group-toggle flex-grow-1 cursor-pointer">API Reference</span>
+                    <button class="btn btn-sm btn-toggle ms-auto" type="button" aria-expanded="false">
+                      <i class="bi-chevron-right"></i>
+                    </button>
+                  </li>
+                  <ul class="navbar-nav flex-column collapse-panel">
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-4 "
+                           href="/plp/api.html">Product Listing API</a>
+                      </li>
+                  </ul>
+
+            </ul>
+          <li class="nav-item hub-parent">
+            <div class="d-flex align-items-center">
+              <a class="nav-link fw-semibold py-1 flex-grow-1 "
+                 href="/recommendations.html">
+                <i class="me-1 bi-circle-square"></i>Recommendations
+              </a>
+                <button class="btn btn-sm btn-toggle" type="button" aria-expanded="false">
+                  <i class="bi-chevron-right"></i>
+                </button>
+            </div>
+          </li>
+
+            <ul class="navbar-nav ms-3 flex-column collapse-panel">
+                  <li class="nav-item">
+                    <a class="nav-link py-1 ms-2 "
+                       href="/recommendations.html">Overview</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link py-1 ms-2 "
+                       href="/recommendations/recco_js.html">Recco.js</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link py-1 ms-2 "
+                       href="/recommendations/concepts.html">Basic Concepts</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link py-1 ms-2 "
+                       href="/recommendations/models.html">Reference Models</a>
+                  </li>
+                  <li class="nav-item fw-bold mt-2 ms-3 d-flex align-items-center reference-group-item">
+                    <span class="reference-group-toggle flex-grow-1 cursor-pointer">API Reference</span>
+                    <button class="btn btn-sm btn-toggle ms-auto" type="button" aria-expanded="false">
+                      <i class="bi-chevron-right"></i>
+                    </button>
+                  </li>
+                  <ul class="navbar-nav flex-column collapse-panel">
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-4 "
+                           href="/recommendations/api.html">Recommender API</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-4 "
+                           href="/recommendations/train_data.html">Train Data Import</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-4 "
+                           href="/recommendations/recommendation_batch_publisher.html">Batch Publisher</a>
+                      </li>
+                  </ul>
+
+            </ul>
+          <li class="nav-item hub-parent">
+            <div class="d-flex align-items-center">
+              <a class="nav-link fw-semibold py-1 flex-grow-1 "
+                 href="/tutorials.html">
+                <i class="me-1 bi-rocket-takeoff"></i>Tutorials
+              </a>
+                <button class="btn btn-sm btn-toggle" type="button" aria-expanded="false">
+                  <i class="bi-chevron-right"></i>
+                </button>
+            </div>
+          </li>
+
+            <ul class="navbar-nav ms-3 flex-column collapse-panel">
+                  <li class="nav-item">
+                    <a class="nav-link py-1 ms-2 "
+                       href="/tutorials.html">Overview</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link py-1 ms-2 "
+                       href="/tutorials/autocomplete.html">Autocomplete</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link py-1 ms-2 "
+                       href="/tutorials/search.html">Search</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link py-1 ms-2 "
+                       href="/tutorials/recommender.html">Recommendations</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link py-1 ms-2 "
+                       href="/tutorials/plp.html">Product Listing</a>
+                  </li>
+            </ul>
+          <li class="nav-item hub-parent">
+            <div class="d-flex align-items-center">
+              <a class="nav-link fw-semibold py-1 flex-grow-1 "
+                 href="/solutions.html">
+                <i class="me-1 bi-book-fill"></i>Solutions
+              </a>
+                <button class="btn btn-sm btn-toggle" type="button" aria-expanded="false">
+                  <i class="bi-chevron-right"></i>
+                </button>
+            </div>
+          </li>
+
+            <ul class="navbar-nav ms-3 flex-column collapse-panel">
+                  <li class="nav-item">
+                    <a class="nav-link py-1 ms-2 "
+                       href="/solutions.html">Overview</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link py-1 ms-2 "
+                       href="/solutions/multi_warehouse.html">Multi-warehouse</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link py-1 ms-2 "
+                       href="/solutions/query_time_boosting.html">Query-time Boosting</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link py-1 ms-2 "
+                       href="/solutions/colors_and_hex_codes.html">Colors and Color Codes</a>
+                  </li>
+            </ul>
+          <li class="nav-item">
+            <a class="nav-link fw-semibold py-1 "
+               href="/changelog.html">
+              <i class="me-1 bi-journal-code"></i>Changelog
+            </a>
+          </li>
+
+          <li class="nav-item hub-parent">
+            <div class="d-flex align-items-center">
+              <a class="nav-link fw-semibold py-1 flex-grow-1 "
+                 href="/lbx.html">
+                <i class="me-1 bi-briefcase"></i>LBX Integration
+              </a>
+                <button class="btn btn-sm btn-toggle" type="button" aria-expanded="false">
+                  <i class="bi-chevron-right"></i>
+                </button>
+            </div>
+          </li>
+
+            <ul class="navbar-nav ms-3 flex-column collapse-panel">
+                  <li class="nav-item">
+                    <a class="nav-link py-1 ms-2 "
+                       href="/lbx.html">Overview</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link py-1 ms-2 "
+                       href="/lbx/form.html">Questionnaire</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link py-1 ms-2 "
+                       href="/lbx/design.html">Design</a>
+                  </li>
+                  <li class="nav-item fw-bold mt-2 ms-3 d-flex align-items-center reference-group-item">
+                    <span class="reference-group-toggle flex-grow-1 cursor-pointer">Requirements</span>
+                    <button class="btn btn-sm btn-toggle ms-auto" type="button" aria-expanded="false">
+                      <i class="bi-chevron-right"></i>
+                    </button>
+                  </li>
+                  <ul class="navbar-nav flex-column collapse-panel">
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-4 "
+                           href="/lbx/requirements/product_identification.html">Product identification</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-4 "
+                           href="/lbx/requirements/platforms.html">Platforms</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-4 "
+                           href="/lbx/requirements/spa_events.html">SPA events</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-4 "
+                           href="/lbx/requirements/add_to_cart.html">Add to cart</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-4 "
+                           href="/lbx/requirements/add_to_wishlist.html">Add to wishlist</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-4 "
+                           href="/lbx/requirements/recommender_wrappers.html">Recommender wrappers</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-4 "
+                           href="/lbx/requirements/plp_instructions.html">Product listing instructions</a>
+                      </li>
+                  </ul>
+
+                  <li class="nav-item fw-bold mt-2 ms-3 d-flex align-items-center reference-group-item">
+                    <span class="reference-group-toggle flex-grow-1 cursor-pointer">Robustness</span>
+                    <button class="btn btn-sm btn-toggle ms-auto" type="button" aria-expanded="false">
+                      <i class="bi-chevron-right"></i>
+                    </button>
+                  </li>
+                  <ul class="navbar-nav flex-column collapse-panel">
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-4 "
+                           href="/lbx/robustness/marking_search_fields.html">Marking search fields</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-4 "
+                           href="/lbx/robustness/wrapper.html">Wrapper</a>
+                      </li>
+                  </ul>
+
+                  <li class="nav-item fw-bold mt-2 ms-3 d-flex align-items-center reference-group-item">
+                    <span class="reference-group-toggle flex-grow-1 cursor-pointer">Solutions</span>
+                    <button class="btn btn-sm btn-toggle ms-auto" type="button" aria-expanded="false">
+                      <i class="bi-chevron-right"></i>
+                    </button>
+                  </li>
+                  <ul class="navbar-nav flex-column collapse-panel">
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-4 "
+                           href="/lbx/solutions/pricing_api.html">Pricing API</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-4 "
+                           href="/lbx/solutions/pricing_levels.html">Pricing levels</a>
+                      </li>
+                  </ul>
+
+            </ul>
+          <li class="nav-item hub-parent">
+            <div class="d-flex align-items-center">
+              <a class="nav-link fw-semibold py-1 flex-grow-1 "
+                 href="/platform-integrations.html">
+                <i class="me-1 bi-plug"></i>Platform Integrations
+              </a>
+                <button class="btn btn-sm btn-toggle" type="button" aria-expanded="false">
+                  <i class="bi-chevron-right"></i>
+                </button>
+            </div>
+          </li>
+
+            <ul class="navbar-nav ms-3 flex-column collapse-panel">
+                  <li class="nav-item">
+                    <a class="nav-link py-1 ms-2 "
+                       href="/platform-integrations.html">Overview</a>
+                  </li>
+                  <li class="nav-item fw-bold mt-2 ms-3 d-flex align-items-center reference-group-item">
+                    <span class="reference-group-toggle flex-grow-1 cursor-pointer">Magento 2</span>
+                    <button class="btn btn-sm btn-toggle ms-auto" type="button" aria-expanded="false">
+                      <i class="bi-chevron-right"></i>
+                    </button>
+                  </li>
+                  <ul class="navbar-nav flex-column collapse-panel">
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-4 "
+                           href="/platform-integrations/magento2/magento2_integration.html">Integration</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-4 "
+                           href="/platform-integrations/magento2/magento2_data_sync.html">Data Sync</a>
+                      </li>
+                  </ul>
+
+                  <li class="nav-item fw-bold mt-2 ms-3 d-flex align-items-center reference-group-item">
+                    <span class="reference-group-toggle flex-grow-1 cursor-pointer">IdoSell</span>
+                    <button class="btn btn-sm btn-toggle ms-auto" type="button" aria-expanded="false">
+                      <i class="bi-chevron-right"></i>
+                    </button>
+                  </li>
+                  <ul class="navbar-nav flex-column collapse-panel">
+                      <li class="nav-item">
+                        <a class="nav-link py-1 ms-4 "
+                           href="/platform-integrations/idosell/idosell_integration.html">Integration</a>
+                      </li>
+                  </ul>
+
+            </ul>
+    </ul>
+  </div>
+</div>
+
+<style>
+#sidebar-nav .collapse-panel,
+#sidebar-nav-mobile .collapse-panel { display: none; }
+
+#sidebar-nav .btn-toggle > .bi-chevron-right,
+#sidebar-nav-mobile .btn-toggle > .bi-chevron-right {
+  display: inline-block;
+  -webkit-transition: -webkit-transform 0.2s ease;
+  transition: -webkit-transform 0.2s ease;
+  transition: transform 0.2s ease;
+  transition: transform 0.2s ease, -webkit-transform 0.2s ease;
+}
+
+/* Prevent text wrapping on nav links */
+/* Lock ALL ul widths to sidebar width to prevent any expansion */
+#sidebar-nav,
+#sidebar-nav-mobile {
+  width: 230px !important;
+  max-width: 230px !important;
+}
+
+#sidebar-nav .navbar-nav,
+#sidebar-nav-mobile .navbar-nav,
+#sidebar-nav ul,
+#sidebar-nav-mobile ul {
+  width: 230px !important;
+  max-width: 230px !important;
+  -webkit-box-sizing: border-box !important;
+          box-sizing: border-box !important;
+}
+
+/* Reduce indentation on nested items to fit chevrons */
+#sidebar-nav .navbar-nav.ms-3,
+#sidebar-nav-mobile .navbar-nav.ms-3 {
+  margin-left: 0.75rem !important;
+  padding-right: 0.5rem !important;
+}
+
+#sidebar-nav .nav-link.ms-2,
+#sidebar-nav-mobile .nav-link.ms-2 {
+  margin-left: 0.5rem !important;
+}
+
+#sidebar-nav .nav-link.ms-4,
+#sidebar-nav-mobile .nav-link.ms-4 {
+  margin-left: 1rem !important;
+  padding-right: 0.25rem !important;
+}
+
+#sidebar-nav .reference-group-item.ms-3,
+#sidebar-nav-mobile .reference-group-item.ms-3 {
+  margin-left: 0.5rem !important;
+}
+
+/* Ensure flex containers reserve space for chevrons */
+.hub-parent > .d-flex,
+.reference-group-item {
+  display: flex !important;
+  align-items: center !important;
+}
+
+.hub-parent .nav-link,
+.reference-group-toggle {
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+}
+
+.hub-parent .btn-toggle,
+.reference-group-item .btn-toggle {
+  flex: 0 0 auto !important;
+  margin-left: auto !important;
+}
+
+#sidebar-nav .nav-link,
+#sidebar-nav-mobile .nav-link {
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+
+.reference-group-toggle {
+  cursor: pointer;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  padding: 0.25rem 0;
+}
+
+.reference-group-toggle:hover {
+  opacity: 0.8;
+}
+
+#sidebar-nav .btn-toggle,
+#sidebar-nav-mobile .btn-toggle {
+  min-width: 24px;
+  padding: 0.25rem 0.5rem;
+}
+
+#sidebar-nav .nav-link,
+#sidebar-nav-mobile .nav-link {
+  line-height: 1.25;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+.navbar.lb-sticky-offset {
+  min-width: 200px !important;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+ 
+.navbar.lb-sticky-offset::-webkit-scrollbar {
+  width: 6px;
+}
+.navbar.lb-sticky-offset::-webkit-scrollbar-track {
+  background: transparent;
+}
+.navbar.lb-sticky-offset::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+
+/* Protect navigation menu active states from other scripts */
+#sidebar-nav .nav-link.active,
+#sidebar-nav-mobile .nav-link.active {
+  background-color: var(--bs-secondary-bg) !important;
+  border-radius: 10px !important;
+}
+
+
+@media (min-width: 992px) {
+  .row:has(.nav-main) {
+    display: flex;
+    flex-wrap: nowrap;
+  }
+
+  .row:has(.nav-main) .nav-main {
+    min-width: 290px;
+    max-width: 290px;
+    flex: 0 0 auto;
+  }
+
+  .row:has(.nav-main) .col-lg-7,
+  .row:has(.nav-main) article {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .row:has(.nav-main) .col-lg-3,
+  .row:has(.nav-main) #navbar-toc {
+    flex: 0 0 auto;
+    width: 25%;
+    min-width: 200px;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .nav-main {
+    display: none;
+  }
+}
+  
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const nav = document.getElementById('sidebar-nav');
+  const mobileNav = document.getElementById('sidebar-nav-mobile');
+  
+  function initializeNav(navElement) {
+    if (!navElement) return;
+
+    function rotateIcon(icon, deg) {
+      if (!icon) return;
+      icon.style.setProperty('transform', `rotate(${deg}deg)`, 'important');
+    }
+
+    function syncIcon(btn) {
+      const icon = btn.querySelector('.bi-chevron-right');
+      const expanded = btn.getAttribute('aria-expanded') === 'true';
+      rotateIcon(icon, expanded ? 90 : 0);
+    }
+
+    function togglePanel(btn) {
+      const ownerLi = btn.closest('li.nav-item');
+      const panel = ownerLi?.nextElementSibling;
+      if (!panel || !panel.classList.contains('collapse-panel')) return false;
+      
+      const expanded = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', String(!expanded));
+      panel.style.display = expanded ? 'none' : 'block';
+      syncIcon(btn);
+      return true;
+    }
+
+    navElement.querySelectorAll('.collapse-panel').forEach(panel => panel.style.display = 'none');
+
+    navElement.addEventListener('click', (e) => {
+      const btn = e.target.closest('.btn-toggle');
+      if (btn) {
+        togglePanel(btn);
+        return;
+      }
+
+      const refGroupToggle = e.target.closest('.reference-group-toggle');
+      if (refGroupToggle) {
+        const parentLi = refGroupToggle.closest('li.nav-item');
+        const toggleBtn = parentLi?.querySelector('.btn-toggle');
+        if (toggleBtn) {
+          togglePanel(toggleBtn);
+        }
+        
+        // Navigate to the first child reference item
+        const nextSibling = parentLi?.nextElementSibling;
+        if (nextSibling && nextSibling.classList.contains('collapse-panel')) {
+          const firstChildLink = nextSibling.querySelector('.nav-link');
+          if (firstChildLink) {
+            window.location.href = firstChildLink.href;
+          }
+        }
+        return;
+      }
+
+      const navLink = e.target.closest('.nav-link');
+      if (navLink) {
+        const parentDiv = navLink.parentElement;
+        if (parentDiv && parentDiv.classList.contains('d-flex') && parentDiv.classList.contains('align-items-center')) {
+          const toggleBtn = parentDiv.querySelector('.btn-toggle');
+          if (toggleBtn) {
+            togglePanel(toggleBtn);
+          }
+        }
+      }
+    });
+
+    const active = navElement.querySelector('.nav-link.active');
+    if (active) {
+      let panel = active.closest('.collapse-panel');
+      while (panel && navElement.contains(panel)) {
+        panel.style.display = 'block';
+        const ownerLi = panel.previousElementSibling;
+        const ownerBtn = ownerLi?.querySelector?.('.btn-toggle');
+        if (ownerBtn) {
+          ownerBtn.setAttribute('aria-expanded', 'true');
+          syncIcon(ownerBtn);
+        }
+        panel = panel.parentElement?.closest('.collapse-panel');
+
+        if (ownerLi && ownerLi.classList.contains('hub-parent')) {
+          const hubLink = ownerLi.querySelector('.nav-link');
+          if (hubLink) {
+            hubLink.classList.add('hub-active');
+          }
+        }
+      }
+      
+      const parentDiv = active.parentElement;
+      if (parentDiv && parentDiv.classList.contains('d-flex') && parentDiv.classList.contains('align-items-center')) {
+        const toggleBtn = parentDiv.querySelector('.btn-toggle');
+        const ownerLi = active.closest('li.nav-item');
+        const hubPanel = ownerLi?.nextElementSibling;
+        
+        if (toggleBtn && hubPanel && hubPanel.classList.contains('collapse-panel')) {
+          hubPanel.style.display = 'block';
+          toggleBtn.setAttribute('aria-expanded', 'true');
+          syncIcon(toggleBtn);
+        }
+
+        const hubParent = active.closest('.hub-parent');
+        if (hubParent) {
+            active.classList.add('hub-active');
+        }
+      }
+    }
+  }
+  
+  initializeNav(nav);
+  initializeNav(mobileNav);
+  
+  // Function to restore navigation active states
+  function restoreNavActiveStates() {
+    const currentPath = window.location.pathname;
+    
+    // Define versioned endpoint mappings
+    const versionedEndpoints = {
+      '/indexing/api/v1/content_update.html': true,
+      '/indexing/api/v2/content_update.html': true,
+      '/indexing/api/v1/partial_update.html': true,
+      '/indexing/api/v2/partial_update.html': true,
+      '/indexing/api/v1/content_removal.html': true,
+      '/indexing/api/v2/content_removal.html': true,
+      '/indexing/api/v1/query_update.html': true,
+      '/indexing/api/v2/query_update.html': true,
+      '/indexing/api/v1/export.html': true,
+      '/indexing/api/v2/export.html': true
+    };
+    
+    // Find all nav links and ensure the current page is marked as active
+    document.querySelectorAll('#sidebar-nav .nav-link, #sidebar-nav-mobile .nav-link').forEach(function(link) {
+      const href = link.getAttribute('href');
+      
+      // Direct match
+      if (href === currentPath && !link.classList.contains('active')) {
+        link.classList.add('active');
+        return;
+      }
+      
+      // Check if this is a versioned endpoint that should be highlighted
+      if (versionedEndpoints[currentPath]) {
+        // Extract the endpoint type from the current path
+        const currentEndpoint = currentPath.replace(/\/indexing\/api\/v[12]\//, '').replace('.html', '');
+        const linkEndpoint = href.replace(/\/indexing\/api\/v[12]\//, '').replace('.html', '');
+        
+        if (currentEndpoint === linkEndpoint && !link.classList.contains('active')) {
+          link.classList.add('active');
+        }
+      }
+    });
+  }
+
+  // Initial protection against active class removal
+  window.addEventListener('load', function() {
+    setTimeout(restoreNavActiveStates, 50);
+  });
+
+  // Use MutationObserver to immediately catch and restore active classes
+  if (window.MutationObserver) {
+    const observer = new MutationObserver(function(mutations) {
+      let needsRestore = false;
+      
+      mutations.forEach(function(mutation) {
+        if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+          const target = mutation.target;
+          
+          // Check if this is a nav-link in our navigation menu
+          if (target.matches('#sidebar-nav .nav-link, #sidebar-nav-mobile .nav-link')) {
+            const href = target.getAttribute('href');
+            const currentPath = window.location.pathname;
+            
+            // Check if this link should be active but isn't
+            if (href === currentPath && !target.classList.contains('active')) {
+              needsRestore = true;
+            }
+            
+            // Check versioned endpoints
+            const versionedEndpoints = {
+              '/indexing/api/v1/content_update.html': true,
+              '/indexing/api/v2/content_update.html': true,
+              '/indexing/api/v1/partial_update.html': true,
+              '/indexing/api/v2/partial_update.html': true,
+              '/indexing/api/v1/content_removal.html': true,
+              '/indexing/api/v2/content_removal.html': true,
+              '/indexing/api/v1/query_update.html': true,
+              '/indexing/api/v2/query_update.html': true,
+              '/indexing/api/v1/export.html': true,
+              '/indexing/api/v2/export.html': true
+            };
+            
+            if (versionedEndpoints[currentPath]) {
+              const currentEndpoint = currentPath.replace(/\/indexing\/api\/v[12]\//, '').replace('.html', '');
+              const linkEndpoint = href.replace(/\/indexing\/api\/v[12]\//, '').replace('.html', '');
+              
+              if (currentEndpoint === linkEndpoint && !target.classList.contains('active')) {
+                needsRestore = true;
+              }
+            }
+          }
+        }
+      });
+      
+      if (needsRestore) {
+        // Small delay to avoid conflicts
+        setTimeout(restoreNavActiveStates, 5);
+      }
+    });
+    
+    // Start observing navigation elements
+    setTimeout(function() {
+      const navElements = document.querySelectorAll('#sidebar-nav, #sidebar-nav-mobile');
+      navElements.forEach(function(nav) {
+        if (nav) {
+          observer.observe(nav, {
+            attributes: true,
+            attributeFilter: ['class'],
+            childList: true,
+            subtree: true
+          });
+        }
+      });
+    }, 100);
+  }
+
+  // Protect against scroll-based active class removal (ToC interference)
+  let scrollTimeout;
+  window.addEventListener('scroll', function() {
+    // Clear any previous timeout
+    clearTimeout(scrollTimeout);
+    
+    // Set a delay to run after ToC script completes (ToC uses 200ms debounce)
+    scrollTimeout = setTimeout(function() {
+      restoreNavActiveStates();
+    }, 250);
+  });
+  
+  // Close mobile offcanvas when screen size changes to desktop
+  const mediaQuery = window.matchMedia('(min-width: 992px)');
+  function handleScreenChange(e) {
+    if (e.matches) {
+      const offcanvas = document.getElementById('offcanvasNavbar');
+      if (offcanvas && offcanvas.classList.contains('show')) {
+        const bsOffcanvas = bootstrap.Offcanvas.getInstance(offcanvas);
+        if (bsOffcanvas) {
+          bsOffcanvas.hide();
+        }
+      }
+    }
+  }
+  
+  mediaQuery.addListener(handleScreenChange);
+  handleScreenChange(mediaQuery);
+});
+</script>
+
+
+
+    <article class="col-lg-10 py-3 pb-5 px-4 positon-relative">
+
+    
+    
+<style>
+.api-reference-wrapper {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  position: relative;
+}
+
+.api-section {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  margin-bottom: 4rem;
+  align-items: start;
+}
+
+.api-section-prose {
+  padding-right: 2rem;
+}
+
+.api-section-code {
+  position: sticky;
+  top: 4rem;
+  -ms-grid-row-align: start;
+      align-self: start;
+  max-width: 600px;
+  max-height: 80vh;
+  overflow: hidden;
+}
+
+.api-section-code .lb-code {
+  max-width: 100%;
+  max-height: 70vh;
+  overflow: visible;
+}
+
+.api-section-code .tab-content {
+  max-height: 65vh;
+  overflow: visible;
+}
+
+.api-section-code .tab-pane {
+  max-height: 65vh;
+  overflow: auto;
+}
+
+.api-section-code .highlight {
+  position: relative;
+  overflow: visible;
+}
+
+.api-section-code .highlight pre {
+  overflow-x: auto;
+  overflow-y: visible;
+  white-space: pre;
+  margin: 0;
+}
+
+/* Page header */
+.api-header {
+  margin-bottom: 3rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.api-header h1 {
+  margin-bottom: 1rem;
+  color: #1a202c;
+}
+
+.api-header .lead {
+  color: #718096;
+  font-size: 1.1rem;
+}
+
+/* Badge styling */
+.api-section-prose .badge {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+}
+
+/* Table styling in prose */
+.api-section-prose table {
+  font-size: 0.875rem;
+}
+
+.api-section-prose table th {
+  background-color: #f7fafc;
+  border-bottom: 2px solid #e2e8f0;
+  font-weight: 600;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1199.98px) {
+  .api-section {
+    -ms-grid-columns: 1fr;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  
+  .api-section-prose {
+    padding-right: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .api-reference-wrapper {
+    padding: 0 0.5rem;
+  }
+  
+  .api-section {
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  
+  .api-section-code .highlight pre {
+    padding: 1rem;
+    font-size: 0.8125rem;
+  }
+}
+
+.code-section-title {
+  font-size: 0.875rem;
+  color: #6c757d;
+  font-weight: 500;
+  margin-bottom: 0.75rem;
+  margin-top: 0;
+}
+
+/* API Switcher styling - converted from SCSS to CSS */
+.api-reference-wrapper {
+  position: relative;
+}
+
+.api-header {
+  position: relative;
+}
+
+.api-reference-wrapper .dropdown-api {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 93px;
+}
+
+.api-reference-wrapper .dropdown-api .btn {
+  width: 100%;
+  font-size: 14px;
+  font-weight: 400;
+  background-color: #9B6CA4 !important;
+  border: 0 !important;
+  border-radius: 6px !important;
+  -webkit-transition: none !important;
+  transition: none !important;
+  color: white !important;
+}
+
+.api-reference-wrapper .dropdown-api .btn::after {
+  margin-left: 10px;
+}
+
+.api-reference-wrapper .dropdown-api .btn.show {
+  background-color: #692175 !important;
+  border-radius: 6px 6px 0 0 !important;
+}
+
+.api-reference-wrapper .dropdown-api .btn.show::after {
+  border-bottom: .3em solid;
+  border-top: 0;
+}
+
+.api-reference-wrapper .dropdown-api .dropdown-menu {
+  inset: -3px 0px auto auto !important;
+  width: 100% !important;
+  min-width: auto !important;
+  background-color: #692175 !important;
+  border: none !important;
+  border-radius: 0 0 6px 6px !important;
+}
+
+.api-reference-wrapper .dropdown-api .dropdown-item {
+  color: #fff !important;
+  font-size: 14px !important;
+  font-weight: 200 !important;
+}
+
+.api-reference-wrapper .dropdown-api .dropdown-item:first-child::before {
+  content: "";
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  border-top: 1px solid #ffffff60;
+  width: calc(100% - 36.5px);
+}
+
+.api-reference-wrapper .dropdown-api .dropdown-item:hover {
+  background-color: #692175 !important;
+  font-weight: 400 !important;
+}
+
+.api-reference-wrapper .dropdown-api .dropdown-item.active {
+  background-color: #692175 !important;
+  font-weight: 400 !important;
+}
+
+.api-reference-wrapper .dropdown-api .dropdown-item.active::after {
+  content: "\f26a";
+  display: inline-block;
+  font-family: bootstrap-icons !important;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: normal !important;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  vertical-align: -.125em;
+  margin-left: 10px;
+  -webkit-font-smoothing: antialiased;
+}
+</style>
+
+<div class="api-reference-wrapper">
+  <div class="api-header">
+    
+<!-- API Switcher temporarily hidden - uncomment when ready to make public
+
+    <div class="dropdown show dropdown-api">
+      <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">API v1</a>
+      <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuLink">
+          <a class="dropdown-item active" href="/indexing/api/v1/content_removal.html">API v1</a>
+          <a class="dropdown-item " href="/indexing/api/v2/content_removal.html">API v2</a>
+      </div>
+    </div>
+-->
+    <h1>Content Removal (DELETE)</h1>
+    <p class="lead">Permanently delete one or more objects from your Luigi's Box search index using the DELETE /v1/content endpoint.</p>
+    
+
+  </div>
+  
+  <div class="callout note">
+  <div class="callout-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="blue" viewbox="0 0 24 24" width="24" height="24">
+      <path d="M21 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zm-14 2h14v16H7V4zm2 2v2h10V6H9zm0 4v2h10v-2H9zm0 4v2h7v-2H9z"></path>
+    </svg>
+
+  </div>
+  <div class="callout-body">
+    <div class="callout-label"><strong>Note</strong></div>
+    <div class="callout-content">
+      <p>This endpoint requires HMAC authentication. Refer to the <a href="/api_principles.html#authentication">Authentication</a> documentation for details.</p>
+
+    </div>
+  </div>
+</div>
+
+<p></p><div class="api-section">
+        <div class="api-section-prose">
+          <h2>Overview</h2>
+
+<p>This endpoint allows you to permanently delete one or more objects from your Luigi's Box search index. You specify which items to remove by providing their <code>type</code> and <code>identity</code> in the request body.</p>
+
+<div class="callout warning">
+  <div class="callout-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="red">
+      <path d="M1 21h22L12 2 1 21z"></path>
+      <text x="12" y="16" text-anchor="middle" font-size="12" fill="white" font-family="Arial" dy=".3em">!</text>
+    </svg>
+
+  </div>
+  <div class="callout-body">
+    <div class="callout-label"><strong>Warning</strong></div>
+    <div class="callout-content">
+      
+<p>This is a <strong>permanent operation</strong>. Once an object is deleted, it will no longer appear in search results or autocomplete suggestions. This is the correct method for handling products that are sold out and will not be restocked.</p>
+
+    </div>
+  </div>
+</div>
+
+<p></p>
+</div>
+        <div class="api-section-code">
+
+<p></p>
+<div class="card my-4 lb-code">
+        <div class="card-header">
+          <ul class="nav nav-underline" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" href="#tab-endpoint-1755-endpoint" data-toggle="tab" role="tab" aria-controls="tab-endpoint-1755-endpoint" aria-selected="true" data-bs-toggle="tab" data-bs-target="#tab-endpoint-1755-endpoint">Endpoint</a>
+            </li>
+          </ul>
+        </div>
+        <div class="card-body p-0">
+          <div id="tab-endpoint-1755-content" class="tab-content">
+            <div id="tab-endpoint-1755-endpoint" class="tab-pane fade show active" role="tabpanel" aria-labelledby="tab-endpoint-1755-endpoint">
+              <div class="endpoint-display p-4" style="background-color: #272822;">
+                <div class="d-flex align-items-center gap-3">
+                  <span class="http-method badge" style="background-color: #dc3545; color: white; font-weight: 600; font-size: 0.75rem; padding: 0.375rem 0.75rem;">DELETE</span>
+                  <code class="endpoint-url" style="font-size: 0.875rem; padding: 0.25rem 0.5rem; border-radius: 4px; color: #ffffff;">https://live.luigisbox.com/v1/content</code>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+<p></p>
+</div>
+      </div>
+
+<p></p><div class="api-section">
+        <div class="api-section-prose">
+          <h2>Request Parameters</h2>
+
+<p>The request body must be a JSON object containing a single root key, <code>objects</code>, which holds an array of simple objects identifying what to delete.</p>
+
+<h3>Top-level Request Structure</h3>
+
+<p></p>
+<table class="table">
+        <tr>
+<th style="text-align: left">Parameter</th>
+<th style="text-align: left">Type</th>
+<th style="text-align: left">Required</th>
+<th style="text-align: left">Description</th>
+</tr>
+
+<p></p>
+<tr>
+<td style="text-align: left"><code>objects</code></td>
+<td style="text-align: left">Array</td>
+<td style="text-align: left">✓</td>
+<td style="text-align: left">An array of objects to be deleted from the index.</td>
+</tr>
+
+<p></p>
+</table>
+
+<h3>Object structure</h3>
+
+<p>Each object in the <code>objects</code> array requires only two keys to identify the content for removal.</p>
+
+<p></p>
+<table class="table">
+        <tr>
+<th style="text-align: left">Parameter</th>
+<th style="text-align: left">Type</th>
+<th style="text-align: left">Required</th>
+<th style="text-align: left">Description</th>
+</tr>
+
+<p></p>
+<tr>
+<td style="text-align: left"><code>identity</code></td>
+<td style="text-align: left">String</td>
+<td style="text-align: left">✓</td>
+<td style="text-align: left">The unique identifier of the object you want to delete.</td>
+</tr>
+<tr>
+<td style="text-align: left"><code>type</code></td>
+<td style="text-align: left">String</td>
+<td style="text-align: left">✓</td>
+<td style="text-align: left">The type of the object you want to delete (e.g., <code>item</code>, <code>category</code>, <code>brand</code>).</td>
+</tr>
+
+<p></p>
+</table>
+
+<p></p>
+</div>
+        <div class="api-section-code">
+
+<p></p>
+<div class="code-section-container">
+          <h4 class="code-section-title">Example: Request Body (JSON)</h4>
+          <div class="card my-4 lb-code ">
+  <div class="card-header">
+    <ul class="nav nav-underline" role="tablist">
+      
+        <li class="nav-item">
+          <a class="nav-link active" href="#tab-0-json" data-toggle="tab" role="tab" aria-controls="tab-0-json" aria-selected="true" data-bs-toggle="tab" data-bs-target="#tab-0-json">json</a>
+        </li>
+      
+      
+      
+
+      
+    </ul>
+  </div>
+  <div class="card-body p-0">
+    <div id="tab-0-content" class="tab-content">
+      
+        <div id="tab-0-json" class="tab-pane fade show active" role="tabpanel" aria-labelledby="tab-0-json">
+          <div class="highlight"><pre class="highlight json m-0 p-4 tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"objects"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"item"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"identity"</span><span class="p">:</span><span class="w"> </span><span class="s2">"B6B7CD9466295DCFDB62676CAE374289"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"item"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"identity"</span><span class="p">:</span><span class="w"> </span><span class="s2">"611526210E4585C7C8D5367F2CC42A57"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div>
+        </div>
+      
+    </div>
+  </div>
+</div>
+        </div>
+
+<p></p>
+</div>
+      </div>
+
+<p></p><div class="api-section">
+        <div class="api-section-prose">
+          <h2>How to Send a Deletion Request</h2>
+
+<p>The examples show how to prepare and send a request to the API to delete content.</p>
+
+<p><strong>Authentication is required for all requests</strong>. The code demonstrates how to construct 
+the necessary headers, including <code>Date</code> and <code>Authorization</code>. The <code>Authorization</code> header requires a 
+dynamically generated HMAC signature. For a detailed explanation of how to create this signature,
+please refer to our main API Authentication guide.</p>
+
+<div class="callout warning">
+  <div class="callout-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="red">
+      <path d="M1 21h22L12 2 1 21z"></path>
+      <text x="12" y="16" text-anchor="middle" font-size="12" fill="white" font-family="Arial" dy=".3em">!</text>
+    </svg>
+
+  </div>
+  <div class="callout-body">
+    <div class="callout-label"><strong>Warning</strong></div>
+    <div class="callout-content">
+      
+<p>Your <strong>Private Key</strong> is a secret and should never be exposed in client-side code (like frontend JavaScript). It should only be used on a secure server.</p>
+
+    </div>
+  </div>
+</div>
+
+<div class="callout info">
+  <div class="callout-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewbox="0 0 24 24" fill="green">
+      <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"></path>
+    </svg>
+
+  </div>
+  <div class="callout-body">
+    <div class="callout-label"><strong>Info</strong></div>
+    <div class="callout-content">
+      
+<p>Your API Keys can be found in the Luigi's Box application under "General settings" &gt; "Integration settings".</p>
+
+    </div>
+  </div>
+</div>
+
+<p></p>
+</div>
+        <div class="api-section-code">
+
+<p></p>
+<div class="code-section-container">
+          <h4 class="code-section-title">Code Examples</h4>
+          <div class="card my-4 lb-code ">
+  <div class="card-header">
+    <ul class="nav nav-underline" role="tablist">
+      
+        <li class="nav-item">
+          <a class="nav-link active" href="#tab-1-ruby" data-toggle="tab" role="tab" aria-controls="tab-1-ruby" aria-selected="true" data-bs-toggle="tab" data-bs-target="#tab-1-ruby">ruby</a>
+        </li>
+      
+        <li class="nav-item">
+          <a class="nav-link " href="#tab-1-php" data-toggle="tab" role="tab" aria-controls="tab-1-php" aria-selected="true" data-bs-toggle="tab" data-bs-target="#tab-1-php">php</a>
+        </li>
+      
+        <li class="nav-item">
+          <a class="nav-link " href="#tab-1-javascript" data-toggle="tab" role="tab" aria-controls="tab-1-javascript" aria-selected="true" data-bs-toggle="tab" data-bs-target="#tab-1-javascript">javascript</a>
+        </li>
+      
+      
+      
+
+      
+    </ul>
+  </div>
+  <div class="card-body p-0">
+    <div id="tab-1-content" class="tab-content">
+      
+        <div id="tab-1-ruby" class="tab-pane fade show active" role="tabpanel" aria-labelledby="tab-1-ruby">
+          <div class="highlight"><pre class="highlight ruby m-0 p-4 tab-ruby"><code><span class="c1"># --- Ruby Example for DELETE /v1/content ---</span>
+<span class="c1"># Assumes 'faraday' gem is installed (gem install faraday)</span>
+
+<p><span class="nb">require</span> <span class="s1">'faraday'</span>
+<span class="nb">require</span> <span class="s1">'json'</span>
+<span class="nb">require</span> <span class="s1">'time'</span>
+<span class="nb">require</span> <span class="s1">'openssl'</span>
+<span class="nb">require</span> <span class="s1">'base64'</span></p>
+
+<p><span class="c1"># Helper function for authentication</span>
+<span class="k">def</span> <span class="nf">generate_luigisbox_digest</span><span class="p">(</span><span class="n">private_key</span><span class="p">,</span> <span class="n">http_method</span><span class="p">,</span> 
+                              <span class="n">endpoint_path</span><span class="p">,</span> <span class="n">date_header</span><span class="p">,</span> 
+                              <span class="n">content_type_header</span><span class="p">)</span>
+  <span class="n">data</span> <span class="o">=</span> <span class="s2">"</span><span class="si">#{</span><span class="n">http_method</span><span class="si">}</span><span class="se">\n</span><span class="si">#{</span><span class="n">content_type_header</span><span class="si">}</span><span class="se">\n</span><span class="s2">"</span> <span class="o">+</span>
+         <span class="s2">"</span><span class="si">#{</span><span class="n">date_header</span><span class="si">}</span><span class="se">\n</span><span class="si">#{</span><span class="n">endpoint_path</span><span class="si">}</span><span class="s2">"</span>
+  <span class="n">dg</span> <span class="o">=</span> <span class="no">OpenSSL</span><span class="o">::</span><span class="no">Digest</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s1">'sha256'</span><span class="p">)</span>
+  <span class="no">Base64</span><span class="p">.</span><span class="nf">strict_encode64</span><span class="p">(</span>
+    <span class="no">OpenSSL</span><span class="o">::</span><span class="no">HMAC</span><span class="p">.</span><span class="nf">digest</span><span class="p">(</span><span class="n">dg</span><span class="p">,</span> <span class="n">private_key</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+  <span class="p">).</span><span class="nf">strip</span>
+<span class="k">end</span></p>
+
+<p><span class="no">YOUR_PUBLIC_KEY</span> <span class="o">=</span> <span class="s2">"your_public_api_key"</span>
+<span class="no">YOUR_PRIVATE_KEY</span> <span class="o">=</span> <span class="s2">"your_private_api_key"</span> <span class="c1"># Keep secure!</span>
+<span class="no">LUIGISBOX_HOST</span> <span class="o">=</span> <span class="s1">'https://live.luigisbox.com'</span>
+<span class="no">ENDPOINT_PATH</span> <span class="o">=</span> <span class="s1">'/v1/content'</span></p>
+
+<p><span class="n">product_data</span> <span class="o">=</span> <span class="p">[</span>
+  <span class="p">{</span>
+    <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"item"</span><span class="p">,</span>
+    <span class="s2">"identity"</span><span class="p">:</span> <span class="s2">"B6B7CD9466295DCFDB62676CAE374289"</span>
+  <span class="p">},</span>
+  <span class="p">{</span>
+    <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"item"</span><span class="p">,</span>
+    <span class="s2">"identity"</span><span class="p">:</span> <span class="s2">"611526210E4585C7C8D5367F2CC42A57"</span>
+  <span class="p">}</span>
+<span class="p">]</span>
+<span class="n">request_body_json</span> <span class="o">=</span> <span class="p">{</span> <span class="ss">objects: </span><span class="n">product_data</span> <span class="p">}.</span><span class="nf">to_json</span></p>
+
+<p><span class="n">http_method</span> <span class="o">=</span> <span class="s1">'DELETE'</span>
+<span class="n">content_type</span> <span class="o">=</span> <span class="s1">'application/json; charset=utf-8'</span>
+<span class="n">current_date</span> <span class="o">=</span> <span class="no">Time</span><span class="p">.</span><span class="nf">now</span><span class="p">.</span><span class="nf">httpdate</span></p>
+
+<p><span class="n">signature</span> <span class="o">=</span> <span class="n">generate_luigisbox_digest</span><span class="p">(</span>
+  <span class="no">YOUR_PRIVATE_KEY</span><span class="p">,</span> <span class="n">http_method</span><span class="p">,</span> <span class="no">ENDPOINT_PATH</span><span class="p">,</span> 
+  <span class="n">current_date</span><span class="p">,</span> <span class="n">content_type</span>
+<span class="p">)</span>
+<span class="n">authorization_header</span> <span class="o">=</span> <span class="s2">"ApiAuth </span><span class="si">#{</span><span class="no">YOUR_PUBLIC_KEY</span><span class="si">}</span><span class="s2">:</span><span class="si">#{</span><span class="n">signature</span><span class="si">}</span><span class="s2">"</span></p>
+
+<p><span class="n">connection</span> <span class="o">=</span> <span class="no">Faraday</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">url: </span><span class="no">LUIGISBOX_HOST</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">conn</span><span class="o">|</span>
+  <span class="n">conn</span><span class="p">.</span><span class="nf">use</span> <span class="no">FaradayMiddleware</span><span class="o">::</span><span class="no">Gzip</span>
+<span class="k">end</span></p>
+
+<p><span class="n">response</span> <span class="o">=</span> <span class="n">connection</span><span class="p">.</span><span class="nf">delete</span><span class="p">(</span><span class="no">ENDPOINT_PATH</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">req</span><span class="o">|</span>
+  <span class="n">req</span><span class="p">.</span><span class="nf">headers</span><span class="p">[</span><span class="s1">'Content-Type'</span><span class="p">]</span> <span class="o">=</span> <span class="n">content_type</span>
+  <span class="n">req</span><span class="p">.</span><span class="nf">headers</span><span class="p">[</span><span class="s1">'Date'</span><span class="p">]</span> <span class="o">=</span> <span class="n">current_date</span>
+  <span class="n">req</span><span class="p">.</span><span class="nf">headers</span><span class="p">[</span><span class="s1">'Authorization'</span><span class="p">]</span> <span class="o">=</span> <span class="n">authorization_header</span>
+  <span class="n">req</span><span class="p">.</span><span class="nf">body</span> <span class="o">=</span> <span class="n">request_body_json</span>
+<span class="k">end</span></p>
+
+<p><span class="n">response_body</span> <span class="o">=</span> <span class="no">JSON</span><span class="p">.</span><span class="nf">parse</span><span class="p">(</span><span class="n">response</span><span class="p">.</span><span class="nf">body</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">response</span><span class="p">.</span><span class="nf">success?</span> <span class="o">&amp;&amp;</span> <span class="n">response_body</span><span class="p">[</span><span class="s1">'ok_count'</span><span class="p">]</span> <span class="o">&amp;&amp;</span> 
+   <span class="n">response_body</span><span class="p">[</span><span class="s1">'ok_count'</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span>
+  <span class="nb">puts</span> <span class="s2">"Product successfully deleted: "</span> <span class="o">+</span>
+       <span class="s2">"</span><span class="si">#{</span><span class="no">JSON</span><span class="p">.</span><span class="nf">pretty_generate</span><span class="p">(</span><span class="n">response_body</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
+<span class="k">else</span>
+  <span class="nb">puts</span> <span class="s2">"Error deleting product: HTTP Status "</span> <span class="o">+</span>
+       <span class="s2">"</span><span class="si">#{</span><span class="n">response</span><span class="p">.</span><span class="nf">status</span><span class="si">}</span><span class="s2">, Response: </span><span class="si">#{</span><span class="n">response</span><span class="p">.</span><span class="nf">body</span><span class="si">}</span><span class="s2">"</span>
+<span class="k">end</span>
+</p></code></pre></div>
+
+        </div>
+      
+        <div id="tab-1-php" class="tab-pane fade show " role="tabpanel" aria-labelledby="tab-1-php">
+          <div class="highlight"><pre class="highlight php m-0 p-4 tab-php"><code><span class="cp">&lt;?php</span>
+<span class="c1">// PHP Example for DELETE /v1/content</span>
+<span class="c1">// Assumes Guzzle is installed: </span>
+<span class="c1">// composer require guzzlehttp/guzzle</span>
+
+<p><span class="k">require</span> <span class="s1">'vendor/autoload.php'</span><span class="p">;</span></p>
+
+<p><span class="kn">use</span> <span class="nc">GuzzleHttp\Client</span><span class="p">;</span></p>
+
+<p><span class="k">function</span> <span class="n">generateLuigisboxDigest</span><span class="p">(</span><span class="nv">$privateKey</span><span class="p">,</span> <span class="nv">$httpMethod</span><span class="p">,</span> 
+                                 <span class="nv">$endpointPath</span><span class="p">,</span> <span class="nv">$dateHeader</span><span class="p">,</span> 
+                                 <span class="nv">$contentTypeHeader</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nv">$data</span> <span class="o">=</span> <span class="s2">"</span><span class="si">{</span><span class="nv">$httpMethod</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="nv">$contentTypeHeader</span><span class="si">}</span><span class="se">\n</span><span class="s2">"</span> <span class="mf">.</span>
+            <span class="s2">"</span><span class="si">{</span><span class="nv">$dateHeader</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="nv">$endpointPath</span><span class="si">}</span><span class="s2">"</span><span class="p">;</span>
+    <span class="nv">$hash</span> <span class="o">=</span> <span class="nb">hash_hmac</span><span class="p">(</span><span class="s1">'sha256'</span><span class="p">,</span> <span class="nv">$data</span><span class="p">,</span> <span class="nv">$privateKey</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nb">trim</span><span class="p">(</span><span class="nb">base64_encode</span><span class="p">(</span><span class="nv">$hash</span><span class="p">));</span>
+<span class="p">}</span></p>
+
+<p><span class="nv">$YOUR_PUBLIC_KEY</span>  <span class="o">=</span> <span class="s2">"your_public_api_key"</span><span class="p">;</span>
+<span class="nv">$YOUR_PRIVATE_KEY</span> <span class="o">=</span> <span class="s2">"your_private_api_key"</span><span class="p">;</span>  <span class="c1">// Keep secure!</span>
+<span class="nv">$LUIGISBOX_HOST</span>   <span class="o">=</span> <span class="s1">'https://live.luigisbox.com'</span><span class="p">;</span>
+<span class="nv">$ENDPOINT_PATH</span>    <span class="o">=</span> <span class="s1">'/v1/content'</span><span class="p">;</span></p>
+
+<p><span class="nv">$product_data</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">[</span>
+        <span class="s1">'identity'</span> <span class="o">=&gt;</span> <span class="s1">'B6B7CD9466295DCFDB62676CAE374289'</span><span class="p">,</span>
+        <span class="s1">'type'</span>     <span class="o">=&gt;</span> <span class="s1">'item'</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="p">[</span>
+        <span class="s1">'identity'</span> <span class="o">=&gt;</span> <span class="s1">'611526210E4585C7C8D5367F2CC42A57'</span><span class="p">,</span>
+        <span class="s1">'type'</span>     <span class="o">=&gt;</span> <span class="s1">'item'</span><span class="p">,</span>
+    <span class="p">]</span>
+<span class="p">];</span></p>
+
+<p><span class="nv">$request_body</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'objects'</span> <span class="o">=&gt;</span> <span class="nv">$product_data</span><span class="p">];</span></p>
+
+<p><span class="nv">$http_method</span>  <span class="o">=</span> <span class="s1">'DELETE'</span><span class="p">;</span>
+<span class="nv">$content_type</span> <span class="o">=</span> <span class="s1">'application/json; charset=utf-8'</span><span class="p">;</span></p>
+
+<p><span class="c1">// Create HTTP-date string </span>
+<span class="c1">// (e.g., "Tue, 22 May 2025 14:32:00 GMT")</span>
+<span class="nv">$current_date</span> <span class="o">=</span> <span class="nb">gmdate</span><span class="p">(</span><span class="s1">'D, d M Y H:i:s'</span><span class="p">)</span> <span class="mf">.</span> <span class="s1">' GMT'</span><span class="p">;</span></p>
+
+<p><span class="nv">$signature</span> <span class="o">=</span> <span class="nf">generateLuigisboxDigest</span><span class="p">(</span>
+    <span class="nv">$YOUR_PRIVATE_KEY</span><span class="p">,</span> <span class="nv">$http_method</span><span class="p">,</span> 
+    <span class="nv">$ENDPOINT_PATH</span><span class="p">,</span> <span class="nv">$current_date</span><span class="p">,</span> <span class="nv">$content_type</span>
+<span class="p">);</span>
+<span class="nv">$authorization_header</span> <span class="o">=</span> <span class="s2">"ApiAuth </span><span class="si">{</span><span class="nv">$YOUR_PUBLIC_KEY</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="nv">$signature</span><span class="si">}</span><span class="s2">"</span><span class="p">;</span></p>
+
+<p><span class="nv">$client</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">GuzzleHttp\Client</span><span class="p">();</span>
+<span class="nv">$response</span> <span class="o">=</span> <span class="nv">$client</span><span class="o">-&gt;</span><span class="nf">request</span><span class="p">(</span>
+    <span class="nv">$http_method</span><span class="p">,</span> 
+    <span class="s2">"</span><span class="si">{</span><span class="nv">$LUIGISBOX_HOST</span><span class="si">}{</span><span class="nv">$ENDPOINT_PATH</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> 
+    <span class="p">[</span>
+        <span class="s1">'headers'</span> <span class="o">=&gt;</span> <span class="p">[</span>
+            <span class="s1">'Accept-Encoding'</span> <span class="o">=&gt;</span> <span class="s1">'gzip, deflate'</span><span class="p">,</span>
+            <span class="s1">'Content-Type'</span>  <span class="o">=&gt;</span> <span class="nv">$content_type</span><span class="p">,</span>
+            <span class="s1">'Date'</span>          <span class="o">=&gt;</span> <span class="nv">$current_date</span><span class="p">,</span>
+            <span class="s1">'Authorization'</span> <span class="o">=&gt;</span> <span class="nv">$authorization_header</span><span class="p">,</span>
+        <span class="p">],</span>
+        <span class="s1">'json'</span> <span class="o">=&gt;</span> <span class="nv">$request_body</span>
+    <span class="p">]</span>
+<span class="p">);</span></p>
+
+<p><span class="nv">$response_body</span> <span class="o">=</span> <span class="nb">json_decode</span><span class="p">(</span><span class="nv">$response</span><span class="o">-&gt;</span><span class="nf">getBody</span><span class="p">(),</span> <span class="kc">true</span><span class="p">);</span></p>
+
+<p><span class="k">if</span><span class="p">(</span><span class="nv">$response</span><span class="o">-&gt;</span><span class="nf">getStatusCode</span><span class="p">()</span> <span class="o">==</span> <span class="mi">200</span> <span class="o">&amp;&amp;</span> 
+   <span class="k">isset</span><span class="p">(</span><span class="nv">$response_body</span><span class="p">[</span><span class="s1">'ok_count'</span><span class="p">])</span> <span class="o">&amp;&amp;</span> 
+   <span class="nv">$response_body</span><span class="p">[</span><span class="s1">'ok_count'</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">echo</span> <span class="s2">"Product successfully deleted:"</span> <span class="mf">.</span> <span class="kc">PHP_EOL</span><span class="p">;</span>
+    <span class="k">echo</span> <span class="nb">json_encode</span><span class="p">(</span><span class="nv">$response_body</span><span class="p">,</span> <span class="no">JSON_PRETTY_PRINT</span><span class="p">);</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="k">echo</span> <span class="s2">"Error deleting product: HTTP Status "</span> <span class="mf">.</span> 
+         <span class="nv">$response</span><span class="o">-&gt;</span><span class="nf">getStatusCode</span><span class="p">()</span> <span class="mf">.</span> 
+         <span class="s2">"</span><span class="se">\n</span><span class="s2">Response: "</span> <span class="mf">.</span> <span class="nv">$response</span><span class="o">-&gt;</span><span class="nf">getBody</span><span class="p">();</span>
+<span class="p">}</span>
+</p></code></pre></div>
+
+        </div>
+      
+        <div id="tab-1-javascript" class="tab-pane fade show " role="tabpanel" aria-labelledby="tab-1-javascript">
+          <div class="highlight"><pre class="highlight javascript m-0 p-4 tab-javascript"><code><span class="kd">const</span> <span class="nx">axios</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">axios</span><span class="dl">'</span><span class="p">);</span>
+<span class="kd">const</span> <span class="nx">crypto</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">crypto</span><span class="dl">'</span><span class="p">);</span>
+
+<p><span class="kd">function</span> <span class="nx">generateLuigisBoxDigest</span><span class="p">(</span><span class="nx">privateKey</span><span class="p">,</span> <span class="nx">httpMethod</span><span class="p">,</span> 
+                                <span class="nx">endpointPath</span><span class="p">,</span> <span class="nx">dateHeader</span><span class="p">,</span> 
+                                <span class="nx">contentTypeHeader</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">data</span> <span class="o">=</span> <span class="nx">httpMethod</span> <span class="o">+</span> <span class="dl">"</span><span class="se">\n</span><span class="dl">"</span> <span class="o">+</span> <span class="nx">contentTypeHeader</span> <span class="o">+</span> <span class="dl">"</span><span class="se">\n</span><span class="dl">"</span> <span class="o">+</span>
+               <span class="nx">dateHeader</span> <span class="o">+</span> <span class="dl">"</span><span class="se">\n</span><span class="dl">"</span> <span class="o">+</span> <span class="nx">endpointPath</span><span class="p">;</span>
+  <span class="kd">const</span> <span class="nx">hmac</span> <span class="o">=</span> <span class="nx">crypto</span><span class="p">.</span><span class="nx">createHmac</span><span class="p">(</span><span class="dl">'</span><span class="s1">sha256</span><span class="dl">'</span><span class="p">,</span> <span class="nx">privateKey</span><span class="p">);</span>
+  <span class="nx">hmac</span><span class="p">.</span><span class="nx">update</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+  <span class="k">return</span> <span class="nx">hmac</span><span class="p">.</span><span class="nx">digest</span><span class="p">(</span><span class="dl">'</span><span class="s1">base64</span><span class="dl">'</span><span class="p">).</span><span class="nx">trim</span><span class="p">();</span>
+<span class="p">}</span></p>
+
+<p><span class="c1">// Configuration</span>
+<span class="kd">const</span> <span class="nx">YOUR_PUBLIC_KEY</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">your_public_api_key</span><span class="dl">"</span><span class="p">;</span>
+<span class="kd">const</span> <span class="nx">YOUR_PRIVATE_KEY</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">your_private_api_key</span><span class="dl">"</span><span class="p">;</span> <span class="c1">// Keep secure!</span>
+<span class="kd">const</span> <span class="nx">LUIGISBOX_HOST</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">https://live.luigisbox.com</span><span class="dl">'</span><span class="p">;</span>
+<span class="kd">const</span> <span class="nx">ENDPOINT_PATH</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">/v1/content</span><span class="dl">'</span><span class="p">;</span></p>
+
+<p><span class="c1">// Product data</span>
+<span class="kd">const</span> <span class="nx">productData</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="dl">"</span><span class="s2">type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">item</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">identity</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">B6B7CD9466295DCFDB62676CAE374289</span><span class="dl">"</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+      <span class="dl">"</span><span class="s2">type</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">item</span><span class="dl">"</span><span class="p">,</span>
+      <span class="dl">"</span><span class="s2">identity</span><span class="dl">"</span><span class="p">:</span> <span class="dl">"</span><span class="s2">611526210E4585C7C8D5367F2CC42A57</span><span class="dl">"</span>
+    <span class="p">}</span>
+<span class="p">];</span></p>
+
+<p><span class="kd">const</span> <span class="nx">requestBody</span> <span class="o">=</span> <span class="p">{</span> <span class="na">objects</span><span class="p">:</span> <span class="nx">productData</span> <span class="p">}</span></p>
+
+<p><span class="kd">const</span> <span class="nx">httpMethod</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">DELETE</span><span class="dl">'</span><span class="p">;</span>
+<span class="kd">const</span> <span class="nx">contentType</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">application/json; charset=utf-8</span><span class="dl">'</span><span class="p">;</span>
+<span class="c1">// Create current date in HTTP date format</span>
+<span class="kd">const</span> <span class="nx">currentDate</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">().</span><span class="nx">toUTCString</span><span class="p">();</span></p>
+
+<p><span class="kd">const</span> <span class="nx">signature</span> <span class="o">=</span> <span class="nx">generateLuigisBoxDigest</span><span class="p">(</span>
+  <span class="nx">YOUR_PRIVATE_KEY</span><span class="p">,</span> <span class="nx">httpMethod</span><span class="p">,</span> <span class="nx">ENDPOINT_PATH</span><span class="p">,</span> 
+  <span class="nx">currentDate</span><span class="p">,</span> <span class="nx">contentType</span>
+<span class="p">);</span>
+<span class="kd">const</span> <span class="nx">authorizationHeader</span> <span class="o">=</span> 
+  <span class="dl">"</span><span class="s2">ApiAuth </span><span class="dl">"</span> <span class="o">+</span> <span class="nx">YOUR_PUBLIC_KEY</span> <span class="o">+</span> <span class="dl">"</span><span class="s2">:</span><span class="dl">"</span> <span class="o">+</span> <span class="nx">signature</span><span class="p">;</span></p>
+
+<p><span class="c1">// Make the HTTP request with Axios</span>
+<span class="nx">axios</span><span class="p">({</span>
+  <span class="na">method</span><span class="p">:</span> <span class="nx">httpMethod</span><span class="p">,</span>
+  <span class="na">url</span><span class="p">:</span> <span class="nx">LUIGISBOX_HOST</span> <span class="o">+</span> <span class="nx">ENDPOINT_PATH</span><span class="p">,</span>
+  <span class="na">headers</span><span class="p">:</span> <span class="p">{</span>
+    <span class="dl">'</span><span class="s1">Content-Type</span><span class="dl">'</span><span class="p">:</span> <span class="nx">contentType</span><span class="p">,</span>
+    <span class="dl">'</span><span class="s1">Date</span><span class="dl">'</span><span class="p">:</span> <span class="nx">currentDate</span><span class="p">,</span>
+    <span class="dl">'</span><span class="s1">Authorization</span><span class="dl">'</span><span class="p">:</span> <span class="nx">authorizationHeader</span>
+  <span class="p">},</span>
+  <span class="na">data</span><span class="p">:</span> <span class="nx">requestBody</span>
+<span class="p">})</span>
+<span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">response</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="kd">const</span> <span class="nx">responseBody</span> <span class="o">=</span> <span class="nx">response</span><span class="p">.</span><span class="nx">data</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">status</span> <span class="o">===</span> <span class="mi">200</span> <span class="o">&amp;&amp;</span> 
+      <span class="nx">responseBody</span><span class="p">.</span><span class="nx">ok_count</span> <span class="o">&amp;&amp;</span> 
+      <span class="nx">responseBody</span><span class="p">.</span><span class="nx">ok_count</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">Product successfully deleted:</span><span class="dl">"</span><span class="p">,</span> 
+                <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">responseBody</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="mi">2</span><span class="p">));</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="dl">"</span><span class="s2">Error deleting product: </span><span class="dl">"</span> <span class="o">+</span>
+                  <span class="dl">"</span><span class="s2">HTTP Status </span><span class="dl">"</span> <span class="o">+</span> <span class="nx">response</span><span class="p">.</span><span class="nx">status</span> <span class="o">+</span> <span class="dl">"</span><span class="s2">, </span><span class="dl">"</span> <span class="o">+</span>
+                  <span class="dl">"</span><span class="s2">Response: </span><span class="dl">"</span> <span class="o">+</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">responseBody</span><span class="p">));</span>
+  <span class="p">}</span>
+<span class="p">})</span>
+<span class="p">.</span><span class="k">catch</span><span class="p">(</span><span class="nx">error</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">error</span><span class="p">(</span><span class="dl">"</span><span class="s2">Exception:</span><span class="dl">"</span><span class="p">,</span> <span class="nx">error</span><span class="p">.</span><span class="nx">message</span><span class="p">);</span>
+<span class="p">});</span>
+</p></code></pre></div>
+        </div>
+      
+    </div>
+  </div>
+</div>
+        </div>
+
+<p></p>
+</div>
+      </div>
+
+<p></p><div class="api-section">
+        <div class="api-section-prose">
+          <h2>Error Handling</h2>
+      <table class="table">
+        <tr>
+<th style="text-align: left">HTTP Status</th>
+<th style="text-align: left">Description</th>
+</tr>
+
+<p></p>
+<tr>
+<td style="text-align: left"><strong>400 Bad Request</strong></td>
+<td style="text-align: left">The request structure is invalid or the JSON is malformed. For example, an object in the array is missing the <code>identity</code> or <code>type</code> key.</td>
+</tr>
+<tr>
+<td style="text-align: left"><strong>429 Too Many Requests</strong></td>
+<td style="text-align: left">The API rate limit has been exceeded. Check the <code>Retry-After</code> header and see <a href="/api_principles.html#throttling">Throttling docs</a>.</td>
+</tr>
+
+<p></p>
+</table>
+
+<p></p>
+</div>
+        <div class="api-section-code">
+
+<p></p>
+<div class="code-section-container">
+          <h4 class="code-section-title">Example: Error Response</h4>
+          <div class="card my-4 lb-code ">
+  <div class="card-header">
+    <ul class="nav nav-underline" role="tablist">
+      
+        <li class="nav-item">
+          <a class="nav-link active" href="#tab-2-json" data-toggle="tab" role="tab" aria-controls="tab-2-json" aria-selected="true" data-bs-toggle="tab" data-bs-target="#tab-2-json">json</a>
+        </li>
+      
+      
+      
+
+      
+    </ul>
+  </div>
+  <div class="card-body p-0">
+    <div id="tab-2-content" class="tab-content">
+      
+        <div id="tab-2-json" class="tab-pane fade show active" role="tabpanel" aria-labelledby="tab-2-json">
+          <div class="highlight"><pre class="highlight json m-0 p-4 tab-json"><code><span class="p">{</span><span class="w">
+  </span><span class="nl">"ok_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"errors_count"</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">
+  </span><span class="nl">"errors"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nl">"B6B7CD9466295DCFDB62676CAE374289"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="nl">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"not_found"</span><span class="p">,</span><span class="w">
+      </span><span class="nl">"reason"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Identity not in catalog"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div>
+        </div>
+      
+    </div>
+  </div>
+</div>
+        </div>
+
+<p></p>
+</div>
+      </div>
+<h2 id="related-endpoints">Related Endpoints</h2>
+<ul>
+<li>
+<a href="/indexing/api/v1/content_update.html">Content Update</a> - Create or replace objects</li>
+<li>
+<a href="/indexing/api/v1/partial_update.html">Partial Content Update</a> - Update specific fields only</li>
+<li>
+<a href="/indexing/api/v1/query_update.html">Update by Query</a> - Bulk updates based on search criteria</li>
+</ul>
+
+</div>
+
+    <hr>
+
+        <!-- Feedback section and associated styles -->
+    <div class="feedback-wrapper">
+      <div class="feedback-menu">
+          <h3>Was this page helpful?</h3>
+          <div id="feedback">
+            <div id="feedback-container">
+              <button id="feedback-up" aria-label="Thumbs Up">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                  <path d="M2 21h4V9H2v12zm20-11h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 2 7.59 8.59C7.22 8.95 7 9.45 7 10v8c0 .55.45 1 1 1h9c.82 0 1.54-.5 1.85-1.22l3.02-7.05c.09-.23.13-.47.13-.73v-1z"/>
+                </svg>
+              </button>
+            
+              <button id="feedback-down" aria-label="Thumbs Down">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                  <path d="M22 3h-4v12h4V3zm-20 11h6.31l-.95 4.57-.03.32c0 .41.17.79.44 1.06L9.83 22l6.58-6.59c.37-.36.59-.86.59-1.41V6c0-.55-.45-1-1-1H7c-.82 0-1.54.5-1.85 1.22L2.13 14.27C2.04 14.5 2 14.74 2 15v-1z"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+      </div>
+    </div>
+    
+    
+    </article>
+
+
+
+
+  </div>
+</div>
+
+<div class="container-fluid bg-dark">
+  <footer class="py-3 container text-bg-dark">
+    <div class="row mt-5">
+      <div class="col-md-6">
+        <a href="/" class="mb-3 mb-md-0 text-decoration-none">
+          <img src="../../../assets/images/logo-d76f5422.svg" height="64"/>
+        </a>
+        <p class="my-3 mb-md-0">© 2016—2025 Luigi's Box</p>
+      </div>
+      <div class="col-md-3">
+        <h5>System status</h5>
+        <iframe src="https://www.luigisboxstatus.com/badge?theme=dark" width="250" height="30" frameborder="0" scrolling="no"></iframe>
+      </div>
+      <div class="col-md-3">
+        <h5>Resources</h5>
+        <ul class="list-unstyled">
+          <li class="mb-2"><a href="https://www.luigisbox.com" class="text-bg-dark">Website</a></li>
+          <li class="mb-2"><a href="https://help.luigisbox.com" class="text-bg-dark">Knowledge base</a></li>
+          <li class="mb-2"><a href="mailto:support@luigisbox.com" class="text-bg-dark">Contact our support</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<script>
+  function LBInitGlobalAutocomplete() {
+    AutoComplete(
+      {
+        Layout: 'line',
+        TrackerId: '459915-554117',
+        Locale: 'en',
+        TypingSuggestions: true,
+        ShowBranding: false,
+        Placeholder: '#lb-search',
+        AfterRender: function (query, results, emitAnalyticsEventFn) {
+          document.querySelector('#lb-search').classList.add('subtle-shadow-popup');
+          document.querySelectorAll('.luigi-ac-header td').forEach((header) => {
+            header.insertAdjacentHTML('afterbegin', `<i class="bi bi-box "></i>`);
+          });
+          document.querySelectorAll('.luigi-ac-_item-wrapper, .luigi-ac-sections-wrapper, .luigi-ac-examples-wrapper').forEach((section) => {
+            section.insertAdjacentHTML('afterbegin', `<div class="luigi-side-line"></div>`);
+          });
+        },
+        AfterClose: function () {},
+        FormatForDisplay: function (result) {
+          function capitalize(word) {
+            let capitalized = word.charAt(0).toUpperCase() + word.slice(1);
+            const exceptionsMapping = {
+              Lbx: 'LBX',
+              Api: 'API',
+            };
+            for (const key in exceptionsMapping) {
+              capitalized = capitalized.replace(key, exceptionsMapping[key]);
+            }
+            return capitalized;
+          }
+          const chevron = `  &#x203A;  `;
+          const atts = result.attributes;
+
+          if (result.type === 'sections' || result.type === 'examples') {
+            const masterUrl = atts.original_url
+            const topLevelCat = masterUrl?.split('/')?.[1].split("#")?.[0]?.replace('.html', '').replaceAll('_', ' ').replace(/[ ]js/, '.js');
+            const capitalizedTopLevelCat = capitalize(topLevelCat);
+            if (capitalizedTopLevelCat !== atts['title.untouched']) {
+              result.attributes.title = `${capitalizedTopLevelCat}${chevron}${result.attributes.title}`;
+            }
+          }
+
+          return result;
+        },
+        Translations: {
+          en: {
+            showAllTitle: 'Show all results',
+            types: {
+              _item: {
+                name: 'Articles',
+                recommendHeroName: 'Top Articles',
+                heroName: 'Top Articles',
+                recommendName: 'Top Categories',
+              },
+              sections: {
+                name: 'Sections',
+                recommendHeroName: 'Top Sections',
+                heroName: 'Top Sections',
+                recommendName: 'Top Sections',
+              },
+              examples: {
+                name: 'Examples',
+                recommendHeroName: 'Top Examples',
+                heroName: 'Top Examples',
+                recommendName: 'Top Examples',
+              },
+            },
+          },
+        },
+        Types: [
+          {
+            type: '_item',
+            name: 'Items',
+            size: 6,
+            recommend: {
+              size: 4,
+            },
+          },
+          {
+            type: 'sections',
+            name: 'Sections',
+            size: 3,
+            recommend: {
+              size: 2,
+            },
+          },
+          {
+            type: 'examples',
+            name: 'Example',
+            size: 3,
+            recommend: {
+              size: 2,
+            },
+          },
+        ],
+      },
+      '#search-input'
+    );
+  }
+
+  document.addEventListener('keydown', function (event) {
+    // Check if the "Cmd" (or "Ctrl") key and "k" key are pressed
+    if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
+      event.preventDefault();
+      document.querySelector('#search-input').click();
+      document.querySelector('#search-input').focus();
+    }
+  });
+</script>
+<script src="https://cdn.luigisbox.com/autocomplete.js" async onload="LBInitGlobalAutocomplete()"></script>
+
+<script>
+  function handleSearchInitialization() {
+    const path = window.location.pathname;
+    if (!path.startsWith("/search/searchPage.html")) {
+      return
+    }
+    LBInitDocumentationSearch()
+  }
+
+  function LBInitDocumentationSearch() {
+    Luigis.Search({
+      TrackerId: '459915-554117',
+      Locale: 'en',
+      Theme: 'boo',
+      Size: 21,
+      Facets: ['brand', 'category', 'price_amount'],
+      DefaultFilters: {
+          type: 'sections'
+      },
+      QuicksearchTypes: ['category', 'brand'],
+      UrlParamName: {
+        QUERY: 'q',
+      },
+      OnDone(query, results, emitAnalyticsEventFn) {
+        setTimeout(function() {
+          var script = document.getElementById('lb-search-results');
+          if (script) {
+            script.style.display = 'none';
+            if (script.parentElement) {
+              script.parentElement.style.display = 'none';
+            }
+          }
+        }, 50);
+      },
+    }, '#search-input', '#search-ui')
+  }
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const upButton = document.getElementById("feedback-up");
+  const downButton = document.getElementById("feedback-down");
+  const feedbackContainer = document.getElementById("feedback-container");
+
+  const FeedbackType = {
+    UP: "up",
+    DOWN: "down",
+  };
+
+  const FeedbackForms = {
+    ONSUCCESS_FORM: "https://docs.google.com/forms/d/e/1FAIpQLScsv_-1lx09vDCYdIfP4Q6Gpt3K6WUyqvGXQe3yQN03Z7nm2A/viewform?usp=pp_url&entry.2144526813=SOURCE_URL_PLACEHOLDER",
+    ONISSUE_FORM: "https://docs.google.com/forms/d/e/1FAIpQLSfdlN8_MBbvQH8OvJHpv7LRIuM7IVdM9Qn6gqS-bqI5ApP0VA/viewform?usp=pp_url&entry.233291793=SOURCE_URL_PLACEHOLDER",
+  };
+
+  const URL_PLACEHOLDER = "SOURCE_URL_PLACEHOLDER";
+
+  function populateUrlWithCurrentPage(baseUrlWithPlaceholder, placeholder) {
+    const currentPageUrl = window.location.href;
+    return baseUrlWithPlaceholder.replace(placeholder, encodeURIComponent(currentPageUrl));
+  }
+
+  function createFeedbackButton(feedbackType) {
+    const button = document.createElement("button");
+    button.classList.add("button-styles"); // Make sure .button-styles is defined in your CSS
+
+    let baseFormUrl;
+    if (feedbackType === FeedbackType.UP) {
+      button.textContent = "Help us improve our docs";
+      baseFormUrl = FeedbackForms.ONSUCCESS_FORM;
+    } else { // FeedbackType.DOWN
+      button.textContent = "Report an issue";
+      baseFormUrl = FeedbackForms.ONISSUE_FORM;
+    }
+
+    // Populate the URL using the helper function
+    const targetFormUrl = populateUrlWithCurrentPage(baseFormUrl, URL_PLACEHOLDER);
+
+    button.onclick = () => {
+      window.open(targetFormUrl, "_blank");
+    };
+
+    return button;
+  }
+
+  function handleFeedbackClick(event) {
+    const clickedButton = event.currentTarget;
+    const otherButton = clickedButton === upButton ? downButton : upButton;
+
+    otherButton.classList.remove("selected");
+    clickedButton.classList.add("selected");
+
+    // Animate the clicked button
+    const svg = clickedButton.querySelector("svg");
+    svg.classList.add("animate");
+    svg.addEventListener(
+      "animationend",
+      () => {
+        svg.classList.remove("animate");
+      },
+      { once: true }
+    );
+
+    const feedbackType = clickedButton === upButton ? FeedbackType.UP : FeedbackType.DOWN;
+
+    // Send feedback to Google Analytics
+
+    dataLayer.push({
+      'event': "feedback",
+      'event_category': "User Feedback",
+      'event_label': feedbackType
+    });
+    
+      
+
+    feedbackContainer.classList.add("fade-out");
+
+    setTimeout(() => {
+      feedbackContainer.innerHTML = `<p>Your opinion matters to us! 🩵</p>`;
+
+      const button = createFeedbackButton(feedbackType);
+      feedbackContainer.appendChild(button);
+      feedbackContainer.classList.add("fade-in");
+    }, 500); 
+  }
+
+  upButton.addEventListener("click", handleFeedbackClick);
+  downButton.addEventListener("click", handleFeedbackClick);
+});
+</script>
+
+<script src="https://cdn.luigisbox.com/search.js" async onload="handleSearchInitialization()"></script>
+<script src="https://cdn.luigisbox.com/docs-luigisbox-com.js" async></script>
+
+<!-- Copy to Clipboard Functionality -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Add copy buttons to all code blocks
+  const codeBlocks = document.querySelectorAll('.highlight pre');
+  
+  codeBlocks.forEach(function(pre) {
+    // Create copy button
+    const copyButton = document.createElement('div');
+    copyButton.className = 'copy-clipboard';
+    copyButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>Copy to Clipboard</title><path d="M18 6v-6h-18v18h6v6h18v-18h-6zm-12 10h-4v-14h14v4h-10v10zm16 6h-14v-14h14v14z"></path></svg>';
+    
+    // Add click handler
+    copyButton.addEventListener('click', function() {
+      const code = pre.querySelector('code');
+      const text = code ? code.textContent.replace(/\n$/, '') : pre.textContent.replace(/\n$/, '');
+      
+      // Use modern Clipboard API with fallback
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(text).then(function() {
+          showSuccess(copyButton);
+        }).catch(function() {
+          fallbackCopy(text);
+          showSuccess(copyButton);
+        });
+      } else {
+        fallbackCopy(text);
+        showSuccess(copyButton);
+      }
+    });
+    
+    // Append the button to the outer .highlight wrapper (not the <pre> itself)
+    let wrapper = pre.closest('.highlight');
+    if (wrapper === pre) {
+      wrapper = pre.parentElement ? pre.parentElement.closest('.highlight') : null;
+    }
+    if (!wrapper) wrapper = pre.parentElement || document.body;
+
+    // Ensure the wrapper can be a positioned container; prefer CSS but
+    // fall back to inline style if needed.
+    try {
+      const comp = window.getComputedStyle(wrapper);
+      if (comp && comp.position === 'static') {
+        wrapper.style.position = 'relative';
+      }
+    } catch (e) {
+      /* ignore */
+    }
+
+    wrapper.appendChild(copyButton);
+  });
+  
+  function fallbackCopy(text) {
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+  }
+  
+  function showSuccess(button) {
+    const originalHTML = button.innerHTML;
+    button.classList.add('copied');
+    // make button non-interactive while showing feedback
+    button.setAttribute('aria-disabled', 'true');
+    button.style.pointerEvents = 'none';
+    button.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>Copied!</title><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"></path></svg>';
+    
+    setTimeout(function() {
+      button.classList.remove('copied');
+      // re-enable button after feedback
+      button.removeAttribute('aria-disabled');
+      button.style.pointerEvents = '';
+      button.innerHTML = originalHTML;
+    }, 1000);
+  }
+});
+</script>
+
+</body>
+</html>
+
+

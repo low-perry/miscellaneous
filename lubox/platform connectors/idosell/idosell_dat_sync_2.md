@@ -3,7 +3,7 @@ layout: platform_integration_layout
 title: Luigi's Box IdoSell Data Synchronization Guide
 ---
 
-# Overview
+## Overview
 
 Luigi's Box automatically synchronizes your IdoSell product catalog to power search, recommendations, and analytics. Unlike some other platforms that use "delta" updates, the IdoSell integration performs a comprehensive sync to ensure your data is always 100% consistent.
 
@@ -22,6 +22,9 @@ Luigi's Box syncs comprehensive product data from your IdoSell store via the Adm
 | Images         | All image URLs (primary mapped from productImageSmallUrl) | Visual search results and recommendations                      |
 | Categories     | Category structure and Menus                    | Category-based filtering and navigation                         |
 | Attributes     | All productParameters (except export-specific ones) | Faceted search and filtering                                   |
+
+
+
 | Variants       | Sizes, colors, and variations                   | Grouped under master products for clean search results          |
 | Visibility     | Active status (productIsVisible: "y")          | Ensures hidden products do not appear in search                 |
 
