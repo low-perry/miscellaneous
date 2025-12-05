@@ -92,30 +92,70 @@ Example:
   "type": "malformed_input",
   "reason": "incorrect parameters provided"
 }
-Migration Plan
-The migration will be executed iteratively, one hub at a time. We will preserve the original files until explicitly instructed to remove them.
+Jira Integration & Rollout Plan
+Epic: Create the v2 api pages and restructure the docs
 
-Phase 1: Autocomplete Hub
-Create Hub Page: source/autocomplete/index.html.md.erb.
-Create Guides: Extract "Trending Queries" and "Top Items" concepts into guide pages.
-Create Reference: Ensure source/autocomplete/api/v2/ contains pure reference pages.
-Update API Switcher: Ensure data/api.yml (or equivalent) reflects the new structure for Autocomplete.
-Commit: Verify and commit changes for this hub.
-Phase 2: Search Hub
-Create Hub Page: source/search/index.html.md.erb.
-Create Guides: Extract filtering, facets, sorting, and query understanding into guide pages.
-Create Reference: Ensure source/search/api/v2/search.html.md.erb is pure reference.
-Update API Switcher: Update data source.
-Commit: Verify and commit.
-Phase 3: PLP Hub
-Create Hub Page: source/plp/index.html.md.erb.
-Create Guides: Extract category hierarchy guide.
-Create Reference: Ensure source/plp/api/v2/ is pure reference.
-Commit: Verify and commit.
-Phase 4: Recommender & Analytics Hubs
-Follow the same pattern: Hub -> Guides -> Reference -> Commit.
+We will organize the work into Stories (per Hub) and Tasks (per granular action). Each Task will correspond to a single commit to ensure traceability and easy rollback.
+
+Story 1: Restructure Autocomplete Hub
+Goal: Separate guides from reference and implement V2 structure for Autocomplete.
+
+Task 1.1: Create Autocomplete Hub Page (source/autocomplete/index.html.md.erb).
+Commit: feat(docs): create autocomplete hub page
+Task 1.2: Extract "Trending Queries" Guide.
+Commit: refactor(docs): extract trending queries guide
+Task 1.3: Extract "Top Items" Guide.
+Commit: refactor(docs): extract top items guide
+Task 1.4: Refine Autocomplete V2 Reference (remove guides).
+Commit: refactor(docs): refine autocomplete v2 reference
+Task 1.5: Update API Switcher (data/api.yml) for Autocomplete.
+Commit: config(docs): update api switcher for autocomplete
+Story 2: Restructure Search Hub
+Goal: Separate guides from reference and implement V2 structure for Search.
+
+Task 2.1: Create Search Hub Page (source/search/index.html.md.erb).
+Commit: feat(docs): create search hub page
+Task 2.2: Extract "Filtering" Guide.
+Commit: refactor(docs): extract filtering guide
+Task 2.3: Extract "Facets" Guide.
+Commit: refactor(docs): extract facets guide
+Task 2.4: Extract "Sorting & Pagination" Guide.
+Commit: refactor(docs): extract sorting and pagination guide
+Task 2.5: Extract "Query Understanding" Guide.
+Commit: refactor(docs): extract query understanding guide
+Task 2.6: Refine Search V2 Reference.
+Commit: refactor(docs): refine search v2 reference
+Task 2.7: Update API Switcher for Search.
+Commit: config(docs): update api switcher for search
+Story 3: Restructure PLP Hub
+Goal: Separate guides from reference and implement V2 structure for PLP.
+
+Task 3.1: Create PLP Hub Page.
+Commit: feat(docs): create plp hub page
+Task 3.2: Extract "Category Hierarchy" Guide.
+Commit: refactor(docs): extract category hierarchy guide
+Task 3.3: Refine PLP V2 Reference.
+Commit: refactor(docs): refine plp v2 reference
+Task 3.4: Update API Switcher for PLP.
+Commit: config(docs): update api switcher for plp
+Story 4: Restructure Recommender & Analytics Hubs
+Goal: Separate guides from reference and implement V2 structure for remaining services.
+
+Task 4.1: Create Recommender Hub Page.
+Commit: feat(docs): create recommender hub page
+Task 4.2: Extract Recommender Guides.
+Commit: refactor(docs): extract recommender guides
+Task 4.3: Refine Recommender V2 Reference.
+Commit: refactor(docs): refine recommender v2 reference
+Task 4.4: Create Analytics Hub Page.
+Commit: feat(docs): create analytics hub page
+Task 4.5: Extract Analytics Guides.
+Commit: refactor(docs): extract analytics guides
+Task 4.6: Refine Analytics V2 Reference.
+Commit: refactor(docs): refine analytics v2 reference
+Task 4.7: Update API Switcher for remaining services.
+Commit: config(docs): update api switcher for recommender and analytics
 API Switcher Logic
-The _api_switcher.html.erb partial relies on data.api.services to determine available versions.
+The _api_switcher.html.erb partial relies on data/api.yml to determine available versions.
 
-Action: We need to verify data/api.yml (or similar data file) to ensure it correctly maps the new V2 endpoints and links.
-Note: The switcher logic currently seems to be commented out in some places or conditional. We must ensure it is active and pointing to the correct new V2 URLs.
+Action: We will verify and update data/api.yml in the final task of each Story to ensure the new structure is correctly reflected in the navigation.
