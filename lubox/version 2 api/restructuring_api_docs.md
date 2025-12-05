@@ -93,11 +93,29 @@ Example:
   "reason": "incorrect parameters provided"
 }
 Migration Plan
-Extract: For each hub, identify content in the monolith that belongs in a guide.
-Create Guides: Create the new .html.md files and move the content.
-Refine Reference: Strip the moved content from the API reference file, leaving only the technical definition.
-Link: Add links from the Reference page to the Guides (e.g., "For details on complex filtering, see the 
+The migration will be executed iteratively, one hub at a time. We will preserve the original files until explicitly instructed to remove them.
 
-Filtering Guide
-.") and vice versa.
-Verify: Ensure all links work and content is not lost.
+Phase 1: Autocomplete Hub
+Create Hub Page: source/autocomplete/index.html.md.erb.
+Create Guides: Extract "Trending Queries" and "Top Items" concepts into guide pages.
+Create Reference: Ensure source/autocomplete/api/v2/ contains pure reference pages.
+Update API Switcher: Ensure data/api.yml (or equivalent) reflects the new structure for Autocomplete.
+Commit: Verify and commit changes for this hub.
+Phase 2: Search Hub
+Create Hub Page: source/search/index.html.md.erb.
+Create Guides: Extract filtering, facets, sorting, and query understanding into guide pages.
+Create Reference: Ensure source/search/api/v2/search.html.md.erb is pure reference.
+Update API Switcher: Update data source.
+Commit: Verify and commit.
+Phase 3: PLP Hub
+Create Hub Page: source/plp/index.html.md.erb.
+Create Guides: Extract category hierarchy guide.
+Create Reference: Ensure source/plp/api/v2/ is pure reference.
+Commit: Verify and commit.
+Phase 4: Recommender & Analytics Hubs
+Follow the same pattern: Hub -> Guides -> Reference -> Commit.
+API Switcher Logic
+The _api_switcher.html.erb partial relies on data.api.services to determine available versions.
+
+Action: We need to verify data/api.yml (or similar data file) to ensure it correctly maps the new V2 endpoints and links.
+Note: The switcher logic currently seems to be commented out in some places or conditional. We must ensure it is active and pointing to the correct new V2 URLs.
